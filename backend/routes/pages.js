@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', function(req, res) {
+	console.log(req.session);
+	if (req.session.email)
+		console.log('session email');
 	res.render('pages/index');
 });
 
