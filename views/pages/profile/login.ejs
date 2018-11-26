@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include ../../partials/head %>
+</head>
+<body class="container">
+	<header>
+		<% include ../../partials/header %>
+	</header>
+	<main>
+		<div class="jumbotron">
+			<h1>Login Page</h1>
+				<div class="form-group">
+				<label for="email">Email</label>
+				<input type="email" name="email" id="email" class="form-control" placeholder="email@example.com" aria-describedby="helpId">
+				<small id="helpId" class="text-muted">Insert a valid email address</small>
+				</div>
+				<div class="form-group">
+				<label for="password">Password</label>
+				<input type="password" class="form-control" name="password" id="password" aria-describedby="helpId" placeholder="Password">
+				<small id="helpId" class="form-text text-muted">Password requires atleast 1 Uppercase, 1 Lowercase, 1 number and 1 special character</small>
+				</div>
+				<button type="submit" class="btn btn-info">Submit</button>
+		</div>
+	</main>
+
+	<footer>
+		<% include ../../partials/footer %>
+	</footer>
+</body>
+</html>

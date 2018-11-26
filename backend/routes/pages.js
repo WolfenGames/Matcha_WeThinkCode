@@ -9,4 +9,17 @@ router.get('/about', function(req, res) {
 	res.render('pages/about');
 });
 
+router.get('/profile', function(req, res) {
+	res.render('pages/profile/profile');
+})
+
+router.get('/login', function(req, res) {
+	res.render('pages/profile/login');
+})
+
+
+router.get('/signup', function(req, res) {
+	res.render('pages/profile/signup');
+})
+
 module.exports = router;
