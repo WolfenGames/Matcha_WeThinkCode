@@ -1,5 +1,12 @@
+const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
+const pageRoutes = require('./routes/pages');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.set('view engine', 'ejs');
 
 app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
@@ -13,3 +20,7 @@ app.use((req, res, next) => {
 	);
 	next();
 });
+
+app.use("/", pageRoutes);
+
+module.exports = app;
