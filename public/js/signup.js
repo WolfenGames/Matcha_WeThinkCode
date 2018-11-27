@@ -3,12 +3,13 @@ $(document).ready(function(){
 		var email = $('#email').val();
 		var pass = $('#password').val();
 		var cpass = $('#cpassword').val();
-		console.log("pressed");
+		console.log('Hello???');
 		$.post('/User/Create', {
 			Email: email,
 			oPassword: pass,
 			cPassword: cpass
-		}), function(data, success) {
-			alert('Status ' + success);
-	}});
+		}).done(function() {
+			window.location.href = "/login";
+		});
+	});
 });
