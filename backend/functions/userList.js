@@ -1,18 +1,14 @@
-const mongoose = require('mongoose');
-const User = require('../models/user');
+const db = require('../database/db');
 
 module.exports = {
 	ListUser(fn) {
-		User.find({}).then(result => {
-			let users = [];
-			result.forEach(
-				function (res) {
-					users.push(res);
-				}
-			);
-			fn(users);
-		}).catch(error => {
-			console.log("Cant find users:: " + error);
-		});
+		db.mongo.connect(db.url, {useNewUrlParser: true}, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db('Matcha');
+			dbo.collection('Users').find({}).toArray(function(err, result) {
+				if (err) throw err;
+				fn(result);
+			});
+		});	
 	}
 }

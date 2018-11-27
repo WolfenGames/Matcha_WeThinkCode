@@ -3,6 +3,7 @@ const router = express.Router();
 const ListUsers = require('../functions/userList');
 const DelteUsers = require('../functions/userManagement');
 const FuncUser = require('../functions/userSave');
+const bcrypt = require('bcrypt');
 
 router.get('/', function(req, res) {
 	res.render('pages/index');
@@ -33,13 +34,24 @@ router.get('/deleteall', function(req, res) {
 });
 
 router.get('/create', function(req, res) {
-	FuncUser.userSave('Test', 'Test@gmail.com', 'Any');
+	FuncUser.userSave('Test@gmail.com', 'password', 'User');
 	res.redirect('/profile');
 });
 
 router.get('/createAdmin', function(req, res) {
-	FuncUser.userSave('Admin', 'Admin@gmail.com', 'Any', 'Admin');
+	FuncUser.userSave('Admin@gmail.com', 'password', 'Admin');
 	res.redirect('/profile');
+});
+
+router.post('/User/Create', function(req, res) {
+	const oPass = req.body.oPassword;
+	const cPass = req.body.cPassword
+	const email = req.body.Email;
+	if (cPass == oPass) {
+		let hash = bcrypt.hashSync(oPass, 10);
+		FuncUser.userSave(email, hash);
+	}
+	res.redirect(200, '/profile');
 });
 
 router.get('/signup', function(req, res) {

@@ -4,9 +4,6 @@ const app = express();
 const pageRoutes = require('./routes/pages');
 const session = require('express-session');
 const DB = require('./database/db');
-const FunctUser = require('./functions/userSave');
-const ListUser = require('./functions/userList');
-const UserManagement = require('./functions/userManagement');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -30,5 +27,6 @@ app.use((req, res, next) => {
 });
 
 app.use("/", pageRoutes);
+DB.createCollection('Users');
 
 module.exports = app;

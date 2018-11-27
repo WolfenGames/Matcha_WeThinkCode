@@ -1,18 +1,27 @@
-const User = require('../models/user');
+const db = require('../database/db');
 
 module.exports = {
-	userSave(username, email, password, type) {
-		const user = new User ({
-			username: username,
-			password: password,
-			email: email,
-			age: 1,
-			type: type
-		});
-		user.save().then(result => {
-			console.log('User created');
-		}).catch(error => {
-			console.log('Error saving user:: ' + error);
+	userSave(email, password, type) {
+		db.mongo.connect(db.url, {useNewUrlParser: true}, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db('Matcha');
+			var saveOptions = {
+				username: 'To Be added Later ' + Date(),
+				firstname: 'To Be added Later ' + Date(),
+				surname: 'To Be added Later ' + Date(),
+				sex: 'To Be added Later ' + Date(),
+				sexuality: 'To Be added Later ' + Date(),
+				email: email,
+				password: password,
+				age: 100,
+				fame: 0,
+				rating: 0,
+				type: type
+			};
+			dbo.collection('Users').insertOne(saveOptions, function(err, res) {
+				if (err) throw err;
+				db.close();
+			});
 		});
 	}
 }

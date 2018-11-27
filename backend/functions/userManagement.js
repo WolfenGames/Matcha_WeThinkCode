@@ -1,18 +1,26 @@
-const User = require('../models/user');
+const db = require('../database/db');
 
 module.exports = {
 	deleteByUsername(user) {
-		User.deleteOne({ _id: user }).then(result => {
-			console.log('Users deleted by name:: ' + user);
-		}).catch(error => {
-			console.log("Error deleting many:: " + error);
-		})
+		db.mongo.connect(db.url, {useNewUrlParser: true}, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db('Matcha');
+			var query = { username: user };
+			dbo.collection('Users').deleteOne(query, function(err, res) {
+				if (err) throw err;
+				db.close();
+			});
+		});
 	},
 	deleteAll() {
-		User.deleteMany({ type: 'User' }).then(result => {
-			console.log('All users deleted');
-		}).catch(error => {
-			console.log('Cant delete all -> ' + error);
+		db.mongo.connect(db.url, {useNewUrlParser: true}, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db('Matcha');
+			var query = { type: 'User' };
+			dbo.collection('Users').deleteMany(query, function(err, res) {
+				if (err) throw err;
+				db.close();
+			});
 		});
 	}
 }

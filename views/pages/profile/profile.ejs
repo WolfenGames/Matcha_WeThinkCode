@@ -21,16 +21,22 @@
 				%>
 			<p>Total Users:: <%= usercount %></p>
 			<% for (var i = 0; i < usercount; i++){ %>
+				<% 
+				var uid = users[i]['_id']; 
+				var uname = users[i]['username'];
+				var pass = users[i]['password'];
+				var type = users[i]['type'];
+				%>
 				<p>
-					Username: <%= users[i]['username'] %>
+					Username: <%= uname; %> Type : <%= type %>
 				</p>
 				<p>
-					password: <%= users[i]['password'] %>
+					password: <%= pass; %>
 				</p>
 				<p>
-					id: <%= users[i]['_id'] %>
+					id: <%= uid %>
 				</p>
-				<input class="btn btn-warning" type="submit" value="Delete User: <%= users[i]['username'] %>" onclick='location.href="/delete/<%= users[i]['_id'] %>"'>
+				<input class="btn btn-warning" type="submit" value="Delete User: <%= uname %>" onclick='location.href="/delete/<%= uname %>"'>
 				<hr>
 			<% }
 			 } %>

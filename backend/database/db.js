@@ -1,9 +1,19 @@
-const mongoose = require('mongoose');
+const mongo = require('mongodb').MongoClient;
+"use strict";
 
 const url = 'mongodb://localhost:27017/Matcha';
 
-mongoose.connect(url, { useNewUrlParser: true}).then(() => {
-	console.log("Database connected");
-}).catch((error) => {
-	console.log('Failed to connect:: ' + error);
-});
+module.exports = {
+	url,
+	mongo,
+	createCollection(collectionName) {
+		mongo.connect(url, { useNewUrlParser: true }, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db('Matcha');
+			dbo.createCollection(collectionName, function(err, res) {
+				if (err) throw err;
+				db.close();
+			});
+		});	
+	}
+ };
