@@ -10,6 +10,30 @@
 	<main>
 		<div class="jumbotron">
 			<h1>Profile Page</h1>
+			<div class="container">
+				<input class="btn btn-primary" type='submit' value="Create User" onclick="location.href='/create'"> <br>
+				<input class="btn btn-warning" type="submit" value="Delete Users" onclick="location.href='/deleteall'"> <br>
+				<input class="btn btm-sucess" type="submit" value="Create Dummy Admin" onclick="location.href='/createAdmin'">
+			</div>
+			<% 
+			var usercount = users.length;
+			if (users){ 
+				%>
+			<p>Total Users:: <%= usercount %></p>
+			<% for (var i = 0; i < usercount; i++){ %>
+				<p>
+					Username: <%= users[i]['username'] %>
+				</p>
+				<p>
+					password: <%= users[i]['password'] %>
+				</p>
+				<p>
+					id: <%= users[i]['_id'] %>
+				</p>
+				<input class="btn btn-warning" type="submit" value="Delete User: <%= users[i]['username'] %>" onclick='location.href="/delete/<%= users[i]['_id'] %>"'>
+				<hr>
+			<% }
+			 } %>
 		</div>
 	</main>
 
