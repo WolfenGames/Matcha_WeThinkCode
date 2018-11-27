@@ -12,6 +12,7 @@ module.exports = {
 			var dbo = db.db('Matcha');
 			dbo.createCollection(collectionName, function(err, res) {
 				if (err) throw err;
+				res.createIndex({ email: 1}, {unique: true});
 				db.close();
 			});
 		});	

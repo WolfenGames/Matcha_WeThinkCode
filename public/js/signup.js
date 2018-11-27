@@ -8,7 +8,8 @@ $(document).ready(function(){
 			Email: email,
 			oPassword: pass,
 			cPassword: cpass
-		}).done(function() {
+		}).done(function(res) {
+			console.log(res);
 			window.location.href = "/login";
 		});
 	});
