@@ -1,7 +1,7 @@
 const db = require('../database/db');
 
 module.exports = {
-	userSave(email, password, type) {
+	userSave(email, password, uType) {
 		db.mongo.connect(db.url, {useNewUrlParser: true}, function(err, db) {
 			if (err) throw err;
 			var dbo = db.db('Matcha');
@@ -16,7 +16,7 @@ module.exports = {
 				age: 100,
 				fame: 0,
 				rating: 0,
-				type: type
+				type: uType
 			};
 			dbo.collection('Users').insertOne(saveOptions, function(err, res) {
 				if (err) throw err;

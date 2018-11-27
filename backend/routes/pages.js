@@ -49,9 +49,9 @@ router.post('/User/Create', function(req, res) {
 	const email = req.body.Email;
 	if (cPass == oPass) {
 		let hash = bcrypt.hashSync(oPass, 10);
-		FuncUser.userSave(email, hash);
+		FuncUser.userSave(email, hash, 'User');
 	}
-	res.redirect(200, '/profile');
+	res.redirect(200, '/');
 });
 
 router.get('/signup', function(req, res) {
