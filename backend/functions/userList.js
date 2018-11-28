@@ -2,13 +2,15 @@ const db = require('../database/db');
 
 module.exports = {
 	ListUser(fn) {
-		db.mongo.connect(db.url, {useNewUrlParser: true}, function(err, db) {
-			if (err) throw err;
+		db.mongo.connect(db.url, {useNewUrlParser: true}).then(db => {
 			var dbo = db.db('Matcha');
-			dbo.collection('Users').find({}).toArray(function(err, result) {
-				if (err) throw err;
+			dbo.collection('Users').find({}).toArray().then(result => {
 				fn(result);
+			}).catch(err => {
+				console.log("Cant list users " + err);
 			});
-		});	
+		}).catch(err => {
+			console.log("Cant connect " + err);
+		});
 	}
 }

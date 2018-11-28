@@ -2,6 +2,7 @@ const db = require('../database/db');
 
 module.exports = {
 	deleteByUsername(user) {
+		/*
 		db.mongo.connect(db.url, {useNewUrlParser: true}, function(err, db) {
 			if (err) throw err;
 			var dbo = db.db('Matcha');
@@ -11,8 +12,10 @@ module.exports = {
 				db.close();
 			});
 		});
+		*/
 	},
 	deleteAll() {
+		/*
 		db.mongo.connect(db.url, {useNewUrlParser: true}, function(err, db) {
 			if (err) throw err;
 			var dbo = db.db('Matcha');
@@ -22,5 +25,6 @@ module.exports = {
 				db.close();
 			});
 		});
+		*/
 	}
 }
