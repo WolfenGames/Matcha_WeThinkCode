@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/../public'));
 app.set('view engine', 'ejs');
 
-app.use(session({secret: "key", saveUninitialized: false, resave: false}));
+app.use(session({secret: "American Pie: Beta House", saveUninitialized: false, resave: false}));
 
 app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
