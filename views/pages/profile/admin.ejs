@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include ../../partials/head %>
+</head>
+<body class="container">
+	<header>
+		<% include ../../partials/header %>
+	</header>
+	<main>
+		<div class="jumbotron">
+			<% if (message) { %>
+				<p><%= message['error'] %></p>
+				<% } %>
+			<h1>Admin Page</h1>
+			<div class="container">
+				<input class="btn btn-primary" type='submit' value="Create User" onclick="location.href='/create'"> <br>
+				<input class="btn btn-warning" type="submit" value="Delete Users" onclick="location.href='/deleteall'"> <br>
+				<input class="btn btm-sucess" type="submit" value="Create Dummy Admin" onclick="location.href='/createAdmin'">
+			</div>
+			<% 
+			var usercount = users.length;
+			if (users){ 
+				%>
+			<p>Total Users:: <%= usercount %></p>
+			<% for (var i = 0; i < usercount; i++){ %>
+				<% 
+				var uid = users[i]['_id']; 
+				var uname = users[i]['username'];
+				var pass = users[i]['password'];
+				var type = users[i]['type'];
+				%>
+				<p>
+					Username: <%= uname; %> Type : <%= type %>
+				</p>
+				<p>
+					password: <%= pass; %>
+				</p>
+				<p>
+					id: <%= uid %>
+				</p>
+				<input class="btn btn-warning" type="submit" value="Delete User: <%= uname %>" onclick='location.href="/delete/<%= uname %>"'>
+				<hr>
+			<% }
+			 } %>
+		</div>
+	</main>
+
+	<footer>
+		<% include ../../partials/footer %>
+	</footer>
+</body>
+</html>

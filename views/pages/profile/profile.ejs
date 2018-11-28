@@ -8,38 +8,15 @@
 		<% include ../../partials/header %>
 	</header>
 	<main>
-		<div class="jumbotron">
-			<h1>Profile Page</h1>
-			<div class="container">
-				<input class="btn btn-primary" type='submit' value="Create User" onclick="location.href='/create'"> <br>
-				<input class="btn btn-warning" type="submit" value="Delete Users" onclick="location.href='/deleteall'"> <br>
-				<input class="btn btm-sucess" type="submit" value="Create Dummy Admin" onclick="location.href='/createAdmin'">
-			</div>
-			<% 
-			var usercount = users.length;
-			if (users){ 
-				%>
-			<p>Total Users:: <%= usercount %></p>
-			<% for (var i = 0; i < usercount; i++){ %>
-				<% 
-				var uid = users[i]['_id']; 
-				var uname = users[i]['username'];
-				var pass = users[i]['password'];
-				var type = users[i]['type'];
-				%>
-				<p>
-					Username: <%= uname; %> Type : <%= type %>
-				</p>
-				<p>
-					password: <%= pass; %>
-				</p>
-				<p>
-					id: <%= uid %>
-				</p>
-				<input class="btn btn-warning" type="submit" value="Delete User: <%= uname %>" onclick='location.href="/delete/<%= uname %>"'>
+		<div class="container bg-light rounded-bottom">
+			<h1>&lt;Profile Page/&gt;</h1>
+			<!--Prof pic-->
+			<div class="d-flex flex-column border" style="width: 250px">
+				<img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:240px; height: 240px; background-color: blue;">
 				<hr>
-			<% }
-			 } %>
+				<h3>&lt;About me/&gt;</h3>
+				<textarea cols="20" rows="5" style="resize: none;">example text</textarea>
+			</div>
 		</div>
 	</main>
 
