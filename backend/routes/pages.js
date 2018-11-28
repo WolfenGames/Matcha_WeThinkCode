@@ -58,4 +58,8 @@ router.get('/signup', function(req, res) {
 	res.render('pages/profile/signup');
 })
 
+router.get('*', function(req, res) {
+	res.render('pages/404');
+})
+
 module.exports = router;
