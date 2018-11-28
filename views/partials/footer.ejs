@@ -1,12 +1,13 @@
 <!-- views/partials/footer.ejs -->
-<div id="google_translate_element"></div>
+<div class="d-flex flex-row">
+    <div id="google_translate_element"></div>
 
-<script type="text/javascript">
-function googleTranslateElementInit() {
-new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
-}
-</script>
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+    new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+    }
+    </script>
 
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-	
-<p class="text-center text-muted">© Copyright 2018 jwolf</p>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <p class="text-center text-muted">© Copyright 2018 jwolf</p>
+</div>

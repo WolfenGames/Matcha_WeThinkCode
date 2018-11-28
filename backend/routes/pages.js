@@ -57,9 +57,10 @@ router.post('/User/Create', function(req, res) {
 	const oPass = req.body.oPassword;
 	const cPass = req.body.cPassword
 	const email = req.body.Email;
+	const sub = req.body.emailpref;
 	if (cPass == oPass) {
 		let hash = bcrypt.hashSync(oPass, 10);
-		FuncUser.userSave(email, hash, 'User');
+		FuncUser.userSave(email, hash, 'User', sub);
 	}
 	res.redirect(200, '/');
 });
