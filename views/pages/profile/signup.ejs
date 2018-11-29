@@ -11,6 +11,7 @@
 	<main>
 		<div class="jumbotron">
 			<h1>&lt;Signup Page/&gt;</h1>
+			<hr>
 			<form>
 				<div class="form-group">
 				<label for="email">&lt;Email/&gt;</label>
@@ -27,11 +28,15 @@
 				<input pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' type="password" class="form-control" name="cpassword" id="cpassword" aria-describedby="helpId" placeholder="Password">
 				<small id="helpId" class="form-text text-muted">Password requires atleast 1 Uppercase, 1 Lowercase, 1 number and 1 special character</small>
 				</div>
-				<label class="custom-control custom-checkbox">
-				  <input type="checkbox" name="emailpref" id="emailpref">
-				  <span class="custom-control-indicator"></span>
-				  <span class="custom-control-description">Would you, the user, like to recieve pointless emails from us?</span>
-				</label>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<div class="input-group-text">
+							<input id="emailpref" name="emailpref" type="radio">
+						</div>
+					</div>
+					<span class="form-control">Would you, the user, like to recieve pointless emails from us?</span>
+				</div>
+				<hr>
 				<button type="button" id='Signup-Button' class="btn btn-info">&lt;Submit/&gt;</button>
 			</form>
 			</div>
