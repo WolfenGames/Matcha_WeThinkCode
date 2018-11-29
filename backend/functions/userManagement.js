@@ -1,15 +1,18 @@
 const db = require('../database/db');
 
-function deleteByUsername(user) {
+function deleteByUsername(user, cb) {
 	db.mongo.connect(db.url, { useNewUrlParser: true }).then(db => {
 		var dbo = db.db('Matcha');
 		var query = { username: user};
 		dbo.collection('Users').deleteOne(query).then(res => {
+			cb("Suceesss");
 			db.close();
 		}).catch(err => {
+			cb("Error");
 			console.log("Can't deleteby one (user:: " + user + ") -> " + err);
 		});
 	}).catch(err => {
+		cb("Cant connect to database");
 		console.log("Cant connect to database called by deleteByUsername(" + user + ")");
 	});
 } 

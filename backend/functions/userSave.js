@@ -23,14 +23,11 @@ function userSave(email, password, uType, sub) {
 		};
 		dbo.collection('Users').insertOne(saveOptions).then(res => {
 			db.close();
-			return true;
 		}).catch(err => {
 			console.log("Error Saving user " + err);
-			return false;
 		});
 	}).catch(err => {
 		console.log("Error saving user " + err);
-		return false;
 	});
 }
 

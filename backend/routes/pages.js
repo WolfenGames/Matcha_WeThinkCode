@@ -25,10 +25,9 @@ router.get('/login', function(req, res) {
 
 router.get('/delete/:name', function(req, res) {
 	message = {};
-	if (!DelteUsers.deleteByUsername(req.params.name))
-	{
-		message = { error: "Failed to delete by username"}
-	}
+	DelteUsers.deleteByUsername(req.params.name, function(reason) {
+		message = { err: reason };
+	});
 	res.redirect('/admin');
 });
 
@@ -38,7 +37,10 @@ router.get('/deleteall', function(req, res) {
 });
 
 router.get('/create', function(req, res) {
-	FuncUser.userSave('Test@gmail.com', 'password', 'User');
+	message = {};
+	FuncUser.userSave('Test@gmail.com', 'password', 'User', function(result){
+		message = { err: result };
+	});
 	res.redirect('/admin');
 });
 
