@@ -4,7 +4,9 @@ const ListUsers = require('../functions/userList');
 const DelteUsers = require('../functions/userManagement');
 const FuncUser = require('../functions/userSave');
 const bcrypt = require('bcrypt');
-const mailer = require('../functions/sendmail');
+const verify = require('../functions/verify');
+const login = require('../functions/login');
+const url = require('url');
 
 var message = {};
 
@@ -39,15 +41,15 @@ router.get('/deleteall', function(req, res) {
 
 router.get('/create', function(req, res) {
 	message = {};
-	FuncUser.userSave('Test@gmail.com', 'password', 'User', function(result){
-		message = { err: result };
-	});
+	var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+	FuncUser.userSave('jwolf@student.wethinkcode.co.za', 'password', 'User', false, fullUrl);
 	res.redirect('/admin');
 });
 
 router.get('/createAdmin', function(req, res) {
 	message = {};
-	if (!FuncUser.userSave('Admin@gmail.com', 'password', 'Admin'))
+	var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+	if (!FuncUser.userSave('Admin@gmail.com', 'password', 'Admin', fullUrl))
 	{
 		message = {
 			error: "Can't create User -> Possible duplicate entry"
@@ -63,7 +65,8 @@ router.post('/User/Create', function(req, res) {
 	const sub = req.body.emailpref;
 	if (cPass == oPass) {
 		let hash = bcrypt.hashSync(oPass, 10);
-		FuncUser.userSave(email, hash, 'User', sub);
+		var fullUrl = req.protocol + '://' + req.get('host') + "/verify?email=" + email + "&verify=";
+		FuncUser.userSave(email, hash, 'User', sub, fullUrl);
 	}
 	res.redirect(200, '/');
 });
@@ -78,8 +81,26 @@ router.get('/admin', function(req, res) {
 	});
 });
 
-router.get('/sendTest', function(req, res) {
-	mailer.sendVerifyEmail();
+router.get('/verify', function(req, res) {
+	var adr = req.protocol + '://' + req.get('host') + req.url;
+	var q = url.parse(adr, true);
+	let mail = q.query.email;
+	let verifyKey = q.query.verify;
+	verify.verify(mail, verifyKey);
+	res.redirect('/login');
+});
+
+router.get('/logout/user', function(req, res) {
+	req.session.destroy();
+	res.redirect('/');
+});
+
+router.post('/login/user', function(req, res) {
+	login.login(req.body.email, req.body.password, function(loginres) {
+		if (loginres !== 'none'){
+			req.session.user = loginres['email'];
+		}
+	});
 	res.redirect('/');
 })
 

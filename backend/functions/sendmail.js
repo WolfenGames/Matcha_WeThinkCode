@@ -2,28 +2,21 @@ const mailer = require('nodemailer');
 const settings = require('./settings');
 "use strict";
 
-let transporter = null;
-
-mailer.createTestAccount().then(account => {
-	transporter = mailer.createTransport({
+let transporter = mailer.createTransport({
 		service: 'gmail',
 		auth : {
 			user: settings.user,
 			pass: settings.pass
 		}
 	});
-	console.log(account);
-}).catch(error => {
-	console.log(error);
-});
 
-function sendVerifyEmail() {
+function sendVerifyEmail(email, verifykey) {
 	let mailOptions = {
-		from: "'Matcha' <admin@matcha.com>",
-		to: "jwolf@mailinator.com, <jwolf@mailinator.com>",
+		from: "'Matcha' <jwolfmatcha@gmail.com>",
+		to: email + ", <"+email+">",
 		subject: "Test",
-		text: "Hello World",
-		html: "<h1> HELLO WORLD </h1>",
+		text: "Matcha Verify",
+		html: "<h1> Good day User </h1> <br><hr> <p>Verify Account please</p>" + "<a href='"+verifykey+"'><input type='button' value='verify'></a>"
 	}
 	transporter.sendMail(mailOptions).then(info => {
 		console.log("message sent");
