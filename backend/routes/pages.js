@@ -98,7 +98,7 @@ router.get('/logout/user', function(req, res) {
 router.post('/login/user', function(req, res) {
 	login.login(req.body.email, req.body.password, function(loginres) {
 		if (loginres !== 'none'){
-			req.session.user = loginres['email'];
+			req.session.stuff = loginres;
 		}
 	});
 	res.redirect('/');
