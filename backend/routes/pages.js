@@ -4,6 +4,7 @@ const ListUsers = require('../functions/userList');
 const DelteUsers = require('../functions/userManagement');
 const FuncUser = require('../functions/userSave');
 const bcrypt = require('bcrypt');
+const mailer = require('../functions/sendmail');
 
 var message = {};
 
@@ -76,6 +77,11 @@ router.get('/admin', function(req, res) {
 		res.render('pages/profile/admin', { users: result, message });
 	});
 });
+
+router.get('/sendTest', function(req, res) {
+	mailer.sendVerifyEmail();
+	res.redirect('/');
+})
 
 router.get('*', function(req, res) {
 	res.render('pages/404');
