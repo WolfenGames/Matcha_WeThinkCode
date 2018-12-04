@@ -15,7 +15,7 @@ function userSave(email, password, uType, sub, url) {
 				location: null,
 				verification: hash,
 				isVerified: false,
-				email_subscription: sub,
+				email_subscription: sub === 'true' ? true : false,
 				email: email,
 				password: password,
 				age: 100,
