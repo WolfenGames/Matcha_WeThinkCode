@@ -7,13 +7,13 @@ const bcrypt = require('bcrypt');
 const verify = require('../functions/verify');
 const login = require('../functions/login');
 const url = require('url');
+const getIP = require('ipware')().get_ip;
 
 router.get('/', function(req, res) {
-	res.render('pages/index', { user: req.session.user });
-});
-
-router.get('/about', function(req, res) {
-	res.render('pages/about', { user: req.session.user });
+	if (!req.session.user)
+		res.redirect('/login');
+	else
+		res.render('pages/index', { user: req.session.user, setup: req.session.setup });
 });
 
 router.get('/profile', function(req, res) {
@@ -105,10 +105,7 @@ router.post('/login/user', function(req, res) {
 			var user = loginres;
 			if (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
 			|| !user['bio'] || !user['tags'])
-			{
-				console.log('Client not set up');
 				req.session.setup = false;
-			}
 			res.end('{"msg": "OK"}');
 		}else{
 			res.end('{"msg": "Needs verified or cant be found"}');

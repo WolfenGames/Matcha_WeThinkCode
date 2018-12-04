@@ -1,5 +1,6 @@
 const db = require("../database/db");
 const bcrypt = require("bcrypt");
+const mailer = require("./sendmail");
 "use strict";
 
 function login(email, password, cb) {
@@ -14,6 +15,8 @@ function login(email, password, cb) {
 			{
 				if (bcrypt.compareSync(password, res['password']))
 				{
+					if (res['email_subscription'])
+						mailer.sendNotificationEmail(res['email'], res['username'] === null ? 'User' : res['username']);
 					cb(res);
 				}
 				else
