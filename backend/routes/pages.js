@@ -9,6 +9,10 @@ const login = require('../functions/login');
 const url = require('url');
 const getIP = require('ipware')().get_ip;
 
+
+var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+var e_regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$/;
+
 router.get('/', function(req, res) {
 	if (!req.session.user)
 		res.redirect('/login');
@@ -39,36 +43,27 @@ router.get('/deleteall', function(req, res) {
 	res.redirect('/admin');
 });
 
-router.get('/create', function(req, res) {
-	message = {};
-	var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-	FuncUser.userSave('jwolf@student.wethinkcode.co.za', 'password', 'User', false, fullUrl);
-	res.redirect('/admin', {user: req.session.user});
-});
-
-router.get('/createAdmin', function(req, res) {
-	message = {};
-	var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-	if (!FuncUser.userSave('Admin@gmail.com', 'password', 'Admin', fullUrl))
-	{
-		message = {
-			error: "Can't create User -> Possible duplicate entry"
-		}
-	}
-	res.redirect('/admin', { user: req.session.user });
-});
-
 router.post('/User/Create', function(req, res) {
 	const oPass = req.body.oPassword;
 	const cPass = req.body.cPassword
 	const email = req.body.Email;
 	const sub = req.body.emailpref;
-	if (cPass == oPass) {
-		let hash = bcrypt.hashSync(oPass, 10);
-		var fullUrl = req.protocol + '://' + req.get('host') + "/verify?email=" + email + "&verify=";
-		FuncUser.userSave(email, hash, 'User', sub, fullUrl);
-	}
-	res.redirect(200, '/');
+	if (e_regex.test(email)) {
+		if (regex.test(oPass) && regex.test(cPass))
+		{
+			if (cPass == oPass) {
+				let hash = bcrypt.hashSync(oPass, 10);
+				var fullUrl = req.protocol + '://' + req.get('host') + "/verify?email=" + email + "&verify=";
+				FuncUser.userSave(email, hash, 'User', sub, fullUrl);
+				res.end('{"msg": "OK"}');
+			}else{
+				res.end('{"msg": "Passwords dont match"}');
+			}
+		}
+		else
+			res.end('{"msg": "Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}');
+	}else
+		res.end('{"msg": "Please enter a valid email"}');
 });
 
 router.get('/signup', function(req, res) {
@@ -99,18 +94,25 @@ router.get('/logout/user', function(req, res) {
 });
 
 router.post('/login/user', function(req, res) {
-	login.login(req.body.email, req.body.password, function(loginres) {
-		if (loginres){
-			req.session.user = loginres;
-			var user = loginres;
-			if (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
-			|| !user['bio'] || !user['tags'])
-				req.session.setup = false;
-			res.end('{"msg": "OK"}');
-		}else{
-			res.end('{"msg": "Needs verified or cant be found"}');
+	if (e_regex.test(req.body.email)){
+		if (regex.test(req.body.password)){
+			login.login(req.body.email, req.body.password, function(loginres) {
+				if (loginres){
+					req.session.user = loginres;
+					var user = loginres;
+					if (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
+					|| !user['bio'] || !user['tags'])
+						req.session.setup = false;
+					res.end('{"msg": "OK"}');
+				}else{
+					res.end('{"msg": "Needs verified or cant be found"}');
+				}
+			});
 		}
-	});
+		else
+			res.end('{"msg":"Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}')
+	}else
+		res.end('{"msg":"Please enter a valid email address"}')
 })
 
 router.get('*', function(req, res) {

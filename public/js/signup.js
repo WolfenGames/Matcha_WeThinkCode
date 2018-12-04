@@ -9,9 +9,15 @@ $(document).ready(function(){
 			oPassword: pass,
 			cPassword: cpass,
 			emailpref: emailpref			
-		}).done(function(res) {
-			
-			window.location.href = "/login";
+		}).done(function(data) {
+			var msg = jQuery.parseJSON(data);
+			if (msg['msg'] != "OK")
+			{
+				$("#error-modal").modal();
+				$('#errorModalTitle').html("Error has occured");
+				$("#errorModalText").html(msg['msg']);
+			}else
+				location.replace('/');
 		});
 	});
 });
