@@ -10,6 +10,7 @@ $(document).ready(function(){
 			cPassword: cpass,
 			emailpref: emailpref			
 		}).done(function(res) {
+			
 			window.location.href = "/login";
 		});
 	});

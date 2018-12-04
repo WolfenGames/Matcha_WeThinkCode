@@ -5,8 +5,15 @@ $(document).ready(function(){
 		$.post('/login/user', {
 			email: email,
 			password: pass
-		}).done(function() {
-            alert("Done");
+		}).done(function(data) {
+			var msg = jQuery.parseJSON(data);
+			if (msg['msg'] != "OK")
+			{
+				$("#error-modal").modal();
+				$('#errorModalTitle').html("Error has occured");
+				$("#errorModalText").html(msg['msg']);
+			}else
+				location.replace('/');
 		});
 	});
 });

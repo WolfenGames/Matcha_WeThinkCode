@@ -1,41 +1,39 @@
 const express = require('express');
 const router = express.Router();
 const ListUsers = require('../functions/userList');
-const DelteUsers = require('../functions/userManagement');
+const DeleteUsers = require('../functions/userManagement');
 const FuncUser = require('../functions/userSave');
 const bcrypt = require('bcrypt');
 const verify = require('../functions/verify');
 const login = require('../functions/login');
 const url = require('url');
 
-var message = {};
-
 router.get('/', function(req, res) {
-	res.render('pages/index');
+	res.render('pages/index', { user: req.session.user });
 });
 
 router.get('/about', function(req, res) {
-	res.render('pages/about');
+	res.render('pages/about', { user: req.session.user });
 });
 
 router.get('/profile', function(req, res) {
-		res.render('pages/profile/profile');
+		res.render('pages/profile/profile', { user: req.session.user });
 });
 
 router.get('/login', function(req, res) {
-	res.render('pages/profile/login');
+	res.render('pages/profile/login', { user: req.session.user });
 });
 
 router.get('/delete/:name', function(req, res) {
 	message = {};
-	DelteUsers.deleteByUsername(req.params.name, function(reason) {
+	Deleteuser.deleteByUsername(req.params.name, function(reason) {
 		message = { err: reason };
 	});
-	res.redirect('/admin');
+	res.redirect('/admin', { user: req.session.user });
 });
 
 router.get('/deleteall', function(req, res) {
-	DelteUsers.deleteAll();
+	DeleteUsers.deleteAll();
 	res.redirect('/admin');
 });
 
@@ -43,7 +41,7 @@ router.get('/create', function(req, res) {
 	message = {};
 	var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 	FuncUser.userSave('jwolf@student.wethinkcode.co.za', 'password', 'User', false, fullUrl);
-	res.redirect('/admin');
+	res.redirect('/admin', {user: req.session.user});
 });
 
 router.get('/createAdmin', function(req, res) {
@@ -55,7 +53,7 @@ router.get('/createAdmin', function(req, res) {
 			error: "Can't create User -> Possible duplicate entry"
 		}
 	}
-	res.redirect('/admin');
+	res.redirect('/admin', { user: req.session.user });
 });
 
 router.post('/User/Create', function(req, res) {
@@ -72,13 +70,16 @@ router.post('/User/Create', function(req, res) {
 });
 
 router.get('/signup', function(req, res) {
-	res.render('pages/profile/signup');
+	res.render('pages/profile/signup', { user: req.session.user });
 })
 
 router.get('/admin', function(req, res) {
-	ListUsers.ListUser((result) => {
-		res.render('pages/profile/admin', { users: result, message });
-	});
+	if (req.session.user){
+		ListUsers.ListUser((result) => {
+			res.render('pages/profile/admin', { results: result, user: req.session.user });
+		});
+	}else
+		res.redirect(404);
 });
 
 router.get('/verify', function(req, res) {
@@ -97,11 +98,20 @@ router.get('/logout/user', function(req, res) {
 
 router.post('/login/user', function(req, res) {
 	login.login(req.body.email, req.body.password, function(loginres) {
-		if (loginres !== 'none'){
-			req.session.stuff = loginres;
+		if (loginres){
+			req.session.user = loginres;
+			var user = loginres;
+			if (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
+			|| !user['bio'] || !user['tags'])
+			{
+				console.log('Client not set up');
+				req.session.setup = false;
+			}
+			res.end('{"msg": "OK"}');
+		}else{
+			res.end('{"msg": "Needs verified or cant be found"}');
 		}
 	});
-	res.redirect('/');
 })
 
 router.get('*', function(req, res) {

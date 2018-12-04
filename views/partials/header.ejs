@@ -6,8 +6,19 @@
 			<ul class="nav navbar-nav">
 				<li class="nav-item"><a class="nav-link" href="/">&lt;Home/&gt;</a></li>
 				<li class="nav-item"><a class="nav-link" href="/about">&lt;About/&gt;</a></li>
+				<%
+				if (!user) {%>
 				<li class="nav-item"><a class="nav-link" href="/login">&lt;Login/&gt;</a></li>
 				<li class="nav-item"><a class="nav-link" href="/signup">&lt;Signup/&gt;</a></li>
+				<% } else {
+					if (user['type'] === 'Admin') {
+						%>
+							<li class="nav-item"><a class="nav-link" href="/admin">&lt;Admin Panel/&gt;</a></li>
+						<%
+					} %>
+					<li class="nav-item"><a class="nav-link" href="/profile">&lt;Profile/&gt;</a></li>
+					<li class="nav-item"><a class="nav-link" href="/logout/user">&lt;Logout/&gt;</a></li>
+				<%}%>
 			</ul>
 		</div>
 	</div>
