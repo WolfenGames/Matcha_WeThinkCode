@@ -17,7 +17,9 @@ router.get('/about', function(req, res) {
 });
 
 router.get('/profile', function(req, res) {
-		res.render('pages/profile/profile', { user: req.session.user });
+	if (!req.session.user)
+		res.redirect(404);
+	res.render('pages/profile/profile', { user: req.session.user });
 });
 
 router.get('/login', function(req, res) {
