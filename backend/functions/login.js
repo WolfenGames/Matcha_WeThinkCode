@@ -20,9 +20,7 @@ function login(email, password, cb) {
 					cb(res);
 				}
 				else
-				{
 					cb(null);
-				}
 			}
 			else
 				cb(null);

@@ -1,5 +1,5 @@
 {
-	"name": "Matcha",
+	"name": "matcha",
 	"version": "0.1.0",
 	"scripts": {
 		"start:server": "nodemon server.js"
@@ -13,6 +13,7 @@
 		"express": "^4.16.4",
 		"express-session": "^1.15.6",
 		"http": "0.0.0",
+		"iplocation": "^6.0.4",
 		"ipware": "^1.0.0",
 		"mongodb": "^3.1.10",
 		"node": "^11.2.0",
