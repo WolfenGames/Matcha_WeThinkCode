@@ -48,22 +48,28 @@ router.post('/User/Create', function(req, res) {
 	const cPass = req.body.cPassword
 	const email = req.body.Email;
 	const sub = req.body.emailpref;
-	if (e_regex.test(email)) {
-		if (regex.test(oPass) && regex.test(cPass))
+	FuncUser.emailExists(email, function(result) {
+		if (!result)
 		{
-			if (cPass == oPass) {
-				let hash = bcrypt.hashSync(oPass, 10);
-				var fullUrl = req.protocol + '://' + req.get('host') + "/verify?email=" + email + "&verify=";
-				FuncUser.userSave(email, hash, 'User', sub, fullUrl);
-				res.end('{"msg": "OK"}');
-			}else{
-				res.end('{"msg": "Passwords dont match"}');
-			}
-		}
-		else
-			res.end('{"msg": "Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}');
-	}else
-		res.end('{"msg": "Please enter a valid email"}');
+			if (e_regex.test(email)) {
+				if (regex.test(oPass) && regex.test(cPass))
+				{
+					if (cPass == oPass) {
+						let hash = bcrypt.hashSync(oPass, 10);
+						var fullUrl = req.protocol + '://' + req.get('host') + "/verify?email=" + email + "&verify=";
+						FuncUser.userSave(email, hash, 'User', sub, fullUrl);
+						res.end('{"msg": "OK"}');
+					}else{
+						res.end('{"msg": "Passwords dont match"}');
+					}
+				}
+				else
+					res.end('{"msg": "Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}');
+			}else
+				res.end('{"msg": "Please enter a valid email"}');
+		}else
+			res.end('{"msg":"Email already in use"}');
+	});
 });
 
 router.get('/signup', function(req, res) {

@@ -38,6 +38,20 @@ function userSave(email, password, uType, sub, url) {
 	});
 }
 
+function emailExists(email, cb) {
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection('Users').findOne({email: email}).then(res => {
+			cb(res);
+		}).catch(err => {
+			console.log("Cant use email Exists => " + err);
+		})
+	}).catch(err => {
+		console.log("Can't connect to database called by emailExists(" + email + ")");
+	});
+}
+
 module.exports = {
-	userSave: userSave	
+	userSave: userSave,
+	emailExists: emailExists	
 }
