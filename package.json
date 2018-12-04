@@ -6,6 +6,9 @@
 	},
 	"description": "This is a student made project to simulate a dating website, ie tinder, zoosk",
 	"license": "",
+	"repository": {
+		"url": "https://github.com/WolfenGames/Matcha_WeThinkCode"
+	},
 	"dependencies": {
 		"bcrypt": "^3.0.2",
 		"body-parser": "^1.18.3",
