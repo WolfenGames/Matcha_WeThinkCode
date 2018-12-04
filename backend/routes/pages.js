@@ -67,7 +67,10 @@ router.post('/User/Create', function(req, res) {
 });
 
 router.get('/signup', function(req, res) {
-	res.render('pages/profile/signup', { user: req.session.user });
+	if (!req.session.user)
+		res.render('pages/profile/signup', { user: req.session.user });
+	else
+		res.redirect('/');
 })
 
 router.get('/admin', function(req, res) {
