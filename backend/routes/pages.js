@@ -138,7 +138,7 @@ router.post('/login/user', function(req, res) {
 						req.session.setup = false;
 					res.end('{"msg": "OK"}');
 				}else{
-					res.end('{"msg": "Needs verified or cant be found"}');
+					res.end('{"msg": "Needs to be verified or can\'t be found"}');
 				}
 			});
 		}
