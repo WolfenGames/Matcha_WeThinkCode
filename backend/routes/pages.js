@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const ListUsers = require('../functions/userList');
-const DeleteUsers = require('../functions/userManagement');
+const Deleteuser = require('../functions/userManagement');
 const FuncUser = require('../functions/userSave');
 const bcrypt = require('bcrypt');
 const verify = require('../functions/verify');
 const login = require('../functions/login');
 const url = require('url');
+const mailer = require('../functions/sendmail');
 const getIP = require('ipware')().get_ip;
 
 
@@ -23,23 +24,29 @@ router.get('/', function(req, res) {
 router.get('/profile', function(req, res) {
 	if (!req.session.user)
 		res.redirect(404);
-	res.render('pages/profile/profile', { user: req.session.user });
+	else
+		res.render('pages/profile/profile', { user: req.session.user });
 });
 
 router.get('/login', function(req, res) {
-	res.render('pages/profile/login', { user: req.session.user });
+	if (req.session.user)
+		res.redirect('/');
+	else
+		res.render('pages/profile/login', { user: req.session.user });
 });
 
-router.get('/delete/:name', function(req, res) {
-	message = {};
-	Deleteuser.deleteByUsername(req.params.name, function(reason) {
-		message = { err: reason };
-	});
-	res.redirect('/admin', { user: req.session.user });
+router.post('/delete', function(req, res) {
+	Deleteuser.deleteByUsername(req.body.email, function(reason) {
+		if (reason) {
+			res.end('{"msg": "OK", "extra": "You have deleted your account"}');
+		} else {
+			res.end('{"msg": "Failed", "extra": "Failed to delete your account"}');
+		}
+	});	
 });
 
 router.get('/deleteall', function(req, res) {
-	DeleteUsers.deleteAll();
+	Deleteuser.deleteAll();
 	res.redirect('/admin');
 });
 
@@ -102,6 +109,23 @@ router.get('/logout/user', function(req, res) {
 	res.redirect('/');
 });
 
+router.post('/login/resend', function(req, res) {
+	var email = req.body.email;
+	if (e_regex.test(email)){
+	if (email) {
+			var fullUrl = req.protocol + '://' + req.get('host') + "/verify?email=" + email + "&verify=";
+			mailer.resendVerify(email, fullUrl, function(ret) {
+				if (ret)
+					res.send('{"msg":"Verification sent"}');
+				else
+					res.send('{"msg":"No email associated with account"}');
+			});
+		}else
+			res.send('{"msg":"No email Provided"}');
+	}else
+		res.end('{"msg":"Please enter a valid email address"}')
+});
+
 router.post('/login/user', function(req, res) {
 	if (e_regex.test(req.body.email)){
 		if (regex.test(req.body.password)){
@@ -123,6 +147,23 @@ router.post('/login/user', function(req, res) {
 	}else
 		res.end('{"msg":"Please enter a valid email address"}')
 })
+
+router.post('/login/forgot', function(req, res) {
+	var email = req.body.email;
+	if (e_regex.test(email)){
+		if (email) {
+				var fullUrl = req.protocol + '://' + req.get('host') + "/verify?email=" + email + "&verify=";
+				mailer.sendPassForget(email, fullUrl, function(ret) {
+					if (ret)
+						res.send('{"msg":"Forgot password sent"}');
+					else
+						res.send('{"msg":"No email associated with account"}');
+				});
+			}else
+				res.send('{"msg":"No email Provided"}');
+	}else
+		res.end('{"msg":"Please enter a valid email address"}')
+});
 
 router.get('*', function(req, res) {
 	res.render('pages/404');

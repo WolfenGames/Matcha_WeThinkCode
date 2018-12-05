@@ -16,8 +16,12 @@ $(document).ready(function(){
 				$("#error-modal").modal();
 				$('#errorModalTitle').html("Error has occured");
 				$("#errorModalText").html(msg['msg']);
-			}else
-				location.replace('/');
+			}else{
+				$("#error-modal").modal();
+				$('#errorModalTitle').html("Account Created");
+				$("#errorModalText").html("Redirecting to Login page in 5s.<br/>Please check emails for verifcation link");
+				setInterval(function() {location.replace('/')}, 5000);
+			}
 		});
 	});
 });

@@ -1,5 +1,6 @@
 const mailer = require('nodemailer');
 const settings = require('./settings');
+const db = require('../database/db');
 "use strict";
 
 let transporter = mailer.createTransport({
@@ -9,6 +10,21 @@ let transporter = mailer.createTransport({
 			pass: settings.pass
 		}
 	});
+
+function sendPassForgetEmail(email, url)
+{
+	let mailOptions = {
+		from: "'Matcha' <jwolfmatcha@gmail.com>",
+		to: email + ", <"+email+">",
+		subject: "Matcha Forgot Password",
+		text: "Matcha Forgot password",
+		html: "<h1> Good day User </h1> <br><hr> <p>Click here to reset your password</p>" + "<a href='"+url+"'><input type='button' value='Here'></a>"
+	}
+	transporter.sendMail(mailOptions).then(info => {
+	}).catch(error => {
+		console.log ("Error " + error);
+	})
+}
 
 function sendVerifyEmail(email, verifykey) {
 	let mailOptions = {
@@ -38,7 +54,59 @@ function sendNotificationEmail(email, user) {
 	})
 }
 
+function resendVerify(email, url, cb)
+{
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(db => {
+		var dbo = db.db('Matcha');
+		var query = { email: email };
+		dbo.collection('Users').findOne(query).then(res => {
+		if (res) {
+			if (res['verification'])
+			{
+				sendVerifyEmail(email, url + res['verification']);
+				cb(true);
+			}else
+				cb(false);
+		} else 
+			cb(false);
+		}).catch(err => {
+			console.log("Cant connect to collection 'Users' due to => " + err);
+			cb(false);
+		})
+	}).catch(err => {
+		console.log("Cant connect to database called by resendVerify("+ email + ", ...)");
+		cb(false);
+	});
+}
+
+function sendPassForget(email, url, cb)
+{
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(db => {
+		var dbo = db.db('Matcha');
+		var query = { email: email };
+		dbo.collection('Users').findOne(query).then(res => {
+			if (res){
+				if (res['verification']) {
+					sendPassForgetEmail(email, url + res['verification']);
+					cb(true);
+				}else
+					cb(false);
+			}else {
+				cb(false);
+			}
+		}).catch(err => {
+			console.log("Cant connect to collection 'Users' due to => " + err);
+			cb(false);
+		})
+	}).catch(err => {
+		console.log("Cant connect to database called by resendVerify("+ email + ", ...)");
+		cb(false);
+	});
+}
+
 module.exports = {
+	sendPassForget: sendPassForget,
+	resendVerify: resendVerify,
 	sendVerifyEmail: sendVerifyEmail,
 	sendNotificationEmail: sendNotificationEmail 
 }

@@ -6,14 +6,49 @@
 <body class="container">
 	<header>
 		<% include ../../partials/header %>
+		<script src="/js/profile.js"></script>
 	</header>
+	<% 
+	if (user) {
+	var username = user['username'] === null ? 'You\'re in dire need of an username' : user['username'];
+	var img1 = user['picture.Picture1'];
+	var img2 = user['picture.Picture2'];
+	var img3 = user['picture.Picture3'];
+	var img4 = user['picture.Picture4'];
+	var img5 = user['picture.Picture5'];
+	var prof = user['Prof'];
+	var subscription = user['email_subscription'];
+	var biography = user['biography'];
+	var fame = user['fame'];
+	var age = user['age'];
+	var email = user['email'];
+	}
+	%>
 	<main>
+		<input type="hidden" id="hiddenemail" value="<%= email %>">
 		<div class="container bg-light rounded-bottom mh-100">
-			<h1>&lt;Profile Page/&gt;</h1>
+			<h3>&lt;Profile Page of "<%- username %>"/&gt;</h3>
 		<!--TEMPLATE-->
+		<div class="row">
+		<div class="col-lg-4">
+			<div class="column">
+				<img src="<%= prof %>" alt="Prof Pic" width="100%" height="auto">
+				<div class="form-group">
+				<label for="exampleFormControlTextarea1">&lt;About me/&gt;</label>
+				<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" style="resize: none"></textarea>
+			  </div>
+			  <input id="deleteprofile" type="button" class="btn btn-warning" value="Delete account">
+			</div>
+		<hr>
+		</div>
+		<div class="col-lg-8" style="background-color: green;">
+			<p> I am right coloumn </p>
+		</div>
+		</div>
 		<!--End Template-->
 		</div>
 	</main>
+		<% include ../../partials/error %>
 	<footer>
 		<% include ../../partials/footer %>
 	</footer>

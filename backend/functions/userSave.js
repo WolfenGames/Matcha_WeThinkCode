@@ -22,7 +22,17 @@ function userSave(email, password, uType, sub, url) {
 				fame: 0,
 				rating: 0,
 				type: uType,
-				tags: {}
+				tags: {},
+				picture: {
+					Picture1: null,
+					Picture2: null,
+					Picture3: null,
+					Picture4: null,
+					Picture5: null
+				},
+				Prof: null,
+				biography: null,
+
 			};
 			dbo.collection('Users').insertOne(saveOptions).then(res => {
 				mailer.sendVerifyEmail(email, url + hash);
@@ -31,7 +41,7 @@ function userSave(email, password, uType, sub, url) {
 				console.log("Error Saving user " + err);
 			});
 		}).catch(err => {
-			console.log("Cant hash becuase fucked up");
+			console.log("Cant hash becuase fucked up " + err);
 		});
 	}).catch(err => {
 		console.log("Error saving user " + err);
