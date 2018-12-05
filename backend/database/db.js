@@ -15,8 +15,23 @@ function createCollection(collectionName) {
 		console.log("Cant connect to database called by createCollection(" + collectionName + ") due to -> " + err);
 	})
 }
+
+function createTagsCollection() {
+	mongo.connect(url, { useNewUrlParser: true }).then(db => {
+		var dbo = db.db('Matcha');
+		dbo.createCollection("Tags").then(res => {
+			res.createIndex({Tag: 1}, {unique: true});
+			db.close();
+		}).catch(err => {
+			console.log("Cant create collection {Tags} due to " + err);
+		})
+	}).catch(err => {
+		console.log("Cant connect to database called by createTagsCollection due to " + err);
+	});
+}
 module.exports = {
 	url,
 	mongo,
-	createCollection: createCollection
+	createCollection: createCollection,
+	createTagsCollection: createTagsCollection
  };

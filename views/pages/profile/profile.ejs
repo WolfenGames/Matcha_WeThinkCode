@@ -6,75 +6,52 @@
 <body class="container">
 	<header>
 		<% include ../../partials/header %>
+		<script src="/js/profile.js"></script>
 	</header>
+	<% 
+	if (user) {
+		var username = user['username'] === null ? 'You\'re in dire need of an username' : user['username'];
+		var img1 = user['picture.Picture1'];
+		var img2 = user['picture.Picture2'];
+		var img3 = user['picture.Picture3'];
+		var img4 = user['picture.Picture4'];
+		var img5 = user['picture.Picture5'];
+		var prof = user['Prof'];
+		var subscription = user['email_subscription'];
+		var biography = user['biography'];
+		var fame = user['fame'];
+		var age = user['age'];
+		var email = user['email'];
+		var userType = user['type'];
+	}
+	%>
 	<main>
+		<input type="hidden" id="hiddenemail" value="<%= email %>">
 		<div class="container bg-light rounded-bottom mh-100">
-			<h1>&lt;Profile Page/&gt;</h1>
-			<!--Prof pic-->
-			<div class="d-flex flex-row">
-			<div class="d-flex flex-column w-25">
-				<div class="">
-					<img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:240px; height: 240px; background-color: blue;">
-				</div>
-				<hr>
-				<h3>&lt;About me/&gt;</h3>
-				<textarea cols="20" rows="5" style="resize: none;">example text</textarea>
+			<h3>&lt;Profile Page of "<%- username %>"/&gt;</h3>
+			<p>&lt;<%= email %>/&gt;</p>
+			<p>Type: <%= userType %></p>
+		<!--TEMPLATE-->
+		<div class="row">
+		<div class="col-lg-4">
+			<div class="column">
+				<img src="<%= prof %>" alt="Prof Pic" width="100%" height="auto">
+				<div class="form-group">
+				<label for="exampleFormControlTextarea1">&lt;About me/&gt;</label>
+				<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" style="resize: none"></textarea>
+			  </div>
+			  <input id="deleteprofile" type="button" class="btn btn-warning" value="Delete account">
 			</div>
-			<div class="w-75">
-				<div class="d-flex flex-row">
-					<div class="p-2 d-flex flex-column">
-						<img src="" alt="Image 1">
-						<button class="btnz">Upload image 1</button>
-					</div>
-					<div class="p-2 d-flex flex-column">
-						<img src="" alt="Image 2">
-						<button class="btnz">Upload image 2</button>
-					</div>
-					<div class="p-2 d-flex flex-column">
-						<img src="" alt="Image 3">
-						<button class="btnz">Upload image 3</button>
-					</div>
-					<div class="p-2 d-flex flex-column">
-						<img src="" alt="Image 4">
-						<button class="btnz">Upload image 4</button>
-					</div>
-					<div class="p-2 d-flex flex-column">
-						<img src="" alt="Image 5">
-						<button class="btnz">Upload image 5</button>
-					</div>
-				</div>
-				<hr>
-				<div class="d-flex flex-column">
-					<div>
-						<div class="input-group mb-3">
-							<div class="input-group-prepend">
-								<label class="input-group-text" for="inputGroupSelect01">Sex</label>
-							</div>
-							<select class="custom-select" id="inputGroupSelect01">
-								<option selected>Choose...</option>
-								<option value="1">Male</option>
-								<option value="2">Female</option>
-								<option value="3">N/A</option>
-							</select>
-						</div>
-
-						<div class="input-group mb-3">
-								<div class="input-group-prepend">
-									<label class="input-group-text" for="inputGroupSelect01">Sexual prefernce</label>
-								</div>
-								<select class="custom-select" id="inputGroupSelect01">
-									<option selected>Choose...</option>
-									<option value="1">Heterosexual</option>
-									<option value="2">Homosexual</option>
-									<option value="3">Bisexual</option>
-								</select>
-							</div>
-					</div>
-				</div>
-			</div>
-			</div>
+		<hr>
+		</div>
+		<div class="col-lg-8" style="background-color: green;">
+			<p> I am right coloumn </p>
+		</div>
+		</div>
+		<!--End Template-->
 		</div>
 	</main>
+		<% include ../../partials/error %>
 	<footer>
 		<% include ../../partials/footer %>
 	</footer>

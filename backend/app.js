@@ -28,5 +28,6 @@ app.use((req, res, next) => {
 
 app.use("/", pageRoutes);
 DB.createCollection('Users');
+DB.createTagsCollection();
 
 module.exports = app;

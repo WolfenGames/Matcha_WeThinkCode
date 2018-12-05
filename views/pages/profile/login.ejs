@@ -6,6 +6,7 @@
 <body class="container">
 	<header>
 		<% include ../../partials/header %>
+		<script src="js/login.js"></script>
 	</header>
 	<main>
 		<div class="jumbotron">
@@ -22,10 +23,14 @@
 					<small id="helpId" class="form-text text-muted">Password requires atleast 1 Uppercase, 1 Lowercase, 1 number and 1 special character</small>
 				</div>
 				<hr>
-				<button id="Login-Button" type="submit" class="btn btn-info">&lt;Submit/&gt;</button>
+				<div class="column">
+					<button id="Login-Button" type="submit" class="btn btn-info">&lt;Login/&gt;</button>
+					<button id="Resend-Button" type="submit" class="btn btn-info">&lt;Resend Verification/&gt;</button>
+					<button id="Forgot-Button" type="submit" class="btn btn-info">&lt;Forgot Password/&gt;</button>
+				</div>
 		</div>
 	</main>
-
+		<% include ../../partials/error %>
 	<footer>
 		<% include ../../partials/footer %>
 	</footer>

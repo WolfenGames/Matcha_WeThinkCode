@@ -9,9 +9,6 @@
 	</header>
 	<main>
 		<div class="jumbotron">
-			<% if (message) { %>
-				<p><%= message['error'] %></p>
-				<% } %>
 			<h1>Admin Page</h1>
 			<div class="container">
 				<input class="btn btn-primary" type='submit' value="Create User" onclick="location.href='/create'"> <br>
@@ -19,16 +16,16 @@
 				<input class="btn btm-sucess" type="submit" value="Create Dummy Admin" onclick="location.href='/createAdmin'">
 			</div>
 			<% 
-			var usercount = users.length;
-			if (users){ 
+			var usercount = results.length;
+			if (results){ 
 				%>
 			<p>Total Users:: <%= usercount %></p>
 			<% for (var i = 0; i < usercount; i++){ %>
 				<% 
-				var uid = users[i]['_id']; 
-				var uname = users[i]['username'];
-				var pass = users[i]['password'];
-				var type = users[i]['type'];
+				var uid = results[i]['_id']; 
+				var uname = results[i]['username'];
+				var pass = results[i]['password'];
+				var type = results[i]['type'];
 				%>
 				<p>
 					Username: <%= uname; %> Type : <%= type %>
