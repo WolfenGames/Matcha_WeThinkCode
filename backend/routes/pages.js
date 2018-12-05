@@ -9,7 +9,7 @@ const login			= require('../functions/login');
 const url			= require('url');
 const mailer		= require('../functions/sendmail');
 const aux			= require('../functions/auxiliary');
-const getIP			= require('ipware')().get_ip;
+const geoip			= require('geoip-lite');
 
 
 var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -17,9 +17,6 @@ var e_regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,
 var u_regex = /^[a-zA-Z0-9 ]{5,}$/;
 
 router.get('/', function(req, res) {
-	aux.getIp(result_ip => {
-		console.log(getIP(result_ip));
-	})
 	if (!req.session.user)
 		res.redirect('/login');
 	else
@@ -140,6 +137,10 @@ router.post('/login/user', function(req, res) {
 					var user = loginres;
 					if (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
 					|| !user['bio'] || !user['tags'])
+						aux.getIp(result => {
+							var loc = geoip.lookup(result);
+							req.session.loc = loc;
+						});
 						req.session.setup = false;
 					res.end('{"msg": "OK"}');
 				}else{
