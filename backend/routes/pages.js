@@ -17,6 +17,9 @@ var e_regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,
 var u_regex = /^[a-zA-Z0-9 ]{5,}$/;
 
 router.get('/', function(req, res) {
+	aux.getIp(result_ip => {
+		console.log(getIP(result_ip));
+	})
 	if (!req.session.user)
 		res.redirect('/login');
 	else
