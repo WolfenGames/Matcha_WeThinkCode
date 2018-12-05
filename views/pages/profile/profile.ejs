@@ -10,24 +10,27 @@
 	</header>
 	<% 
 	if (user) {
-	var username = user['username'] === null ? 'You\'re in dire need of an username' : user['username'];
-	var img1 = user['picture.Picture1'];
-	var img2 = user['picture.Picture2'];
-	var img3 = user['picture.Picture3'];
-	var img4 = user['picture.Picture4'];
-	var img5 = user['picture.Picture5'];
-	var prof = user['Prof'];
-	var subscription = user['email_subscription'];
-	var biography = user['biography'];
-	var fame = user['fame'];
-	var age = user['age'];
-	var email = user['email'];
+		var username = user['username'] === null ? 'You\'re in dire need of an username' : user['username'];
+		var img1 = user['picture.Picture1'];
+		var img2 = user['picture.Picture2'];
+		var img3 = user['picture.Picture3'];
+		var img4 = user['picture.Picture4'];
+		var img5 = user['picture.Picture5'];
+		var prof = user['Prof'];
+		var subscription = user['email_subscription'];
+		var biography = user['biography'];
+		var fame = user['fame'];
+		var age = user['age'];
+		var email = user['email'];
+		var userType = user['type'];
 	}
 	%>
 	<main>
 		<input type="hidden" id="hiddenemail" value="<%= email %>">
 		<div class="container bg-light rounded-bottom mh-100">
 			<h3>&lt;Profile Page of "<%- username %>"/&gt;</h3>
+			<p>&lt;<%= email %>/&gt;</p>
+			<p>Type: <%= userType %></p>
 		<!--TEMPLATE-->
 		<div class="row">
 		<div class="col-lg-4">

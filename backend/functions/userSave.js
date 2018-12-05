@@ -30,7 +30,7 @@ function userSave(email, password, uType, sub, url) {
 					Picture4: null,
 					Picture5: null
 				},
-				Prof: null,
+				Prof: '/images/pexels-photo-220453.jpeg',
 				biography: null,
 
 			};
