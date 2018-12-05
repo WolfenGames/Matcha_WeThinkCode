@@ -139,7 +139,10 @@ router.post('/login/user', function(req, res) {
 					|| !user['bio'] || !user['tags'])
 						aux.getIp(result => {
 							var loc = geoip.lookup(result);
-							req.session.loc = loc;
+							req.session.loc = loc.ll;
+							manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
+								
+							});
 						});
 						req.session.setup = false;
 					res.end('{"msg": "OK"}');
