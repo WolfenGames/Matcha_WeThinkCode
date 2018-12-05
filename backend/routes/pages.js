@@ -14,6 +14,7 @@ const getIP			= require('ipware')().get_ip;
 
 var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 var e_regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$/;
+var u_regex = /^[a-zA-Z0-9 ]{5,}$/;
 
 router.get('/', function(req, res) {
 	if (!req.session.user)
@@ -191,7 +192,7 @@ router.post('/updateUsername', function(req, res) {
 	if (req.session.user)
 	{
 		var newusername = req.body.username;
-		if (newusername && newusername.length > 0)
+		if (newusername && newusername.length > 0 && u_regex.test(newusername))
 		{
 			var query = { email: req.session.user.email};
 			var set = { $set: { username: newusername }};
@@ -204,7 +205,7 @@ router.post('/updateUsername', function(req, res) {
 					res.end('{"msg": "Username could not be updated"}')
 			});
 		}else
-			res.end('{"msg":"Error", "extra":"Username can\'t be empty or null"}');
+			res.end('{"msg":"Error", "extra":"Username can\'t be empty or null, Only spaces no special characters"}');
 	}else
 		res.end('{"msg":"Need to be logged in to do this"}');
 });
