@@ -31,6 +31,7 @@ $(document).ready(function(){
 	var usernamehold;
 	$('.username-label').click(function () {
 		usernamehold = $('.username-label').text();
+		console.log(usernamehold);
 		$(this).hide();
 		$(this).siblings('.username-edit-input').val(usernamehold);
 		$(this).siblings('.username-edit-input').text(usernamehold);
@@ -40,14 +41,13 @@ $(document).ready(function(){
     
     $('.username-edit-input').focusout(function() {
 		$(this).hide();
-		if ($(this).val() === null)
-			$(this).text(usernamehold);
 		$(this).siblings('.username-label').text($(this).val()).show();
 		var username = $(".username-label").text();
 		$.post('/updateUsername', {
 			username: username
 		}).done(function(data) {
 			var msg = jQuery.parseJSON(data);
+			console.log(msg);
 			if (msg['msg'] != "OK")
 			{
 				$("#error-modal").modal();
@@ -56,6 +56,7 @@ $(document).ready(function(){
 					$("#errorModalText").html(msg['msg'] + "\nReason: " + msg['extra']);
 				else
 					$("#errorModalText").html(msg['msg']);
+				$('.username-label').text(usernamehold);
 			}
 		});
 	});
@@ -90,5 +91,24 @@ $(document).ready(function(){
 					$("#errorModalText").html(msg['msg']);
 			}
 		});
-    });
+	});
+	
+	//Biography update
+	$('#biography').focusout(function(){
+		var biographydata = $(this).val();
+		$.post('/updateBiography', {
+			biography: biographydata
+		}).done(function(data) {
+			var msg = jQuery.parseJSON(data);
+			if (msg['msg'] != "OK")
+			{
+				$("#error-modal").modal();
+				$('#errorModalTitle').html("Error has occured");
+				if (msg['extra'])
+					$("#errorModalText").html(msg['msg'] + "\nReason: " + msg['extra']);
+				else
+					$("#errorModalText").html(msg['msg']);
+			}
+		});
+	});
 });

@@ -1,14 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const ListUsers = require('../functions/userList');
-const manageUser = require('../functions/userManagement');
-const FuncUser = require('../functions/userSave');
-const bcrypt = require('bcrypt');
-const verify = require('../functions/verify');
-const login = require('../functions/login');
-const url = require('url');
-const mailer = require('../functions/sendmail');
-const getIP = require('ipware')().get_ip;
+const express		= require('express');
+const router		= express.Router();
+const ListUsers		= require('../functions/userList');
+const manageUser	= require('../functions/userManagement');
+const FuncUser		= require('../functions/userSave');
+const bcrypt		= require('bcrypt');
+const verify		= require('../functions/verify');
+const login			= require('../functions/login');
+const url			= require('url');
+const mailer		= require('../functions/sendmail');
+const aux			= require('../functions/auxiliary');
+const getIP			= require('ipware')().get_ip;
 
 
 var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -169,16 +170,19 @@ router.post('/updateEmail', function(req, res) {
 	if (req.session.user)
 	{
 		var newEmail = req.body.email;
-		var query = { email: req.session.user.email};
-		var set = { $set: { email: newEmail }};
-		manageUser.updateEmail(query, set, function(result) {
-			if (result) {
-				res.end('{"msg": "OK"}');
-				req.session.user.email = newEmail;
-			}
-			else
-				res.end('{"msg": "Email could not be updated"}')
-		});
+		if (e_regex.test(newEmail)) {
+			var query = { email: req.session.user.email};
+			var set = { $set: { email: newEmail }};
+			manageUser.updateUserOne(query, set, function(result) {
+				if (result) {
+					req.session.user.email = newEmail;
+					res.end('{"msg": "OK"}');
+				}
+				else
+					res.end('{"msg": "Email could not be updated"}')
+			});
+		}else
+			res.end('{"msg":"Error", "extra":"Needs to be a valid email adress"}');
 	}else
 		res.end('{"msg":"Need to be logged in to do this"}');
 });
@@ -187,15 +191,39 @@ router.post('/updateUsername', function(req, res) {
 	if (req.session.user)
 	{
 		var newusername = req.body.username;
-		var query = { email: req.session.user.email};
-		var set = { $set: { username: newusername }};
-		manageUser.updateUserOne(query, set, function(result) {
-			if (result) {
-				req.session.user.username = newusername;
-				res.end('{"msg": "OK"}');
-			}
-			else
+		if (newusername && newusername.length > 0)
+		{
+			var query = { email: req.session.user.email};
+			var set = { $set: { username: newusername }};
+			manageUser.updateUserOne(query, set, function(result) {
+				if (result) {
+					req.session.user.username = newusername;
+					res.end('{"msg": "OK"}');
+				}
+				else
+					res.end('{"msg": "Username could not be updated"}')
+			});
+		}else
+			res.end('{"msg":"Error", "extra":"Username can\'t be empty or null"}');
+	}else
+		res.end('{"msg":"Need to be logged in to do this"}');
+});
+
+router.post('/updateBiography', function(req, res) {
+	if (req.session.user)
+	{
+		var biography = req.body.biography;
+		aux.text_truncate(biography, 150, function(result_string) {
+			var query = { email: req.session.user.email};
+			var set = { $set: { biography: result_string }};
+			manageUser.updateUserOne(query, set, function(result) {
+				if (result) {
+					req.session.user.biography = result_string;
+					res.end('{"msg": "OK"}');
+				}
+				else
 				res.end('{"msg": "Username could not be updated"}')
+			});
 		});
 	}else
 		res.end('{"msg":"Need to be logged in to do this"}');
