@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ListUsers = require('../functions/userList');
-const Deleteuser = require('../functions/userManagement');
+const manageUser = require('../functions/userManagement');
 const FuncUser = require('../functions/userSave');
 const bcrypt = require('bcrypt');
 const verify = require('../functions/verify');
@@ -36,7 +36,7 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/delete', function(req, res) {
-	Deleteuser.deleteByUsername(req.body.email, function(reason) {
+	manageUser.deleteByUsername(req.body.email, function(reason) {
 		if (reason) {
 			res.end('{"msg": "OK", "extra": "You have deleted your account"}');
 		} else {
@@ -46,7 +46,7 @@ router.post('/delete', function(req, res) {
 });
 
 router.get('/deleteall', function(req, res) {
-	Deleteuser.deleteAll();
+	manageUser.deleteAll();
 	res.redirect('/admin');
 });
 
@@ -163,6 +163,42 @@ router.post('/login/forgot', function(req, res) {
 				res.send('{"msg":"No email Provided"}');
 	}else
 		res.end('{"msg":"Please enter a valid email address"}')
+});
+
+router.post('/updateEmail', function(req, res) {
+	if (req.session.user)
+	{
+		var newEmail = req.body.email;
+		var query = { email: req.session.user.email};
+		var set = { $set: { email: newEmail }};
+		manageUser.updateEmail(query, set, function(result) {
+			if (result) {
+				res.end('{"msg": "OK"}');
+				req.session.user.email = newEmail;
+			}
+			else
+				res.end('{"msg": "Email could not be updated"}')
+		});
+	}else
+		res.end('{"msg":"Need to be logged in to do this"}');
+});
+
+router.post('/updateUsername', function(req, res) {
+	if (req.session.user)
+	{
+		var newusername = req.body.username;
+		var query = { email: req.session.user.email};
+		var set = { $set: { username: newusername }};
+		manageUser.updateUserOne(query, set, function(result) {
+			if (result) {
+				req.session.user.username = newusername;
+				res.end('{"msg": "OK"}');
+			}
+			else
+				res.end('{"msg": "Username could not be updated"}')
+		});
+	}else
+		res.end('{"msg":"Need to be logged in to do this"}');
 });
 
 router.get('*', function(req, res) {

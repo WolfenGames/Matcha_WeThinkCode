@@ -11,6 +11,7 @@
 	<% 
 	if (user) {
 		var username = user['username'] === null ? 'You\'re in dire need of an username' : user['username'];
+		console.log(user);
 		var img1 = user['picture.Picture1'];
 		var img2 = user['picture.Picture2'];
 		var img3 = user['picture.Picture3'];
@@ -28,8 +29,18 @@
 	<main>
 		<input type="hidden" id="hiddenemail" value="<%= email %>">
 		<div class="container bg-light rounded-bottom mh-100">
-			<h3>&lt;Profile Page of "<%- username %>"/&gt;</h3>
-			<p>&lt;<%= email %>/&gt;</p>
+			<div class="row">
+				<h3>&lt;Profile Page of "</h3>
+					<div class="control-group">
+						<h3 for="name" class="username-label"><%= username %></h3>
+						<input type="text" class="username-edit-input w-100" style="display: none;" />
+					</div>
+				<h3>"/&gt;</h3>
+			</div>
+			<p>&lt;
+				<label class="email-label"><%= email %></label>
+				<input type="text" class="email-edit-input w-50" style="display: none;">
+			/&gt;</p>
 			<p>Type: <%= userType %></p>
 		<!--TEMPLATE-->
 		<div class="row">
@@ -52,7 +63,7 @@
 				</div>
 			<hr>
 			</div>
-			<div class="col-lg-8" style="background-color: lightblue;">
+			<div class="col-lg-8" style="background-color: lightblue; opacity: 0.1;">
 				<p> I am right coloumn </p>
 			</div>
 		</div>

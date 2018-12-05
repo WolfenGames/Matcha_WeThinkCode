@@ -30,7 +30,23 @@ function deleteAll() {
 	});
 }
 
+function updateUserOne(query, set, cb){
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(db => {
+		var dbo = db.db('Matcha');
+		dbo.collection('Users').updateOne(query, set).then(res => {
+			cb(true);
+		}).catch(err => {
+			console.log("Cant update called by updateUserOne("+query+","+set+") due to => " + err);
+			cb(false);
+		});
+	}).catch(err => {
+		console.log("Can't connect to database called by updateUserOne(" + query + ", " + set + ") due to => " + err);
+		cb(false);
+	});
+}
+
 module.exports = {
 	deleteByUsername: deleteByUsername,
-	deleteAll: deleteAll
+	deleteAll: deleteAll,
+	updateUserOne: updateUserOne
 }
