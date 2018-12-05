@@ -35,20 +35,30 @@
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="column">
-					<img src="<%= prof %>" alt="Prof Pic" width="100%" height="auto">
+					<img src="<%= prof %>" alt="Prof Pic" class="img-thumbnail">
+					<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+					<div class="d-flex justify-content-center flex-row-reverse">
+						<span id="fameRating" class="fa fa-star checked"></span>
+						<span id="fameRating" class="fa fa-star checked"></span>
+						<span id="fameRating" class="fa fa-star checked"></span>
+						<span id="fameRating" class="fa fa-star"></span>
+						<span id="fameRating" class="fa fa-star"></span>
+					</div>
 					<div class="form-group">
-					<label for="exampleFormControlTextarea1">&lt;About me/&gt;</label>
-					<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" style="resize: none"></textarea>
+					<label for="biography">&lt;About me/&gt;</label>
+					<textarea class="form-control" id="biography" rows="3" style="resize: none" maxlength="150"></textarea>
+					<label for="biography" id="biographylength"></label>
 				</div>
 				</div>
 			<hr>
 			</div>
-			<div class="col-lg-8" style="background-color: green;">
+			<div class="col-lg-8" style="background-color: lightblue;">
 				<p> I am right coloumn </p>
 			</div>
 		</div>
+		<hr>
 		<div class="row">
-			<input id="deleteprofile" type="button" class="btn btn-warning w-100" value="Delete account">
+			<input id="deleteprofile" type="button" class="btn btn-warning w-100 rounded-bottom" value="Delete account">
 		</div>
 		<!--End Template-->
 		</div>

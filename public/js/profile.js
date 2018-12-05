@@ -21,4 +21,8 @@ $(document).ready(function(){
 			}
 		});
 	});
+	$('#biographylength').html("&lt;" + (150 - $("#biography").val().length).toString() + " characters left/&gt;");
+	$('#biography').bind('input propertychange', function() {
+		$('#biographylength').html("&lt;" + (150 - $("#biography").val().length).toString() + " characters left/&gt;");
+  });
 });
