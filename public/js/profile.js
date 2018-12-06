@@ -216,13 +216,33 @@ $(document).ready(function(){
 		});
 	});
 
-	//DOB script
-	var date_input=$('input[name="date"]'); //our date input has the name "date"
-	var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-    date_input.datepicker({
-            format: 'mm/dd/yyyy',
-            container: container,
-            todayHighlight: true,
-            autoclose: true,
-        });
+	var sending = true;
+	$('#tags').keypress(function (e) {
+		if (e.which == 13) {
+			var tag = $(this).val();
+			console.log("Sending => " + sending);
+			console.log("Tag -> " + tag);
+			if (sending)
+			{
+				sending = !sending;
+				$.post('/tags/set', {
+					tag: tag
+				}).done((result) => {
+					sending = !sending;
+				});
+			}
+		}
+	});
+
+	$('#tags').change(function(e) {
+		var availableTags = [];
+		$.get('/tags/get').done(result => {
+			(result).forEach(element => {
+				console.log(element["Tag"]);
+				availableTags.push(element["Tag"]);
+			});
+		})
+		$(this).autocomplete({source: availableTags});
+	})
+
 });

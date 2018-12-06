@@ -87,69 +87,77 @@
 						<label class="lastname-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your lastname!"><%= lastname %></label>
 						<input type="text" class="lastname-edit-input w-25" style="display: none;">
 					/&gt;</p>
-					<!--Date input-->
-					<div class="form-group">
-						<label class="control-label" for="date">&lt;Date of birth/&gt;</label>
-						<input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text"/>
-					</div>
-				<div class="coloumn">
+					<div class="coloumn">
+							<!--Date input-->
+							<form>
+								<div class="form-group">
+									<label class="control-label" for="date">&lt;Date of birth/&gt;</label>
+									<input class="form-control" id="date" name="date" type="date" min="1900-01-00" max="2000-01-00"/>
+								</div>
+							</form>
 					<!--Sexuality-->
-					<div class="input-group mb-3">
-						<div class="input-group-prepend">
-							<label class="input-group-text" for="SexualityGroup">Sexuality</label>
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="SexualityGroup">Sexuality</label>
+							</div>
+							<select class="custom-select" id="SexualityGroup">
+							<% if (Sexuality === '1') { %>
+								<option value="1" selected>Bisexual</option>
+							<% } else { %>
+								<option value="1" >Bisexual</option>
+							<% } %>
+							<% if (Sexuality === '2') { %>
+								<option value="2" selected>Heterosexual</option>
+							<% }else{ %>
+								<option value="2" >Heterosexual</option>
+							<% } %>
+							<% if (Sexuality === '3') { %>
+								<option value="3" selected>Homosexual</option>
+							<% } else { %>
+								<option value="3" >Homosexual</option>
+							<% } %>
+							</select>
 						</div>
-						<select class="custom-select" id="SexualityGroup">
-						<% if (Sexuality === '1') { %>
-							<option value="1" selected>Bisexual</option>
+						<!--Gender-->
+						<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<label class="input-group-text" for="GenderGroup">Gender&nbsp;&nbsp;&nbsp;</label>
+						</div>
+						<select class="custom-select" id="GenderGroup">
+						<% if (Gender === '1') { %>
+							<option value="1" selected>Female</option>
 						<% } else { %>
-							<option value="1" >Bisexual</option>
+							<option value="1" >Female</option>
 						<% } %>
-						<% if (Sexuality === '2') { %>
-							<option value="2" selected>Heterosexual</option>
+						<% if (Gender === '2') { %>
+							<option value="2" selected>Male</option>
 						<% }else{ %>
-							<option value="2" >Heterosexual</option>
+							<option value="2" >Male</option>
 						<% } %>
-						<% if (Sexuality === '3') { %>
-							<option value="3" selected>Homosexual</option>
+						<% if (Gender === '3') { %>
+							<option value="3" selected>Other</option>
 						<% } else { %>
-							<option value="3" >Homosexual</option>
+							<option value="3" >Other</option>
 						<% } %>
 						</select>
-					</div>
-					<!--Gender-->
-					<div class="input-group mb-3">
-					<div class="input-group-prepend">
-						<label class="input-group-text" for="GenderGroup">Gender&nbsp;&nbsp;&nbsp;</label>
-					</div>
-					<select class="custom-select" id="GenderGroup">
-					<% if (Gender === '1') { %>
-						<option value="1" selected>Female</option>
-					<% } else { %>
-						<option value="1" >Female</option>
-					<% } %>
-					<% if (Gender === '2') { %>
-						<option value="2" selected>Male</option>
-					<% }else{ %>
-						<option value="2" >Male</option>
-					<% } %>
-					<% if (Gender === '3') { %>
-						<option value="3" selected>Other</option>
-					<% } else { %>
-						<option value="3" >Other</option>
-					<% } %>
-					</select>
-				</div>
 				</div>
 			</div>
 		</div>
 		<hr>
+			<div class="w-100 row">
+				<label class="w-25" for="tags">Likes: </label>
+				<input type="text" id="tags" class="w-75">
+			</div>
+		</div>
+		</div>
+		<hr>
 		<p class='w-100 text-center'>To edit your profile, click on the element you wish to edit</p>
 		<hr>
+		<div class="row">
+			<input class="w-100 btn btn-danger" type="button" id="" value="Delete profile">
+		</div>
+	</div>
 		<!--End Template-->
-	</div>
-	<div class="row">
-		<input class="w-100 btn" type="button" id="" value="Delete profile">
-	</div>
 	</main>
 		<% include ../../partials/error %>
 	<footer>

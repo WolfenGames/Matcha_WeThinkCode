@@ -10,6 +10,7 @@ const url			= require('url');
 const mailer		= require('../functions/sendmail');
 const aux			= require('../functions/auxiliary');
 const geoip			= require('geoip-lite');
+const tags			= require('../functions/tags');
 
 
 var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -321,6 +322,25 @@ router.post('/update/Lastname', function(req, res) {
 		});
 	}else
 		res.end('{"msg":"Need to be logged in to do this"}');
+});
+
+router.get('/tags/get', function(req, res) {
+	tags.getTags(result => {
+		if (result)
+			res.json(result);
+		else
+			res.json({});
+	})
+});
+
+router.post('/tags/set', function(req, res) {
+	console.log(req.body);
+	tags.setTags(req.body.tag);
+	res.send('{"msg":"OK"}');
+});
+
+router.post('*', function(req, res) {
+	res.end('{"msg":"404"}');
 });
 
 router.get('*', function(req, res) {
