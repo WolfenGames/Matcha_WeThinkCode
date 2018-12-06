@@ -1,4 +1,9 @@
 $(document).ready(function(){
+
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip()
+	  })
+
 	//Delete profile section
 	$('#deleteprofile').click(function() {
 		var email = $("#hiddenemail").val();

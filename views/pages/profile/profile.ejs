@@ -35,13 +35,13 @@
 			<div class="row">
 				<h3>&lt;Profile Page of "</h3>
 					<div class="control-group">
-						<h3 for="name" class="username-label" data-toggle="tooltip" data-placement="top" title="Click here to change your username!"><%= username %></h3>
-						<input type="text" class="username-edit-input w-100" style="display: none;" />
+						<h3 for="name" class="username-label" data-toggle="tooltip" data-placement="right" title="Click here to change your username!"><%= username %></h3>
+						<input type="text" class="username-edit-input" style="display: none;" />
 					</div>
 				<h3>"/&gt;</h3>
 			</div>
 			<p>&lt;
-				<label class="email-label"><%= email %></label>
+				<label class="email-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!"><%= email %></label>
 				<input type="text" class="email-edit-input w-50" style="display: none;">
 			/&gt;</p>
 			<p>Type: <%= userType %></p>
@@ -69,11 +69,11 @@
 			<div class="col-lg-8">
 				<div class="coloumn">
 					<p>&lt;
-						<label class="firstname-label"><%= firstname %></label>
+						<label class="firstname-label" data-toggle="tooltip" data-placement="right" title="Click here to change your firstname!"><%= firstname %></label>
 						<input type="text" class="firstname-edit-input w-25" style="display: none;">
 					/&gt;</p>
 					<p>&lt;
-						<label class="lastname-label"><%= lastname %></label>
+						<label class="lastname-label" data-toggle="tooltip" data-placement="right" title="Click here to change your lastname!"><%= lastname %></label>
 						<input type="text" class="lastname-edit-input w-25" style="display: none;">
 					/&gt;</p>
 				</div>
