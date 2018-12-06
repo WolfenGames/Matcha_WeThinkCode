@@ -174,7 +174,7 @@ router.post('/login/forgot', function(req, res) {
 		res.end('{"msg":"Please enter a valid email address"}')
 });
 
-router.post('/updateEmail', function(req, res) {
+router.post('/update/Email', function(req, res) {
 	if (req.session.user)
 	{
 		var newEmail = req.body.email;
@@ -195,7 +195,7 @@ router.post('/updateEmail', function(req, res) {
 		res.end('{"msg":"Need to be logged in to do this"}');
 });
 
-router.post('/updateUsername', function(req, res) {
+router.post('/update/Username', function(req, res) {
 	if (req.session.user)
 	{
 		var newusername = req.body.username;
@@ -217,7 +217,7 @@ router.post('/updateUsername', function(req, res) {
 		res.end('{"msg":"Need to be logged in to do this"}');
 });
 
-router.post('/updateBiography', function(req, res) {
+router.post('/update/Biography', function(req, res) {
 	if (req.session.user)
 	{
 		var biography = req.body.biography;
@@ -230,8 +230,62 @@ router.post('/updateBiography', function(req, res) {
 					res.end('{"msg": "OK"}');
 				}
 				else
-				res.end('{"msg": "Username could not be updated"}')
+					res.end('{"msg": "Username could not be updated"}')
 			});
+		});
+	}else
+		res.end('{"msg":"Need to be logged in to do this"}');
+});
+
+router.post('/update/Gender', function(req, res) {
+	if (req.session.user)
+	{
+		var gender = req.body.gender;
+		var query = { email: req.session.user.email};
+		var set = { $set: { sex: gender }};
+		manageUser.updateUserOne(query, set, function(result) {
+			if (result) {
+				req.session.user.sex = gender;
+				res.end('{"msg": "OK"}');
+			}
+			else
+				res.end('{"msg": "Gender could not be updated"}')
+		});
+	}else
+		res.end('{"msg":"Need to be logged in to do this"}');
+});
+
+router.post('/update/Sex', function(req, res) {
+	if (req.session.user)
+	{
+		var sex = req.body.sex;
+		var query = { email: req.session.user.email};
+		var set = { $set: { sexuality: sex }};
+		manageUser.updateUserOne(query, set, function(result) {
+			if (result) {
+				req.session.user.sexuality = sex;
+				res.end('{"msg": "OK"}');
+			}
+			else
+				res.end('{"msg": "Sex could not be updated"}')
+		});
+	}else
+		res.end('{"msg":"Need to be logged in to do this"}');
+});
+
+router.post('/update/Firstname', function(req, res) {
+	if (req.session.user)
+	{
+		var fname = req.body.firstname;
+		var query = { email: req.session.user.email};
+		var set = { $set: { firstname: fname }};
+		manageUser.updateUserOne(query, set, function(result) {
+			if (result) {
+				req.session.user.firstname = fname;
+				res.end('{"msg": "OK"}');
+			}
+			else
+				res.end('{"msg": "Sex could not be updated"}')
 		});
 	}else
 		res.end('{"msg":"Need to be logged in to do this"}');

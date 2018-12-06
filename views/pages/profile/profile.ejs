@@ -23,6 +23,10 @@
 		var age = user['age'];
 		var email = user['email'];
 		var userType = user['type'];
+		var Sexuality = user['sexuality'];
+		var Gender = user['sex'];
+		var firstname = user['firstname'] === null ? 'You\'re in dire need of a firstname' : user['firstname'];
+		var lastname = user['surname'] === null ? 'You\'re in dire need of a lastname' : user['surname'];
 	}
 	%>
 	<main>
@@ -62,8 +66,65 @@
 				</div>
 			<hr>
 			</div>
-			<div class="col-lg-8" style="background-color: lightblue; opacity: 0.1;">
-				<p> I am right coloumn </p>
+			<div class="col-lg-8">
+				<div class="coloumn">
+					<p>&lt;
+						<label class="firstname-label"><%= firstname %></label>
+						<input type="text" class="firstname-edit-input w-50" style="display: none;">
+					/&gt;</p>
+					<p>&lt;
+						<label class="lastname-label"><%= lastname %></label>
+						<input type="text" class="lastname-edit-input w-50" style="display: none;">
+					/&gt;</p>
+				</div>
+				<div class="coloumn">
+					<!--Sexuality-->
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<label class="input-group-text" for="SexualityGroup">Sexuality</label>
+						</div>
+						<select class="custom-select" id="SexualityGroup">
+						<% if (Sexuality === '1') { %>
+							<option value="1" selected>Bisexual</option>
+						<% } else { %>
+							<option value="1" >Bisexual</option>
+						<% } %>
+						<% if (Sexuality === '2') { %>
+							<option value="2" selected>Heterosexual</option>
+						<% }else{ %>
+							<option value="2" >Heterosexual</option>
+						<% } %>
+						<% if (Sexuality === '3') { %>
+							<option value="3" selected>Homosexual</option>
+						<% } else { %>
+							<option value="3" >Homosexual</option>
+						<% } %>
+						</select>
+					</div>
+					<!--Gender-->
+					<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<label class="input-group-text" for="GenderGroup">Gender&nbsp;&nbsp;&nbsp;</label>
+					</div>
+					<select class="custom-select" id="GenderGroup">
+					<% if (Gender === '1') { %>
+						<option value="1" selected>Female</option>
+					<% } else { %>
+						<option value="1" >Female</option>
+					<% } %>
+					<% if (Gender === '2') { %>
+						<option value="2" selected>Male</option>
+					<% }else{ %>
+						<option value="2" >Male</option>
+					<% } %>
+					<% if (Gender === '3') { %>
+						<option value="3" selected>Other</option>
+					<% } else { %>
+						<option value="3" >Other</option>
+					<% } %>
+					</select>
+				</div>
+				</div>
 			</div>
 		</div>
 		<hr>

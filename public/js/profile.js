@@ -31,7 +31,6 @@ $(document).ready(function(){
 	var usernamehold;
 	$('.username-label').click(function () {
 		usernamehold = $('.username-label').text();
-		console.log(usernamehold);
 		$(this).hide();
 		$(this).siblings('.username-edit-input').val(usernamehold);
 		$(this).siblings('.username-edit-input').text(usernamehold);
@@ -43,11 +42,10 @@ $(document).ready(function(){
 		$(this).hide();
 		$(this).siblings('.username-label').text($(this).val()).show();
 		var username = $(".username-label").text();
-		$.post('/updateUsername', {
+		$.post('/update/Username', {
 			username: username
 		}).done(function(data) {
 			var msg = jQuery.parseJSON(data);
-			console.log(msg);
 			if (msg['msg'] != "OK")
 			{
 				$("#error-modal").modal();
@@ -77,7 +75,7 @@ $(document).ready(function(){
 			$(this).text(emailhold);
 		$(this).siblings('.email-label').text($(this).val()).show();
 		var email = $(".email-label").text();
-		$.post('/updateEmail', {
+		$.post('/update/Email', {
 			email: email
 		}).done(function(data) {
 			var msg = jQuery.parseJSON(data);
@@ -96,8 +94,77 @@ $(document).ready(function(){
 	//Biography update
 	$('#biography').focusout(function(){
 		var biographydata = $(this).val();
-		$.post('/updateBiography', {
+		$.post('/update/Biography', {
 			biography: biographydata
+		}).done(function(data) {
+			var msg = jQuery.parseJSON(data);
+			if (msg['msg'] != "OK")
+			{
+				$("#error-modal").modal();
+				$('#errorModalTitle').html("Error has occured");
+				if (msg['extra'])
+					$("#errorModalText").html(msg['msg'] + "\nReason: " + msg['extra']);
+				else
+					$("#errorModalText").html(msg['msg']);
+			}
+		});
+	});
+
+	//Edit Sections --Firstname--
+	var firstnamehold;
+	$('.firstname-label').click(function () {
+		firstnamehold = $('.firstname-label').text();
+		$(this).hide();
+		$(this).siblings('.firstname-edit-input').val(firstnamehold);
+		$(this).siblings('.firstname-edit-input').text(firstnamehold);
+		$(this).siblings('.firstname-edit-input').show();
+		$(this).siblings('.firstname-edit-input').focus();
+    });
+    
+    $('.firstname-edit-input').focusout(function() {
+		$(this).hide();
+		$(this).siblings('.firstname-label').text($(this).val()).show();
+		var firstname = $(".firstname-label").text();
+		$.post('/update/Firstname', {
+			firstname: firstname
+		}).done(function(data) {
+			var msg = jQuery.parseJSON(data);
+			if (msg['msg'] != "OK")
+			{
+				$("#error-modal").modal();
+				$('#errorModalTitle').html("Error has occured");
+				if (msg['extra'])
+					$("#errorModalText").html(msg['msg'] + "\nReason: " + msg['extra']);
+				else
+					$("#errorModalText").html(msg['msg']);
+				$('.username-label').text(firstnamehold);
+			}
+		});
+	});
+	
+	//Gender Selector update
+	$('#GenderGroup').change(function() {
+		var gender = $(this).val();
+		$.post('/update/Gender', {
+			gender: gender
+		}).done(function(data) {
+			var msg = jQuery.parseJSON(data);
+			if (msg['msg'] != "OK")
+			{
+				$("#error-modal").modal();
+				$('#errorModalTitle').html("Error has occured");
+				if (msg['extra'])
+					$("#errorModalText").html(msg['msg'] + "\nReason: " + msg['extra']);
+				else
+					$("#errorModalText").html(msg['msg']);
+			}
+		});
+	});
+	//Sexuality Selector update
+	$('#SexualityGroup').change(function() {
+		var sex = $(this).val();
+		$.post('/update/Sex', {
+			sex: sex
 		}).done(function(data) {
 			var msg = jQuery.parseJSON(data);
 			if (msg['msg'] != "OK")
