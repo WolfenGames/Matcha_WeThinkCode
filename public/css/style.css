@@ -3,10 +3,55 @@
 	font-size: 2vh;
 }
 
+.page {
+	background-color: #9F6164 !important;
+}
+
+.nav-mycol {
+	background-color: #9F6164 !important;
+}
+
 body
 {
-	color: chocolate;
-	background-color: darkblue;
+	color: #F8F8F2;
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 100%;
+	width: 100%;
+	opacity: 0;
+	transition: .3s ease;
+	background-color: rgba(#F8DEBD, 0.4);
+}
+
+.container-img {
+	position: relative;
+	width: 100%;
+	max-width: 400px;
+  }
+
+.container-img:hover .overlay {
+	opacity: 1;
+}
+
+.icon {
+	color: white;
+	font-size: 100px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	text-align: center;
+}
+
+.fa-plus:hover {
+	color: #9F6164;
 }
 
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);

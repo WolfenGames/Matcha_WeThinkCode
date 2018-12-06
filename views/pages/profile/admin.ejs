@@ -8,7 +8,7 @@
 		<% include ../../partials/header %>
 	</header>
 	<main>
-		<div class="jumbotron">
+		<div class="container page rounded-bottom">
 			<h1>Admin Page</h1>
 			<div class="container">
 				<input class="btn btn-primary" type='submit' value="Create User" onclick="location.href='/create'"> <br>
@@ -26,12 +26,13 @@
 				var uname = results[i]['username'];
 				var pass = results[i]['password'];
 				var type = results[i]['type'];
+				var bio = results[i]['biography'];
 				%>
 				<p>
 					Username: <%= uname; %> Type : <%= type %>
 				</p>
 				<p>
-					password: <%= pass; %>
+					biography: <%= bio; %>
 				</p>
 				<p>
 					id: <%= uid %>

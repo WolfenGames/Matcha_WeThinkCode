@@ -31,7 +31,8 @@
 	%>
 	<main>
 		<input type="hidden" id="hiddenemail" value="<%= email %>">
-		<div class="container bg-light rounded-bottom mh-100">
+		<div class="container bg-light rounded-bottom mh-100 page">
+			<hr>
 			<div class="row">
 				<h3>&lt;Profile Page of "</h3>
 					<div class="control-group">
@@ -49,8 +50,13 @@
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="column">
-					<div class="mr-auto ml-auto w-100">
-					<img src="<%= prof %>" alt="Prof Pic" class="img-thumbnail">
+					<div class="container-img pic w-100">
+						<img src="<%= prof %>" alt="Prof Pic" class="img-thumbnail w-100">
+						<div class="overlay">
+							<a href="#" class="icon" title="User Profile">
+							<i class="fa fa-plus"></i>
+							</a>
+						</div>
 					</div>
 					<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 					<div class="d-flex justify-content-center flex-row-reverse">
@@ -65,7 +71,7 @@
 					<textarea class="form-control" id="biography" rows="5" style="resize: none" maxlength="150"><%= biography %></textarea>
 					<label for="biography" id="biographylength"></label>
 				</div>
-				</div>
+			</div>
 			<hr>
 			</div>
 			<div class="col-lg-8">
@@ -139,11 +145,11 @@
 		<hr>
 		<p class='w-100 text-center'>To edit your profile, click on the element you wish to edit</p>
 		<hr>
-		<div class="row">
-			<input id="deleteprofile" type="button" class="btn btn-warning w-100 rounded-bottom" value="Delete account">
-		</div>
 		<!--End Template-->
-		</div>
+	</div>
+	<div class="row">
+		<input class="w-100 btn" type="button" id="" value="Delete profile">
+	</div>
 	</main>
 		<% include ../../partials/error %>
 	<footer>
