@@ -142,6 +142,38 @@ $(document).ready(function(){
 		});
 	});
 	
+	//Edit Sections --Lastname--
+	var lastnamehold;
+	$('.lastname-label').click(function () {
+		lastnamehold = $('.lastname-label').text();
+		$(this).hide();
+		$(this).siblings('.lastname-edit-input').val(lastnamehold);
+		$(this).siblings('.lastname-edit-input').text(lastnamehold);
+		$(this).siblings('.lastname-edit-input').show();
+		$(this).siblings('.lastname-edit-input').focus();
+    });
+    
+    $('.lastname-edit-input').focusout(function() {
+		$(this).hide();
+		$(this).siblings('.lastname-label').text($(this).val()).show();
+		var lastname = $(".lastname-label").text();
+		$.post('/update/Lastname', {
+			lastname: lastname
+		}).done(function(data) {
+			var msg = jQuery.parseJSON(data);
+			if (msg['msg'] != "OK")
+			{
+				$("#error-modal").modal();
+				$('#errorModalTitle').html("Error has occured");
+				if (msg['extra'])
+					$("#errorModalText").html(msg['msg'] + "\nReason: " + msg['extra']);
+				else
+					$("#errorModalText").html(msg['msg']);
+				$('.username-label').text(lastnamehold);
+			}
+		});
+	});
+
 	//Gender Selector update
 	$('#GenderGroup').change(function() {
 		var gender = $(this).val();

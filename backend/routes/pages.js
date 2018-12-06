@@ -136,15 +136,17 @@ router.post('/login/user', function(req, res) {
 					req.session.user = loginres;
 					var user = loginres;
 					if (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
-					|| !user['bio'] || !user['tags'])
-						aux.getIp(result => {
-							var loc = geoip.lookup(result);
-							req.session.loc = loc.ll;
-							manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
-								
-							});
-						});
+					|| !user['biography'])
 						req.session.setup = false;
+					else
+						req.session.setup = true;
+					aux.getIp(result => {
+						var loc = geoip.lookup(result);
+						req.session.loc = loc.ll;
+						manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
+							
+						});
+					});
 					res.end('{"msg": "OK"}');
 				}else{
 					res.end('{"msg": "Needs to be verified or can\'t be found"}');
@@ -184,6 +186,8 @@ router.post('/update/Email', function(req, res) {
 			manageUser.updateUserOne(query, set, function(result) {
 				if (result) {
 					req.session.user.email = newEmail;
+					if (!newEmail)
+						req.session.setup = false;
 					res.end('{"msg": "OK"}');
 				}
 				else
@@ -206,6 +210,8 @@ router.post('/update/Username', function(req, res) {
 			manageUser.updateUserOne(query, set, function(result) {
 				if (result) {
 					req.session.user.username = newusername;
+					if (!newusername)
+						req.session.setup = false;
 					res.end('{"msg": "OK"}');
 				}
 				else
@@ -227,6 +233,8 @@ router.post('/update/Biography', function(req, res) {
 			manageUser.updateUserOne(query, set, function(result) {
 				if (result) {
 					req.session.user.biography = result_string;
+					if (!result_string)
+						req.session.setup = false;
 					res.end('{"msg": "OK"}');
 				}
 				else
@@ -282,6 +290,26 @@ router.post('/update/Firstname', function(req, res) {
 		manageUser.updateUserOne(query, set, function(result) {
 			if (result) {
 				req.session.user.firstname = fname;
+				res.end('{"msg": "OK"}');
+			}
+			else
+				res.end('{"msg": "Sex could not be updated"}')
+		});
+	}else
+		res.end('{"msg":"Need to be logged in to do this"}');
+});
+
+router.post('/update/Lastname', function(req, res) {
+	if (req.session.user)
+	{
+		var lname = req.body.lastname;
+		var query = { email: req.session.user.email};
+		var set = { $set: { surname: lname }};
+		manageUser.updateUserOne(query, set, function(result) {
+			if (result) {
+				req.session.user.surname = lname;
+				if (!lname)
+					req.session.setup = false;
 				res.end('{"msg": "OK"}');
 			}
 			else
