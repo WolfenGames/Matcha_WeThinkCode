@@ -141,11 +141,14 @@ router.post('/login/user', function(req, res) {
 					else
 						req.session.setup = true;
 					aux.getIp(result => {
-						var loc = geoip.lookup(result);
-						req.session.loc = loc.ll;
-						manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
-							
-						});
+						if (result)
+						{
+							var loc = geoip.lookup(result);
+							req.session.loc = loc.ll;
+							manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
+								
+							});
+						}
 					});
 					res.end('{"msg": "OK"}');
 				}else{

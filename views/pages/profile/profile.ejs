@@ -35,13 +35,13 @@
 			<div class="row">
 				<h3>&lt;Profile Page of "</h3>
 					<div class="control-group">
-						<h3 for="name" class="username-label" data-toggle="tooltip" data-placement="right" title="Click here to change your username!"><%= username %></h3>
+						<h3 for="name" class="username-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your username!"><%= username %></h3>
 						<input type="text" class="username-edit-input" style="display: none;" />
 					</div>
 				<h3>"/&gt;</h3>
 			</div>
 			<p>&lt;
-				<label class="email-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!"><%= email %></label>
+				<label class="email-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!"><%= email %></label>
 				<input type="text" class="email-edit-input w-50" style="display: none;">
 			/&gt;</p>
 			<p>Type: <%= userType %></p>
@@ -49,7 +49,9 @@
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="column">
+					<div class="mr-auto ml-auto w-100">
 					<img src="<%= prof %>" alt="Prof Pic" class="img-thumbnail">
+					</div>
 					<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 					<div class="d-flex justify-content-center flex-row-reverse">
 						<span id="fameRating" class="fa fa-star checked"></span>
@@ -68,15 +70,22 @@
 			</div>
 			<div class="col-lg-8">
 				<div class="coloumn">
-					<p>&lt;
-						<label class="firstname-label" data-toggle="tooltip" data-placement="right" title="Click here to change your firstname!"><%= firstname %></label>
+					<p>
+					Name::
+					&lt;<label class="firstname-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your firstname!"><%= firstname %></label>
 						<input type="text" class="firstname-edit-input w-25" style="display: none;">
 					/&gt;</p>
-					<p>&lt;
-						<label class="lastname-label" data-toggle="tooltip" data-placement="right" title="Click here to change your lastname!"><%= lastname %></label>
+					<p>
+					Surname::
+					&lt;
+						<label class="lastname-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your lastname!"><%= lastname %></label>
 						<input type="text" class="lastname-edit-input w-25" style="display: none;">
 					/&gt;</p>
-				</div>
+					<!--Date input-->
+					<div class="form-group">
+						<label class="control-label" for="date">&lt;Date of birth/&gt;</label>
+						<input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text"/>
+					</div>
 				<div class="coloumn">
 					<!--Sexuality-->
 					<div class="input-group mb-3">
@@ -127,6 +136,8 @@
 				</div>
 			</div>
 		</div>
+		<hr>
+		<p class='w-100 text-center'>To edit your profile, click on the element you wish to edit</p>
 		<hr>
 		<div class="row">
 			<input id="deleteprofile" type="button" class="btn btn-warning w-100 rounded-bottom" value="Delete account">

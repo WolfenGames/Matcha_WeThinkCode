@@ -31,3 +31,30 @@ body
 
 .starrating > input:hover ~ label
 { color: #ffca08 ;  } /* Set yellow color when star hover */
+
+.edit-label {
+	padding: 2px;
+	border: solid 1px #e6e6e6;
+	border-radius: 5px;
+}
+
+.edit-label:hover {
+	padding: 2px;
+	border: solid 1px #cccccc;
+	border-radius: 5px;
+}
+@media (max-width: 1024px) {
+
+	.edit-label {
+		padding: 2px;
+		border: solid 5px #e6e6e6 !important;
+		border-radius: 5px;
+	}
+	
+	.edit-label:hover {
+		padding: 2px;
+		border: solid 5px #cccccc !important;
+		border-radius: 5px;
+	}
+
+}
