@@ -135,17 +135,19 @@ router.post('/login/user', function(req, res) {
 				if (loginres){
 					req.session.user = loginres;
 					var user = loginres;
+					var loc_found = false;
 					if (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
 					|| !user['bio'] || !user['tags'])
 						aux.getIp(result => {
 							var loc = geoip.lookup(result);
 							req.session.loc = loc.ll;
 							manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
-								
-							});
+								if (cb)
+									loc_found = true;
+								});
 						});
 						req.session.setup = false;
-					res.end('{"msg": "OK"}');
+					loc_found === true ? res.end('{"msg":"OK", "extra":"Location found"}') : res.end('{"msg": "OK", "extra":"Location not found"}');
 				}else{
 					res.end('{"msg": "Needs to be verified or can\'t be found"}');
 				}
