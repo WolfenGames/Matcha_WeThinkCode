@@ -220,8 +220,8 @@ $(document).ready(function(){
 	$('#tags').keypress(function (e) {
 		if (e.which == 13) {
 			var tag = $(this).val();
-			console.log("Sending => " + sending);
-			console.log("Tag -> " + tag);
+			$(this).val('');
+			$(this).text('');
 			if (sending)
 			{
 				sending = !sending;
@@ -229,20 +229,38 @@ $(document).ready(function(){
 					tag: tag
 				}).done((result) => {
 					sending = !sending;
+					$.get('/tags/get').done(result => {
+						availableTags = [];
+						(result).forEach(element => {
+							availableTags.push(element["Tag"]);
+						});
+					})
 				});
 			}
 		}
 	});
 
-	$('#tags').change(function(e) {
-		var availableTags = [];
+	var availableTags = [];
+	$.get('/tags/get').done(result => {
+		(result).forEach(element => {
+			if (availableTags.indexOf(element['Tag']) === -1)
+				availableTags.push(element['Tag']);
+			$('#tags').autocomplete({
+				source: availableTags
+			})
+		});
+	})
+
+	setInterval(function(){
 		$.get('/tags/get').done(result => {
 			(result).forEach(element => {
-				console.log(element["Tag"]);
-				availableTags.push(element["Tag"]);
+				if (availableTags.indexOf(element['Tag']) === -1)
+					availableTags.push(element['Tag']);
+				$('#tags').autocomplete({
+					source: availableTags
+				})
 			});
 		})
-		$(this).autocomplete({source: availableTags});
-	})
+	}, 10000);
 
 });

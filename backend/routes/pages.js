@@ -334,7 +334,6 @@ router.get('/tags/get', function(req, res) {
 });
 
 router.post('/tags/set', function(req, res) {
-	console.log(req.body);
 	tags.setTags(req.body.tag);
 	res.send('{"msg":"OK"}');
 });

@@ -23,7 +23,6 @@ function setTags(query) {
             dbo.collection("Tags").insertOne({Tag: query}).then(result => {
 
             }).catch(err => {
-                console.log("cant update list => " + err);
             })
         }).catch(err => {
             console.log("Cant connect to database setTags("+query+") =>" + err);
