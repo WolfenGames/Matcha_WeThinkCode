@@ -32,7 +32,6 @@ function setTags(query) {
 }
 
 function updateTags(user, tag) {
-
 	conn.connect(db.url, {useNewUrlParser: true}).then(db => {
 		var dbo = db.db("Matcha");
 		dbo.collection("Users").findOne({email: user}).then(res => {
