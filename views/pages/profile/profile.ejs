@@ -27,6 +27,7 @@
 		var Gender = user['sex'];
 		var firstname = user['firstname'] === null ? 'You\'re in dire need of a firstname' : user['firstname'];
 		var lastname = user['surname'] === null ? 'You\'re in dire need of a lastname' : user['surname'];
+		var tags = user['tags'];
 	}
 	%>
 	<main>
@@ -154,7 +155,7 @@
 		<p class='w-100 text-center'>To edit your profile, click on the element you wish to edit</p>
 		<hr>
 		<div class="row">
-			<input class="w-100 btn btn-danger" type="button" id="" value="Delete profile">
+			<input class="w-100 btn btn-danger" type="button" id="deleteprofile" value="Delete profile">
 		</div>
 	</div>
 		<!--End Template-->
