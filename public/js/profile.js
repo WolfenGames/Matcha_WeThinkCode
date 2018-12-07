@@ -216,6 +216,25 @@ $(document).ready(function(){
 		});
 	});
 
+	//DOB update
+	$('#DateOfBirth').focusout(function() {
+		var dob = $(this).val();
+		$.post('/update/Dob', {
+			dob: dob
+		}).done(function(data) {
+			var msg = jQuery.parseJSON(data);
+			if (msg['msg'] != "OK")
+			{
+				$("#error-modal").modal();
+				$('#errorModalTitle').html("Error has occured");
+				if (msg['extra'])
+					$("#errorModalText").html(msg['msg'] + "\nReason: " + msg['extra']);
+				else
+					$("#errorModalText").html(msg['msg']);
+			}
+		});
+	});
+
 	var sending = true;
 	$('#tags').keypress(function (e) {
 		if (e.which == 13) {

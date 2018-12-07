@@ -4,7 +4,9 @@
 }
 
 .page {
-	background-color: #9F6164 !important;
+	/*background-color: #9F6164 !important;*/
+	background-image: url('https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fi.stack.imgur.com%2FpMAiU.jpg&f=1'); 
+	background-position: fixed;
 }
 
 .nav-mycol {

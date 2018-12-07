@@ -324,6 +324,11 @@ router.post('/update/Lastname', function(req, res) {
 		res.end('{"msg":"Need to be logged in to do this"}');
 });
 
+router.post('/update/Dob', function(req, res) {
+	console.log(req.body);
+	res.send('{"msg":"OK"}');
+})
+
 router.get('/tags/get', function(req, res) {
 	tags.getTags(result => {
 		if (result)
