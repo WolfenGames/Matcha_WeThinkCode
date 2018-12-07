@@ -353,6 +353,14 @@ router.post('/tags/set', function(req, res) {
 	res.send('{"msg":"OK"}');
 });
 
+router.post('/tag/delete', function(req, res) {
+	if (req.session.user)
+	{
+		tags.removeTag(req.session.user.email, req.body.tag);
+	}
+	res.send('{"msg":"OK"}');
+});
+
 router.post('*', function(req, res) {
 	res.end('{"msg":"404"}');
 });

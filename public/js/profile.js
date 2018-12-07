@@ -242,7 +242,7 @@ $(document).ready(function(){
 			$(this).val('');
 			$(this).text('');
 			if (availableTags.indexOf(tag) === -1)
-				$('#likes-list').append(' <button onclick="removeTag(\''+tag+'\')">'+ tag +'</button>');
+				$('#likes-list').append(' <button onclick="removeTag(\''+tag+'\', this)">'+ tag +'</button>');
 			$.post('/tags/set', {
 				tag: tag
 			}).done((result) => {
@@ -284,9 +284,10 @@ $(document).ready(function(){
 	
 });
 
-function removeTag(tagname)
+function removeTag(tagname, el)
 {
 	$.post('/tag/delete', {tag : tagname}).done(data => {
+		$(el).remove();
 		availableTags.splice(availableTags.indexOf(tagname), 1);
 	})
 }

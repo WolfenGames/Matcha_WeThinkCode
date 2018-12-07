@@ -59,8 +59,23 @@ function getUpdatedTags(email, cb) {
     })
 }
 
+function removeTag(email, tag)
+{
+    conn.connect(db.url, { useNewUrlParser: true }).then(db => {
+        var dbo = db.db("Matcha");
+        dbo.collection('Users').updateOne({email: email}, { $pull: {tags: tag}}).then(result => {
+            db.close();
+        }).catch(err => {
+            console.log("Cannot remove due to reason " + err);
+        })
+    }).catch(err => {
+        console.log("Cannot connect to database due to reason => " + err);
+    })
+}
+
 module.exports = {
     getTags: getTags,
     setTags: setTags,
-    getUpdatedTags: getUpdatedTags
+    getUpdatedTags: getUpdatedTags,
+    removeTag: removeTag
 }

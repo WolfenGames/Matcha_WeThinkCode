@@ -153,7 +153,7 @@
 			<div class="grid">
 				<div id='likes-list'>
 				<% for (var i = 0; i < tags.length; i++) { %>
-					<button onclick="removeTag('<%=tags[i] %>')"><%=tags[i] %></button>
+					<button onclick="removeTag('<%=tags[i] %>', this)"><%=tags[i] %></button>
 				<% } %>
 				</div>
 			</div>
