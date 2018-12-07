@@ -1,7 +1,8 @@
 const db = require('../database/db');
+const conn = db.mongo;
 
 function getTags(cb){
-    db.mongo.connect(db.url, {useNewUrlParser: true}).then(db => {
+    conn.connect(db.url, {useNewUrlParser: true}).then(db => {
         var dbo = db.db("Matcha");
         dbo.collection("Tags").find({}).toArray().then(res => {
             cb(res);
@@ -18,7 +19,7 @@ function getTags(cb){
 function setTags(query) {
     if (query)
     {
-        db.mongo.connect(db.url, {useNewUrlParser: true}).then(db => {
+        conn.connect(db.url, {useNewUrlParser: true}).then(db => {
             var dbo = db.db("Matcha");
             dbo.collection("Tags").insertOne({Tag: query}).then(result => {
 
@@ -30,7 +31,26 @@ function setTags(query) {
     }
 }
 
+function updateTags(user, tag) {
+
+	conn.connect(db.url, {useNewUrlParser: true}).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection("Users").findOne({email: user}).then(res => {
+			dbo.collection("Users").updateOne({email: user}, { $addToSet: {tags: tag}}).then(result => {
+
+			}).catch(err => {
+				console.log("Cant update the users tag due to => " + err);
+			})
+		}).catch(err => {
+			console.log("Cant find tags due to " + err);
+		})
+	}).catch(err => {
+		console.log("Cant connect to db called by updateTags("+user+","+tag+") due to => " + err);
+	})
+}
+
 module.exports = {
     getTags: getTags,
-    setTags: setTags
+	setTags: setTags,
+	updateTags: updateTags
 }

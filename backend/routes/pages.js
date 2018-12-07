@@ -340,6 +340,7 @@ router.get('/tags/get', function(req, res) {
 
 router.post('/tags/set', function(req, res) {
 	tags.setTags(req.body.tag);
+	tags.updateTags(req.session.user.email, req.body.tag);
 	res.send('{"msg":"OK"}');
 });
 

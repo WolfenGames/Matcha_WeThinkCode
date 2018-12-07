@@ -22,7 +22,7 @@ function userSave(email, password, uType, sub, url) {
 				fame: 0,
 				rating: 0,
 				type: uType,
-				tags: {},
+				tags: [],
 				picture: {
 					Picture1: null,
 					Picture2: null,
