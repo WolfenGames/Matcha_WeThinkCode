@@ -150,6 +150,13 @@
 				<input type="text" id="tags" class="w-75">
 			</div>
 		</div>
+			<div class="grid">
+				<ul>
+				<% for (var i = 0; i < tags.length; i++) { %>
+					<li><%= tags[i] %></li>
+				<% } %>
+				</ul>
+			</div>
 		</div>
 		<hr>
 		<p class='w-100 text-center'>To edit your profile, click on the element you wish to edit</p>
