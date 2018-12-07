@@ -6,11 +6,11 @@ function deleteByUsername(email, cb) {
 		var query = { email: email};
 		dbo.collection('Users').deleteOne(query).then(res => {
 			cb("Suceesss");
-			db.close();
 		}).catch(err => {
 			cb("Error");
 			console.log("Can't deleteby one (email:: " + email + ") -> " + err);
 		});
+		db.close();
 	}).catch(err => {
 		cb("Cant connect to database");
 		console.log("Cant connect to database called by deleteByUsername(" + user + ")");
@@ -21,10 +21,10 @@ function deleteAll() {
 		var dbo = db.db('Matcha');
 		var query = {type: 'User'};
 		dbo.collection('Users').deleteMany(query).then(res => {
-			db.close();
 		}).catch(err => {
 			console.log("Cant delete many called by deleteAll()");
 		});
+		db.close();
 	}).catch(err => {
 		console.log("Cant connect to database called by deleteAll");
 	});
@@ -39,6 +39,7 @@ function updateUserOne(query, set, cb){
 			console.log("Cant update called by updateUserOne("+query+","+set+") due to => " + err);
 			cb(false);
 		});
+		db.close();
 	}).catch(err => {
 		console.log("Can't connect to database called by updateUserOne(" + query + ", " + set + ") due to => " + err);
 		cb(false);

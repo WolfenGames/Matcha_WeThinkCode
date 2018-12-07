@@ -28,7 +28,12 @@ router.get('/profile', function(req, res) {
 	if (!req.session.user)
 		res.redirect(404);
 	else
-		res.render('pages/profile/profile', { user: req.session.user });
+	{
+		tags.getUpdatedTags(req.session.user.email, result => {
+			req.session.user.tags = result;
+			res.render('pages/profile/profile', { user: req.session.user, usertags: result});
+		})
+	}
 });
 
 router.get('/login', function(req, res) {
@@ -339,9 +344,12 @@ router.get('/tags/get', function(req, res) {
 });
 
 router.post('/tags/set', function(req, res) {
-	tags.setTags(req.body.tag, tags.updateTags(req.session.user.email, req.body.tag, tags.getUpdatedTags(req, result => {
-		req.session.user.tags = result;
-	})));
+	if (req.session.user)
+	{
+		tags.setTags(req.body.tag, req.session.user.email, res => {
+			req.session.user.tags = res;
+		});
+	}
 	res.send('{"msg":"OK"}');
 });
 

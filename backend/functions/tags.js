@@ -10,60 +10,57 @@ function getTags(cb){
             cb(null);
             console.log("Cant fetch tags =>" + err)
         });
+        db.close();
     }).catch(err => {
         cb(null);
         console.log("Cant connect to database getTags("+cb+") => " + err);
     });
 }
 
-function setTags(query, fn1) {
-    if (query)
+function setTags(query, user, cb) {
+    if (query && user)
     {
         conn.connect(db.url, {useNewUrlParser: true}).then(db => {
             var dbo = db.db("Matcha");
             dbo.collection("Tags").insertOne({Tag: query}).then(result => {
-                fn1();
+                dbo.collection("Users").findOne({email: user}).then(res => {
+                    dbo.collection("Users").updateOne({email: user}, { $addToSet: {tags: query}}).then(result => {
+                        dbo.collection("Users").findOne({email: user}).then(result => {
+                            db.close();
+                            cb(result.tags);
+                        }).catch(err => {
+                            console.log("Cant connect to collection -> " + err);
+                        })
+                    }).catch(err => {
+                        console.log("Cant update the users tag due to => " + err);
+                    })
+                }).catch(err => {
+                    console.log("Cant find tags due to " + err);
+                })
             }).catch(err => {
-            })
+            });
         }).catch(err => {
             console.log("Cant connect to database setTags("+query+") =>" + err);
         })
     }
 }
 
-function updateTags(user, tag) {
-	conn.connect(db.url, {useNewUrlParser: true}).then(db => {
-		var dbo = db.db("Matcha");
-		dbo.collection("Users").findOne({email: user}).then(res => {
-			dbo.collection("Users").updateOne({email: user}, { $addToSet: {tags: tag}}).then(result => {
-
-			}).catch(err => {
-				console.log("Cant update the users tag due to => " + err);
-			})
-		}).catch(err => {
-			console.log("Cant find tags due to " + err);
-		})
-	}).catch(err => {
-		console.log("Cant connect to db called by updateTags("+user+","+tag+") due to => " + err);
-	})
-}
-
-function getUpdatedTags(req, cb) {
-    conn.connect(db.url, { useNewUrlParser: true }).then(db => {
+function getUpdatedTags(email, cb) {
+    conn.connect(db.url, { useNewUrlParser: true}).then(db => {
         var dbo = db.db('Matcha');
-        dbo.collection("Users").findOne({email: req.session.user.email}).then(result => {
+        dbo.collection("Users").findOne({email: email}).then(result => {
+            db.close();
             cb(result.tags);
         }).catch(err => {
             console.log("Cant connect to collection -> " + err);
         })
     }).catch(err => {
-        console.log("Cant connect to databse => " + err);
-    });
+        console.log("Cant connect to database due to => " + err);
+    })
 }
 
 module.exports = {
     getTags: getTags,
-	setTags: setTags,
-    updateTags: updateTags,
+    setTags: setTags,
     getUpdatedTags: getUpdatedTags
 }

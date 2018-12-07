@@ -69,10 +69,12 @@ function resendVerify(email, url, cb)
 				cb(false);
 		} else 
 			cb(false);
+            db.close();
 		}).catch(err => {
 			console.log("Cant connect to collection 'Users' due to => " + err);
 			cb(false);
 		})
+		db.close();
 	}).catch(err => {
 		console.log("Cant connect to database called by resendVerify("+ email + ", ...)");
 		cb(false);
@@ -98,6 +100,7 @@ function sendPassForget(email, url, cb)
 			console.log("Cant connect to collection 'Users' due to => " + err);
 			cb(false);
 		})
+		db.close();
 	}).catch(err => {
 		console.log("Cant connect to database called by resendVerify("+ email + ", ...)");
 		cb(false);

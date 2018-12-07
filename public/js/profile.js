@@ -1,3 +1,4 @@
+var availableTags = [];
 $(document).ready(function(){
 
 	/*$(function () {
@@ -235,31 +236,29 @@ $(document).ready(function(){
 		});
 	});
 
-	var sending = true;
 	$('#tags').keypress(function (e) {
 		if (e.which == 13) {
 			var tag = $(this).val();
 			$(this).val('');
 			$(this).text('');
-			if (sending)
-			{
-				sending = !sending;
-				$.post('/tags/set', {
-					tag: tag
-				}).done((result) => {
-					sending = !sending;
-					$.get('/tags/get').done(result => {
-						availableTags = [];
-						(result).forEach(element => {
-							availableTags.push(element["Tag"]);
-						});
-					})
-				});
-			}
+			if (availableTags.indexOf(tag) === -1)
+				$('#likes-list').append(' <button onclick="removeTag(\''+tag+'\')">'+ tag +'</button>');
+			$.post('/tags/set', {
+				tag: tag
+			}).done((result) => {
+				$.get('/tags/get').done(result => {
+					(result).forEach(element => {
+						if (availableTags.indexOf(element['Tag']) === -1)
+							availableTags.push(element['Tag']);
+						$('#tags').autocomplete({
+							source: availableTags
+						})
+					});
+				})
+			});
 		}
 	});
 
-	var availableTags = [];
 	$.get('/tags/get').done(result => {
 		(result).forEach(element => {
 			if (availableTags.indexOf(element['Tag']) === -1)
@@ -282,4 +281,12 @@ $(document).ready(function(){
 		})
 	}, 10000);
 
+	
 });
+
+function removeTag(tagname)
+{
+	$.post('/tag/delete', {tag : tagname}).done(data => {
+		availableTags.splice(availableTags.indexOf(tagname), 1);
+	})
+}

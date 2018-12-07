@@ -27,7 +27,7 @@
 		var Gender = user['sex'];
 		var firstname = user['firstname'] === null ? 'You\'re in dire need of a firstname' : user['firstname'];
 		var lastname = user['surname'] === null ? 'You\'re in dire need of a lastname' : user['surname'];
-		var tags = user['tags'];
+		var tags = usertags;
 	}
 	%>
 	<main>
@@ -149,14 +149,15 @@
 				<label class="w-25" for="tags">Likes: </label>
 				<input type="text" id="tags" class="w-75">
 			</div>
-		</div>
+			<hr>
 			<div class="grid">
-				<ul>
+				<div id='likes-list'>
 				<% for (var i = 0; i < tags.length; i++) { %>
-					<li><%= tags[i] %></li>
+					<button onclick="removeTag('<%=tags[i] %>')"><%=tags[i] %></button>
 				<% } %>
-				</ul>
+				</div>
 			</div>
+		</div>
 		</div>
 		<hr>
 		<p class='w-100 text-center'>To edit your profile, click on the element you wish to edit</p>
