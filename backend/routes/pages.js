@@ -339,8 +339,9 @@ router.get('/tags/get', function(req, res) {
 });
 
 router.post('/tags/set', function(req, res) {
-	tags.setTags(req.body.tag);
-	tags.updateTags(req.session.user.email, req.body.tag);
+	tags.setTags(req.body.tag, tags.updateTags(req.session.user.email, req.body.tag, tags.getUpdatedTags(req, result => {
+		req.session.user.tags = result;
+	})));
 	res.send('{"msg":"OK"}');
 });
 

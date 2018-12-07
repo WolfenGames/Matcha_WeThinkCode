@@ -16,13 +16,13 @@ function getTags(cb){
     });
 }
 
-function setTags(query) {
+function setTags(query, fn1) {
     if (query)
     {
         conn.connect(db.url, {useNewUrlParser: true}).then(db => {
             var dbo = db.db("Matcha");
             dbo.collection("Tags").insertOne({Tag: query}).then(result => {
-
+                fn1();
             }).catch(err => {
             })
         }).catch(err => {
@@ -48,8 +48,22 @@ function updateTags(user, tag) {
 	})
 }
 
+function getUpdatedTags(req, cb) {
+    conn.connect(db.url, { useNewUrlParser: true }).then(db => {
+        var dbo = db.db('Matcha');
+        dbo.collection("Users").findOne({email: req.session.user.email}).then(result => {
+            cb(result.tags);
+        }).catch(err => {
+            console.log("Cant connect to collection -> " + err);
+        })
+    }).catch(err => {
+        console.log("Cant connect to databse => " + err);
+    });
+}
+
 module.exports = {
     getTags: getTags,
 	setTags: setTags,
-	updateTags: updateTags
+    updateTags: updateTags,
+    getUpdatedTags: getUpdatedTags
 }
