@@ -73,6 +73,10 @@ body
 	color: #9F6164;
 }
 
+.card {
+	background-color: #9F6164;
+}
+
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
 
 .starrating > input {display: none;}  /* Remove radio buttons */

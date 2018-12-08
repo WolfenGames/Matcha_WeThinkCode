@@ -12,13 +12,33 @@
 </header>
 
 <main>
-    <div class="jumbotron page">
+    <div class="container page">
 		<% if (setup === false) {
 		%>
 			<h1>Please setup account before you can search for users</h1>
 			<a class="nav-link" href="/profile">&lt;Profile/&gt;</a>
 		<%
-		}%>
+		} else { %>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="card" style="height: 200px">
+
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="card" style="height: 200px">
+
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="card" style="height: 200px">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		<% } %>
     </div>
 </main>
 
