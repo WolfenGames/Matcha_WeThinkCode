@@ -2,7 +2,7 @@
 	"name": "matcha",
 	"version": "0.1.5",
 	"scripts": {
-		"start": "nodemon server.js"
+		"server": "nodemon server.js"
 	},
 	"description": "This is a student made project to simulate a dating website, ie tinder, zoosk",
 	"license": "",

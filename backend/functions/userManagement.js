@@ -46,8 +46,23 @@ function updateUserOne(query, set, cb){
 	});
 }
 
+function getUserInfo(email, cb) {
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(db => {
+		var dbo = db.db('Matcha');
+		dbo.collection('Users').findOne({email: email}).then(res => {
+			cb(res);
+			db.close();
+		}).catch(err => {
+			console.log("Cant fetch user " + err);
+		})
+	}).catch(err => {
+		console.log("Cant connect to database " + err);
+	})
+}
+
 module.exports = {
 	deleteByUsername: deleteByUsername,
 	deleteAll: deleteAll,
-	updateUserOne: updateUserOne
+	updateUserOne: updateUserOne,
+	getUserInfo: getUserInfo
 }

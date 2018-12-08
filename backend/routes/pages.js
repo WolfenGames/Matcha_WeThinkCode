@@ -20,8 +20,18 @@ var u_regex = /^[a-zA-Z0-9 ]{5,}$/;
 router.get('/', function(req, res) {
 	if (!req.session.user)
 		res.redirect('/login');
-	else
-		res.render('pages/index', { user: req.session.user, setup: req.session.setup });
+	else{
+		manageUser.getUserInfo(req.session.user.email, result => {
+			var user = req.session.user;
+			if (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
+					|| !user['biography'])
+						req.session.setup = false;
+					else
+						req.session.setup = true;
+			req.session.user = result;
+			res.render('pages/index', { user: req.session.user, setup: req.session.setup });
+		})
+	}
 });
 
 router.get('/profile', function(req, res) {
@@ -29,9 +39,9 @@ router.get('/profile', function(req, res) {
 		res.redirect(404);
 	else
 	{
-		tags.getUpdatedTags(req.session.user.email, result => {
-			req.session.user.tags = result;
-			res.render('pages/profile/profile', { user: req.session.user, usertags: result});
+		manageUser.getUserInfo(req.session.user.email, result => {
+			req.session.user = result;
+			res.render('pages/profile/profile', { user: req.session.user, usertags: result.tags});
 		})
 	}
 });
@@ -362,6 +372,15 @@ router.post('/tag/delete', function(req, res) {
 		tags.removeTag(req.session.user.email, req.body.tag);
 	}
 	res.send('{"msg":"OK"}');
+});
+
+router.get('/tags/get/mine', function(req, res) {
+	tags.getUpdatedTags(req.session.user.email, result => {
+		if (result)
+			res.json(result);
+		else
+			res.json({});
+	});
 });
 
 router.post('*', function(req, res) {

@@ -1,4 +1,5 @@
 var availableTags = [];
+var myCurrTags = [];
 $(document).ready(function(){
 
 	/*$(function () {
@@ -236,29 +237,42 @@ $(document).ready(function(){
 		});
 	});
 
+	
 	$('#tags').keypress(function (e) {
 		if (e.which == 13) {
 			var tag = $(this).val();
 			$(this).val('');
 			$(this).text('');
-			if (availableTags.indexOf(tag) === -1)
-				$('#likes-list').append(' <button class="tag-button" onclick="removeTag(\''+tag+'\', this)">'+ tag +'</button>');
-			$.post('/tags/set', {
-				tag: tag
-			}).done((result) => {
-				$.get('/tags/get').done(result => {
-					(result).forEach(element => {
-						if (availableTags.indexOf(element['Tag']) === -1)
-							availableTags.push(element['Tag']);
-						$('#tags').autocomplete({
-							source: availableTags
-						})
-					});
-				})
-			});
+			if (tag)
+			{
+				if (myCurrTags.indexOf(tag) === -1)
+				{
+					$('#likes-list').append(' <button class="tag-button" onclick="removeTag(\''+tag+'\', this)">'+ tag +'</button>');
+					myCurrTags.push(tag);
+				}
+				$.post('/tags/set', {
+					tag: tag
+				}).done((result) => {
+					$.get('/tags/get').done(result => {
+						(result).forEach(element => {
+							if (availableTags.indexOf(element['Tag']) === -1)
+								availableTags.push(element['Tag']);
+							$('#tags').autocomplete({
+								source: availableTags
+							})
+						});
+					})
+				});
+			}
 		}
 	});
-
+	
+	//Update my list
+	$.get('/tags/get/mine').done(result => {
+		(result).forEach(element => {
+			myCurrTags.push(element);
+		});
+	})
 	$.get('/tags/get').done(result => {
 		(result).forEach(element => {
 			if (availableTags.indexOf(element['Tag']) === -1)
@@ -289,5 +303,6 @@ function removeTag(tagname, el)
 	$.post('/tag/delete', {tag : tagname}).done(data => {
 		$(el).remove();
 		availableTags.splice(availableTags.indexOf(tagname), 1);
+		myCurrTags.splice(myCurrTags.indexOf(tagname), 1);
 	})
 }
