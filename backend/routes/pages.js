@@ -330,7 +330,10 @@ router.post('/update/Lastname', function(req, res) {
 });
 
 router.post('/update/Dob', function(req, res) {
-	console.log(req.body);
+	manageUser.updateUserOne({email: req.session.user.email}, { $set: {age: req.body.dob}}, res =>
+	{
+		
+	});
 	res.send('{"msg":"OK"}');
 })
 

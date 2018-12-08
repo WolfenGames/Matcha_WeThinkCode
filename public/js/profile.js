@@ -242,7 +242,7 @@ $(document).ready(function(){
 			$(this).val('');
 			$(this).text('');
 			if (availableTags.indexOf(tag) === -1)
-				$('#likes-list').append(' <button onclick="removeTag(\''+tag+'\', this)">'+ tag +'</button>');
+				$('#likes-list').append(' <button class="tag-button" onclick="removeTag(\''+tag+'\', this)">'+ tag +'</button>');
 			$.post('/tags/set', {
 				tag: tag
 			}).done((result) => {

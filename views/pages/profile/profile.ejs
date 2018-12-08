@@ -93,7 +93,10 @@
 							<form>
 								<div class="form-group">
 									<label class="control-label" for="DateOfBirth">&lt;Date of birth/&gt;</label>
-									<input class="form-control" id="DateOfBirth" name="date" type="date" min="1900-01-00" max="2000-01-00"/>
+									<input class="form-control" id="DateOfBirth" name="date" type="date"/>
+									<script>
+										$('#DateOfBirth').val("<%= age %>");
+									</script>
 								</div>
 							</form>
 					<!--Sexuality-->
@@ -153,7 +156,7 @@
 			<div class="grid">
 				<div id='likes-list'>
 				<% for (var i = 0; i < tags.length; i++) { %>
-					<button onclick="removeTag('<%=tags[i] %>', this)"><%=tags[i] %></button>
+					<button class="tag-button" onclick="removeTag('<%=tags[i] %>', this)"><%=tags[i] %></button>
 				<% } %>
 				</div>
 			</div>
