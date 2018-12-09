@@ -1,6 +1,6 @@
 *
 {
-	font-size: 1.7vh;
+	font-size: 2.1vh;
 }
 
 .page {
@@ -56,6 +56,10 @@ body
 
 .container-img:hover .overlay {
 	opacity: 1;
+}
+
+img {
+	border-radius: 30px;
 }
 
 .icon {
