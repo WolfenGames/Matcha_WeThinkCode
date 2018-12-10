@@ -89,6 +89,7 @@
 						<input type="text" class="lastname-edit-input w-25" style="display: none;">
 					/&gt;</p>
 					<div class="coloumn">
+						<% if (!age) { %>
 							<!--Date input-->
 							<form>
 								<div class="form-group">
@@ -99,6 +100,15 @@
 									</script>
 								</div>
 							</form>
+							<% } else {  
+							var date = new Date();
+							var mydate = new Date(age);
+							console.log(mydate.getFullYear());
+							console.log(date.getFullYear());
+							var myAge = date.getFullYear() - mydate.getFullYear();
+							%>
+								<%= myAge %>
+						<% } %>
 					<!--Sexuality-->
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
