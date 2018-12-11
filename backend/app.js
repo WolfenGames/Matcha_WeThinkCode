@@ -8,7 +8,7 @@ const match = require("./functions/match");
 
 var p1 = {
 	MatchingTags: 12,
-	total: 12,
+	total: 20,
 	Dist: 0,
 	Max: 5
 };
