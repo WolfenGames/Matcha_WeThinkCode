@@ -386,12 +386,13 @@ router.get('/tags/get/mine', function(req, res) {
 
 
 router.post('/file/uploads/profile/Main', function(req, res) {
+	console.log("???");
 	IS.upload.single('Image1')(req, res, err => {
-		console.log(req.file);
+		console.log(req);
 		if (err)
-			return res.end("oops");
+			return res.end("oops " + err);
 		else
-			return res.end("Yes??");
+			return res.end("Yes");
 	})
 });
 
