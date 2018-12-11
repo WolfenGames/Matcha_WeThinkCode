@@ -297,6 +297,10 @@ $(document).ready(function(){
 
 	$("#MainImageUpload").click(() => {
 		$("#Image1").click();
+		$("#Image1").on('change', function(){
+			console.log("I am trying to call");
+			$("#MainPic").submit();
+		});
 	});
 
 	$("#FirstImageUpload").click(() => {

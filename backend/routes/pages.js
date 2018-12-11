@@ -11,7 +11,7 @@ const mailer		= require('../functions/sendmail');
 const aux			= require('../functions/auxiliary');
 const geoip			= require('geoip-lite');
 const tags			= require('../functions/tags');
-
+const IS			= require('../functions/image_save');
 
 var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 var e_regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$/;
@@ -381,6 +381,17 @@ router.get('/tags/get/mine', function(req, res) {
 		else
 			res.json({});
 	});
+});
+
+
+router.post('/file/uploads/profile/Main', function(req, res) {
+	IS.upload.single('Image1')(req, res, err => {
+		console.log(req.file);
+		if (err)
+			return res.end("oops");
+		else
+			return res.end("Yes??");
+	})
 });
 
 router.post('*', function(req, res) {
