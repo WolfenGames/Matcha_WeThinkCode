@@ -12,6 +12,7 @@ const aux			= require('../functions/auxiliary');
 const geoip			= require('geoip-lite');
 const tags			= require('../functions/tags');
 const IS			= require('../functions/image_save');
+const match			= require('../functions/match');
 
 var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 var e_regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$/;
