@@ -295,7 +295,26 @@ $(document).ready(function(){
 		})
 	}, 10000);
 
-	
+	$("#MainImageUpload").click(() => {
+		$("#Image1").click();
+	});
+
+	$("#FirstImageUpload").click(() => {
+		$("#Image1").click();
+	});
+
+	$("#SecondImageUpload").click(() => {
+		$("#Image2").click();
+	});
+
+	$("#ThirdImageUpload").click(() => {
+		$("#Image3").click();
+	});
+
+	$("#FourthImageUpload").click(() => {
+		$("#Image4").click();
+	});
+
 });
 
 function removeTag(tagname, el)

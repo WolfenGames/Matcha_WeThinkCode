@@ -18,23 +18,15 @@ function getTags(cb){
 }
 
 function setTags(query, user, cb) {
-    console.log(query);
-    console.log(user);
     if (query && user)
     {
-        console.log("Trying to connect");
         conn.connect(db.url, {useNewUrlParser: true}).then(db => {
             var dbo = db.db("Matcha");
-            console.log("connected");
             dbo.collection("Tags").insertOne({Tag: query}).then(result => {
-                console.log("Inserted one");
                 dbo.collection("Users").findOne({email: user}).then(res => {
-                    console.log("Found one");
                     dbo.collection("Users").updateOne({email: user}, { $addToSet: {tags: query}}).then(result => {
-                        console.log("Updated all tags");
                         dbo.collection("Users").findOne({email: user}).then(result => {
                             db.close();
-                            console.log("Found all tags");
                             cb(result.tags);
                         }).catch(err => {
                             console.log("Cant connect to collection -> " + err);
@@ -47,12 +39,9 @@ function setTags(query, user, cb) {
                 })
             }).catch(err => {
                 dbo.collection("Users").findOne({email: user}).then(res => {
-                    console.log("Found one");
                     dbo.collection("Users").updateOne({email: user}, { $addToSet: {tags: query}}).then(result => {
-                        console.log("Updated all tags");
                         dbo.collection("Users").findOne({email: user}).then(result => {
                             db.close();
-                            console.log("Found all tags");
                             cb(result.tags);
                         }).catch(err => {
                             console.log("Cant connect to collection -> " + err);
