@@ -1,8 +1,7 @@
 function matchTags(p1, p2, cb)
 {
 	cb(
-		(p1.MatchingTags/
-		p2.total) * 70
+		(p1.MatchingTags/p2.total) * 70
 	)
 }
 

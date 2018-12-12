@@ -144,6 +144,10 @@ input {
 	color: whitesmoke;
 }
 
+.img-thumbnail {
+	width: 200px;
+	height: auto;
+}
 @media (max-width: 1024px) {
 
 	.edit-label {

@@ -298,24 +298,41 @@ $(document).ready(function(){
 	$("#MainImageUpload").click(() => {
 		$("#Image1").on('change', function(){
 			$("#MainPic").submit();
+			$("#Image1").get(0).reset();
 		});
 		$("#Image1").click();
 	});
 
 	$("#FirstImageUpload").click(() => {
-		$("#Image1").click();
-	});
-
-	$("#SecondImageUpload").click(() => {
+		$("#Image2").on('change', function(){
+			$("#FirstPic").submit();
+			$("#Image2").get(0).reset();
+		});
 		$("#Image2").click();
 	});
 
-	$("#ThirdImageUpload").click(() => {
+	$("#SecondImageUpload").click(() => {
+		$("#Image3").on('change', function(){
+			$("#SecondPic").submit();
+			$("#Image3").get(0).reset();
+		});
 		$("#Image3").click();
 	});
 
-	$("#FourthImageUpload").click(() => {
+	$("#ThirdImageUpload").click(() => {
+		$("#Image4").on('change', function(){
+			$("#ThirdPic").submit();
+			$("#Image4").get(0).reset();
+		});
 		$("#Image4").click();
+	});
+
+	$("#FourthImageUpload").click(() => {
+		$("#Image5").on('change', function(){
+			$("#FourthPic").submit();
+			$("#Image5").get(0).reset();
+		});
+		$("#Image5").click();
 	});
 
 });

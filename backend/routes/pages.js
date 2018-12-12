@@ -390,18 +390,91 @@ router.post('/file/uploads/profile/Main', function(req, res) {
 	{
 		IS.upload.single('Image1')(req, res, err => {
 			var picture = {
-				Picture1: req.session.user.f1,
-				Picture2: req.session.user.picture.Picture2,
-				Picture3: req.session.user.picture.Picture3,
-				Picture4: req.session.user.picture.Picture4,
-				Picture5: req.session.user.picture.Picture5,
+				Picture1: "/images/" + req.session.user.f1,
+				Picture2: req.session.user.picture.Picture1 === null ? "/images/" + req.session.user.picture.Picture1 : req.session.user.picture.Picture2,
+				Picture3: req.session.user.picture.Picture1 === null ? "/images/" + req.session.user.picture.Picture1 : req.session.user.picture.Picture3,
+				Picture4: req.session.user.picture.Picture1 === null ? "/images/" + req.session.user.picture.Picture1 : req.session.user.picture.Picture4,
+				Picture5: req.session.user.picture.Picture1 === null ? "/images/" + req.session.user.picture.Picture1 : req.session.user.picture.Picture5,
+			}
+			var email = req.session.user.email;
+			manageUser.updateUserOne({email: email}, {$set : {picture: picture, Prof: "/images/" + req.session.user.f1}}, function() {
+					res.redirect("/profile");
+			})
+		})
+	}
+});
+
+router.post('/file/uploads/profile/First', function(req, res) {
+	if (req.session.user)
+	{
+		IS.upload.single('Image2')(req, res, err => {
+			var picture = {
+				Picture1: req.session.user.picture.Picture1 === null ? "/images/" + req.session.user.picture.Picture1 : req.session.user.picture.Picture1,
+				Picture2: "/images/" + req.session.user.f1,
+				Picture3: req.session.user.picture.Picture3 === null ? "/images/" + req.session.user.picture.Picture3 : req.session.user.picture.Picture3,
+				Picture4: req.session.user.picture.Picture4 === null ? "/images/" + req.session.user.picture.Picture4 : req.session.user.picture.Picture4,
+				Picture5: req.session.user.picture.Picture5 === null ? "/images/" + req.session.user.picture.Picture5 : req.session.user.picture.Picture5,
 			}
 			var email = req.session.user.email;
 			manageUser.updateUserOne({email: email}, {$set : {picture: picture}}, function() {
-				if (err)
-					return res.end("oops " + err);
-				else
-					return res.end("Yes");
+					res.redirect("/profile");
+			})
+		})
+	}
+});
+
+router.post('/file/uploads/profile/Second', function(req, res) {
+	if (req.session.user)
+	{
+		IS.upload.single('Image3')(req, res, err => {
+			var picture = {
+				Picture1: req.session.user.picture.Picture1 === null ? "/images/" + req.session.user.picture.Picture1 : req.session.user.picture.Picture1,
+				Picture2: req.session.user.picture.Picture2 === null ? "/images/" + req.session.user.picture.Picture2 : req.session.user.picture.Picture2,
+				Picture3: "/images/" + req.session.user.f1,
+				Picture4: req.session.user.picture.Picture4 === null ? "/images/" + req.session.user.picture.Picture4 : req.session.user.picture.Picture4,
+				Picture5: req.session.user.picture.Picture5 === null ? "/images/" + req.session.user.picture.Picture5 : req.session.user.picture.Picture5,
+			}
+			var email = req.session.user.email;
+			manageUser.updateUserOne({email: email}, {$set : {picture: picture}}, function() {
+					res.redirect("/profile");
+			})
+		})
+	}
+});
+
+router.post('/file/uploads/profile/Third', function(req, res) {
+	if (req.session.user)
+	{
+		IS.upload.single('Image4')(req, res, err => {
+			var picture = {
+				Picture1: req.session.user.picture.Picture1 === null ? "/images/" + req.session.user.picture.Picture1 : req.session.user.picture.Picture1,
+				Picture2: req.session.user.picture.Picture2 === null ? "/images/" + req.session.user.picture.Picture2 : req.session.user.picture.Picture2,
+				Picture3: req.session.user.picture.Picture3 === null ? "/images/" + req.session.user.picture.Picture3 : req.session.user.picture.Picture3,
+				Picture4: "/images/" + req.session.user.f1,
+				Picture5: req.session.user.picture.Picture5 === null ? "/images/" + req.session.user.picture.Picture5 : req.session.user.picture.Picture5,
+			}
+			var email = req.session.user.email;
+			manageUser.updateUserOne({email: email}, {$set : {picture: picture}}, function() {
+					res.redirect("/profile");
+			})
+		})
+	}
+});
+
+router.post('/file/uploads/profile/Fourth', function(req, res) {
+	if (req.session.user)
+	{
+		IS.upload.single('Image5')(req, res, err => {
+			var picture = {
+				Picture1: req.session.user.picture.Picture1 === null ? "/images/" + req.session.user.picture.Picture1 : req.session.user.picture.Picture1,
+				Picture2: req.session.user.picture.Picture2 === null ? "/images/" + req.session.user.picture.Picture2 : req.session.user.picture.Picture2,
+				Picture3: req.session.user.picture.Picture3 === null ? "/images/" + req.session.user.picture.Picture3 : req.session.user.picture.Picture3,
+				Picture4: req.session.user.picture.Picture4 === null ? "/images/" + req.session.user.picture.Picture4 : req.session.user.picture.Picture4,
+				Picture5: "/images/" + req.session.user.f1,
+			}
+			var email = req.session.user.email;
+			manageUser.updateUserOne({email: email}, {$set : {picture: picture}}, function() {
+					res.redirect("/profile");
 			})
 		})
 	}
