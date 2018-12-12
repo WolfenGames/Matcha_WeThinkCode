@@ -480,6 +480,10 @@ router.post('/file/uploads/profile/Fourth', function(req, res) {
 	}
 });
 
+router.get('/view', function(req, res) {
+	res.render('potentials/profile', { user: req.session.user});
+})
+
 router.post('*', function(req, res) {
 	res.end('{"msg":"404"}');
 });

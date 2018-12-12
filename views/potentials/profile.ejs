@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<% include ../partials/head %>
+<script defer src="https://use.fontawesome.com/releases/v5.5.0/js/all.js" integrity="sha384-GqVMZRt5Gn7tB9D9q7ONtcp4gtHIUEW/yG7h98J7IpE3kpi+srfFyyB/04OV6pG0" crossorigin="anonymous"></script>
+</head>
+<body class="container">
+	<header>
+		<% include ../partials/header %>
+	</header>
+	<% 
+	if (user) {
+		var username = user['username'] === null ? 'You\'re in dire need of an username' : user['username'];
+		var up = JSON.parse(JSON.stringify(user['picture']));
+		var img1 = up['Picture1'];
+		var img2 = up['Picture2'];
+		var img3 = up['Picture3'];
+		var img4 = up['Picture4'];
+		var img5 = up['Picture5'];
+		var prof = user['Prof'];
+		var subscription = user['email_subscription'];
+		var biography = user['biography'];
+		var fame = user['fame'];
+		var age = user['age'];
+		var email = user['email'];
+		var userType = user['type'];
+		var Sexuality = user['sexuality'];
+		var Gender = user['sex'];
+		var firstname = user['firstname'] === null ? 'You\'re in dire need of a firstname' : user['firstname'];
+		var lastname = user['surname'] === null ? 'You\'re in dire need of a lastname' : user['surname'];
+		var tags = user['tags'];
+	}
+	%>
+	<main>
+		<input type="hidden" id="hiddenemail" value="<%= email %>">
+		<div class="container bg-light rounded-bottom mh-100 page">
+			<hr>
+			<div class="row">
+				<h3>&lt;Profile Page of "</h3>
+					<div class="control-group">
+						<h3 for="name" class="username-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your username!"><%= username %></h3>
+					</div>
+				<h3>"/&gt;</h3>
+			</div>
+			<p>&lt;
+				<label class="email-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!"><%= email %></label>
+			/&gt;</p>
+			<p>Type: <%= userType %></p>
+		<!--TEMPLATE-->
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="column">
+					<div class="container-img pic mx-auto w-100">
+						<img src="<%= prof %>" alt="Prof Pic" class="img-thumbnail w-100">
+					</div>
+					<hr>
+					<div class="d-flex justify-content-center flex-row mt-auto">
+						<span id="fameRating" class="fas fa-star"></span>
+						<span id="fameRating" class="fas fa-star"></span>
+						<span id="fameRating" class="fas fa-star"></span>
+						<span id="fameRating" class="fas fa-star"></span>
+						<span id="fameRating" class="far fa-star"></span>
+					</div>
+					<div class="form-group">
+					<label for="biography">&lt;About me/&gt;</label>
+					<label class="form-control" id="biography" rows="5" style="resize: none" maxlength="150"><%= biography %></label>
+					<label for="biography" id="biographylength"></label>
+				</div>
+			</div>
+			<hr>
+			</div>
+			<div class="col-lg-8">
+				<div class="coloumn">
+					<p>
+					Name::
+					&lt;<label class="firstname-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your firstname!"><%= firstname %></label>
+						<input type="text" class="firstname-edit-input w-25" style="display: none;">
+					/&gt;</p>
+					<p>
+					Surname::
+					&lt;
+						<label class="lastname-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your lastname!"><%= lastname %></label>
+						<input type="text" class="lastname-edit-input w-25" style="display: none;">
+					/&gt;</p>
+					<div class="coloumn">
+						<% if (!age) { %>
+							<!--Date input-->
+							<form>
+								<div class="form-group">
+									<label class="control-label" for="DateOfBirth">&lt;Date of birth/&gt;</label>
+									<input class="form-control" id="DateOfBirth" name="date" type="date"/>
+									<script>
+										$('#DateOfBirth').val("<%= age %>");
+									</script>
+								</div>
+							</form>
+							<% } else {  
+							var date = new Date();
+							var mydate = new Date(age);
+							var myAge = date.getFullYear() - mydate.getFullYear();
+							%>
+								<p class="age">Age:: <%= myAge %></p>
+						<% } %>
+					<!--Sexuality-->
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="SexualityGroup">Sexuality</label>
+							</div>
+							<% if (Sexuality === '1') { %>
+								<label>Bisexual</option>
+							<% }
+							 if (Sexuality === '2') { %>
+								<label>Heterosexual</option>
+							<% } 
+							 if (Sexuality === '3') { %>
+								<label>Homosexual</option>
+							<% } %>
+						</div>
+						<!--Gender-->
+						<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<label class="input-group-text" for="GenderGroup">Gender&nbsp;&nbsp;&nbsp;</label>
+						</div>
+						<% if (Gender === '1') { %>
+							<label>Female</label>
+						<% }
+						 if (Gender === '2') { %>
+							<label>Male</lable>
+						<% }
+						 if (Gender === '3') { %>
+							<label>Other</label>
+						<% } %>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex flex-column">
+			<div class="row pic-row">
+				<div class="container-img pic mx-auto my-auto col-md-6">
+					<img src="<%= img2 %>" alt="Prof Pic" class="img-thumbnail w-100">
+				</div>
+				<div class="container-img pic mx-auto my-auto col-md-6">
+					<img src="<%= img3 %>" alt="Prof Pic" class="img-thumbnail w-100">
+				</div>
+			</div>
+			<div class="row pic-row">
+				<div class="container-img pic mx-auto my-auto col-md-6">
+					<img src="<%= img4 %>" alt="Prof Pic" class="img-thumbnail w-100">
+				</div>
+				<div class="container-img pic mx-auto my-auto col-md-6">
+					<img src="<%= img5 %>" alt="Prof Pic" class="img-thumbnail w-100">
+				</div>
+			</div>
+		</div>
+		<hr>
+			<hr>
+			<div class="grid">
+				<div id='likes-list' class="mx-auto">
+				<% for (var i = 0; i < tags.length; i++) { %>
+					<button class="tag-button" onclick="removeTag('<%=tags[i] %>', this)"><%=tags[i] %></button>
+				<% } %>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+		<!--End Template-->
+	</main>
+		<% include ../partials/error %>
+	<footer>
+		<% include ../partials/footer %>
+	</footer>
+</body>
+</html>
