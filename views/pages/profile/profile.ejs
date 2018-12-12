@@ -158,7 +158,7 @@
 			</div>
 		</div>
 		<div class="d-flex flex-column">
-			<div class="row">
+			<div class="row pic-row">
 				<div class="container-img pic mx-auto my-auto col-md-6">
 					<img src="<%= img2 %>" alt="Prof Pic" class="img-thumbnail w-100">
 					<div class="overlay">
@@ -176,7 +176,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row pic-row">
 				<div class="container-img pic mx-auto my-auto col-md-6">
 					<img src="<%= img4 %>" alt="Prof Pic" class="img-thumbnail w-100">
 					<div class="overlay">
@@ -202,7 +202,7 @@
 			</div>
 			<hr>
 			<div class="grid">
-				<div id='likes-list'>
+				<div id='likes-list' class="">
 				<% for (var i = 0; i < tags.length; i++) { %>
 					<button class="tag-button" onclick="removeTag('<%=tags[i] %>', this)"><%=tags[i] %></button>
 				<% } %>
