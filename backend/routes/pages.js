@@ -386,14 +386,25 @@ router.get('/tags/get/mine', function(req, res) {
 
 
 router.post('/file/uploads/profile/Main', function(req, res) {
-	console.log("???");
-	IS.upload.single('Image1')(req, res, err => {
-		console.log(req);
-		if (err)
-			return res.end("oops " + err);
-		else
-			return res.end("Yes");
-	})
+	if (req.session.user)
+	{
+		IS.upload.single('Image1')(req, res, err => {
+			var picture = {
+				Picture1: req.session.user.f1,
+				Picture2: req.session.user.picture.Picture2,
+				Picture3: req.session.user.picture.Picture3,
+				Picture4: req.session.user.picture.Picture4,
+				Picture5: req.session.user.picture.Picture5,
+			}
+			var email = req.session.user.email;
+			manageUser.updateUserOne({email: email}, {$set : {picture: picture}}, function() {
+				if (err)
+					return res.end("oops " + err);
+				else
+					return res.end("Yes");
+			})
+		})
+	}
 });
 
 router.post('*', function(req, res) {
