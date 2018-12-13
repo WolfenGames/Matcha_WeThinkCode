@@ -483,10 +483,7 @@ router.post('/file/uploads/profile/Fourth', function(req, res) {
 router.get('/forgotpass', function(req, res) {
 	var adr = req.protocol + '://' + req.get('host') + req.url;
 	var q = url.parse(adr, true);
-	console.log(q);
 	manageUser.getUserInfo(q.query.email, user => {
-		console.log(q.email);
-		console.log(user);
 		if (user)
 		{
 			if (user['verification'] === q.query.verify)
@@ -499,7 +496,6 @@ router.get('/forgotpass', function(req, res) {
 });
 
 router.get('/view/:email', function(req, res) {
-	console.log(req.params);
 	manageUser.getUserInfo(req.params.email, user => {
 		if (user)
 			res.render('potentials/profile', { user: user});
@@ -507,6 +503,22 @@ router.get('/view/:email', function(req, res) {
 			res.redirect('/404');
 	})
 })
+
+router.post('/resetpass', function(req, res) {
+	var email = req.body.Email;
+	var pass = req.body.oPassword;
+	var cpass = req.body.cPassword;
+	var verification = req.body.verify;
+	if (pass == cpass)
+	{
+		if (regex.test(pass))
+		{
+			res.end('{"msg":"Success"}');
+		}else
+			res.end('{"msg":"Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}');
+	}else
+		res.end('{"msg":"Passwords dont match"}');
+});
 
 router.post('*', function(req, res) {
 	res.end('{"msg":"404"}');
