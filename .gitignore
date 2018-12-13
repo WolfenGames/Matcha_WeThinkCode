@@ -2,3 +2,4 @@ backend/functions/settings.js
 node_modules/
 .vscode/
 out
+public/images/
