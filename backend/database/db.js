@@ -1,4 +1,5 @@
 const mongo = require('mongodb').MongoClient;
+const _mongo = require('mongodb');
 "use strict";
 
 const url = 'mongodb://localhost:27017/Matcha';
@@ -32,6 +33,7 @@ function createTagsCollection() {
 module.exports = {
 	url,
 	mongo,
+	_mongo,
 	createCollection: createCollection,
 	createTagsCollection: createTagsCollection
  };

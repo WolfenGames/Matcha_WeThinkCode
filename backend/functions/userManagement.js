@@ -60,9 +60,29 @@ function getUserInfo(email, cb) {
 	})
 }
 
+function getUserInfoId(id, cb) {
+	var o_id = new db._mongo.ObjectID(id);
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(db => {
+		var dbo = db.db('Matcha');
+		if (o_id !== null)
+		{
+			dbo.collection('Users').findOne({_id: o_id}).then(res => {
+				cb(res);
+				db.close();
+			}).catch(err => {
+				console.log("Cant fetch user " + err);
+			})
+		}else
+			cb(null)
+	}).catch(err => {
+		console.log("Cant connect to database " + err);
+	})
+}
+
 module.exports = {
 	deleteByUsername: deleteByUsername,
 	deleteAll: deleteAll,
 	updateUserOne: updateUserOne,
+	getUserInfoId: getUserInfoId,
 	getUserInfo: getUserInfo
 }

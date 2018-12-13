@@ -7,6 +7,7 @@
 <body class="container">
 	<header>
 		<% include ../partials/header %>
+		<script src="../js/view.js"></script>
 	</header>
 	<% 
 	if (user) {
@@ -29,6 +30,7 @@
 		var firstname = user['firstname'] === null ? 'You\'re in dire need of a firstname' : user['firstname'];
 		var lastname = user['surname'] === null ? 'You\'re in dire need of a lastname' : user['surname'];
 		var tags = user['tags'];
+		var id = user['_id'];
 	}
 	%>
 	<main>
@@ -45,6 +47,13 @@
 			<p>&lt;
 				<label class="email-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!"><%= email %></label>
 			/&gt;</p>
+			<div class="row mx-auto w-100">
+				<div onclick="likeMe('<%= id %>')">
+					<i class="fa fa-heart fa-5x" aria-hidden="true"></i>
+				</div>
+				<a href="/view/<%= id %>" class="btn btn-primary">Block</a>
+			</div>
+			<hr>
 		<!--TEMPLATE-->
 		<div class="row">
 			<div class="col-lg-4">
@@ -79,7 +88,7 @@
 							var mydate = new Date(age);
 							var myAge = date.getFullYear() - mydate.getFullYear();
 							%>
-							<p class="age">Age&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:: &lt;&nbsp;<label class="email-label edit-label"><%= myAge %></label>&nbsp;/&gt;</p>
+							<p class="age">Age&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:: &lt;&nbsp;<label class="email-label edit-label"><%= myAge %></label>&nbsp;/&gt;</p>
 					<!--Sexuality-->
 						<div class="input-group mb-3">
 								<label class="" for="">Sexuality&nbsp;::&nbsp; </label>

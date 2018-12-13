@@ -22,41 +22,19 @@
 		} else { %>
 			<div class="card-group mr-auto ml-auto">
 				<div class="column">
+					<!--Cards-->
 					<div class="card text-white bg-dark rounded" class="w-25">
-						<img class="card-img-top" src="..." alt="Card image cap">
+						<img class="card-img" src="<%= user['Prof'] %>" alt="Card image cap">
 						<div class="card-body">
-						  <h5 class="card-title">Card title</h5>
-						  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-						  <a href="#" class="btn btn-primary">Go somewhere</a>
+						  <h5 class="card-title"><%= user['username'] %></h5>
+						  <p class="card-text"><%= user['biography'] %>></p>
+						  <a href="/view/<%= user['_id'] %>" class="btn btn-primary">View</a>
+						  <a href="/view/<%= user['email'] %>" class="btn btn-primary">Like</a>
+						  <a href="/view/<%= user['email'] %>" class="btn btn-primary">Block</a>
 						</div>
 					</div>
 					<hr>
-					<div class="card text-white bg-dark rounded" class="w-25">
-					<img class="card-img-top" src="..." alt="Card image cap">
-					<div class="card-body">
-						<h5 class="card-title">Card title</h5>
-						<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
-					</div>
-					</div>
-					<hr>
-					<div class="card text-white bg-dark rounded" class="w-25">
-					<img class="card-img-top" src="..." alt="Card image cap">
-					<div class="card-body">
-						<h5 class="card-title">Card title</h5>
-						<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
-					</div>
-					</div>
-					<hr>
-					<div class="card text-white bg-dark rounded" class="w-25">
-					<img class="card-img-top" src="..." alt="Card image cap">
-					<div class="card-body">
-						<h5 class="card-title">Card title</h5>
-						<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
-					</div>
-					</div>
+					<!--End of Cards-->
 				</div>
 			</div>
 		<% } %>

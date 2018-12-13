@@ -496,9 +496,9 @@ router.get('/forgotpass', function(req, res) {
 });
 
 router.get('/view/:email', function(req, res) {
-	manageUser.getUserInfo(req.params.email, user => {
+	manageUser.getUserInfoId(req.params.email, user => {
 		if (user)
-			res.render('potentials/profile', { user: user});
+			res.render('potentials/profile', { user: user });
 		else
 			res.redirect('/404');
 	})
@@ -513,7 +513,13 @@ router.post('/resetpass', function(req, res) {
 	{
 		if (regex.test(pass))
 		{
-			res.end('{"msg":"Success"}');
+			let hash = bcrypt.hashSync(pass, 10);
+			manageUser.updateUserOne({email: email, verification: verify}, {$set : {password: hash}}, result => {
+				if (result)
+					res.end('{"msg":"OK"}');
+				else
+					res.end('{"msg":"Could not update Password"}')
+			})
 		}else
 			res.end('{"msg":"Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}');
 	}else

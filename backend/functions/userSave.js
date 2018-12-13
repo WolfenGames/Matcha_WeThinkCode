@@ -23,6 +23,9 @@ function userSave(email, password, uType, sub, url) {
 				rating: 100,
 				type: uType,
 				tags: [],
+				likes: [],
+				blocks: [],
+				repors: 0,
 				picture: {
 					Picture1: null,
 					Picture2: null,
@@ -30,8 +33,10 @@ function userSave(email, password, uType, sub, url) {
 					Picture4: null,
 					Picture5: null
 				},
-				Prof: '/images/pexels-photo-220453.jpeg',
+				Prof: null,
 				biography: null,
+				views: 1,
+				rating: 100
 
 			};
 			dbo.collection('Users').insertOne(saveOptions).then(res => {
