@@ -184,7 +184,7 @@ router.post('/login/forgot', function(req, res) {
 	var email = req.body.email;
 	if (e_regex.test(email)){
 		if (email) {
-				var fullUrl = req.protocol + '://' + req.get('host') + "/verify?email=" + email + "&verify=";
+				var fullUrl = req.protocol + '://' + req.get('host') + "/forgotpass/?email=" + email + "&verify=";
 				mailer.sendPassForget(email, fullUrl, function(ret) {
 					if (ret)
 						res.send('{"msg":"Forgot password sent"}');
@@ -480,8 +480,32 @@ router.post('/file/uploads/profile/Fourth', function(req, res) {
 	}
 });
 
-router.get('/view', function(req, res) {
-	res.render('potentials/profile', { user: req.session.user});
+router.get('/forgotpass', function(req, res) {
+	var adr = req.protocol + '://' + req.get('host') + req.url;
+	var q = url.parse(adr, true);
+	console.log(q);
+	manageUser.getUserInfo(q.query.email, user => {
+		console.log(q.email);
+		console.log(user);
+		if (user)
+		{
+			if (user['verification'] === q.query.verify)
+				res.render('pages/profile/forgot', {email: user['email'], verify: user['verification']});
+			else
+				res.redirect('/login');
+		}else
+			res.redirect('/404');
+	});
+});
+
+router.get('/view/:email', function(req, res) {
+	console.log(req.params);
+	manageUser.getUserInfo(req.params.email, user => {
+		if (user)
+			res.render('potentials/profile', { user: user});
+		else
+			res.redirect('/404');
+	})
 })
 
 router.post('*', function(req, res) {

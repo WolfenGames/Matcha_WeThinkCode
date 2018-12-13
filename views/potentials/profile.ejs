@@ -45,7 +45,6 @@
 			<p>&lt;
 				<label class="email-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!"><%= email %></label>
 			/&gt;</p>
-			<p>Type: <%= userType %></p>
 		<!--TEMPLATE-->
 		<div class="row">
 			<div class="col-lg-4">
@@ -63,8 +62,7 @@
 					</div>
 					<div class="form-group">
 					<label for="biography">&lt;About me/&gt;</label>
-					<label class="form-control" id="biography" rows="5" style="resize: none" maxlength="150"><%= biography %></label>
-					<label for="biography" id="biographylength"></label>
+					<label class="form-control" id="biography"><%= biography %></label>
 				</div>
 			</div>
 			<hr>
@@ -72,63 +70,40 @@
 			<div class="col-lg-8">
 				<div class="coloumn">
 					<p>
-					Name::
-					&lt;<label class="firstname-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your firstname!"><%= firstname %></label>
-						<input type="text" class="firstname-edit-input w-25" style="display: none;">
-					/&gt;</p>
+					Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&lt;&nbsp;<label class="firstname-label edit-label"><%= firstname %></label>&nbsp;/&gt;</p>
 					<p>
-					Surname::
-					&lt;
-						<label class="lastname-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your lastname!"><%= lastname %></label>
-						<input type="text" class="lastname-edit-input w-25" style="display: none;">
-					/&gt;</p>
+					Surname&nbsp;::
+						&lt;&nbsp;<label class="lastname-label edit-label"><%= lastname %></label>&nbsp;/&gt;</p>
 					<div class="coloumn">
-						<% if (!age) { %>
-							<!--Date input-->
-							<form>
-								<div class="form-group">
-									<label class="control-label" for="DateOfBirth">&lt;Date of birth/&gt;</label>
-									<input class="form-control" id="DateOfBirth" name="date" type="date"/>
-									<script>
-										$('#DateOfBirth').val("<%= age %>");
-									</script>
-								</div>
-							</form>
-							<% } else {  
-							var date = new Date();
+						<%	var date = new Date();
 							var mydate = new Date(age);
 							var myAge = date.getFullYear() - mydate.getFullYear();
 							%>
-								<p class="age">Age:: <%= myAge %></p>
-						<% } %>
+							<p class="age">Age&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:: &lt;&nbsp;<label class="email-label edit-label"><%= myAge %></label>&nbsp;/&gt;</p>
 					<!--Sexuality-->
 						<div class="input-group mb-3">
-							<div class="input-group-prepend">
-								<label class="input-group-text" for="SexualityGroup">Sexuality</label>
-							</div>
+								<label class="" for="">Sexuality&nbsp;::&nbsp; </label>
 							<% if (Sexuality === '1') { %>
-								<label>Bisexual</option>
+								&lt;&nbsp;<label class="email-label edit-label">Bisexual</label>&nbsp;/&gt;
 							<% }
 							 if (Sexuality === '2') { %>
-								<label>Heterosexual</option>
+							 	&lt;&nbsp;<label class="email-label edit-label">Heterosexual</label>&nbsp;/&gt;
 							<% } 
 							 if (Sexuality === '3') { %>
-								<label>Homosexual</option>
+							 	&lt;&nbsp;<label class="email-label edit-label">Homosexual</label>&nbps;/&gt;
 							<% } %>
 						</div>
 						<!--Gender-->
 						<div class="input-group mb-3">
-						<div class="input-group-prepend">
-							<label class="input-group-text" for="GenderGroup">Gender&nbsp;&nbsp;&nbsp;</label>
-						</div>
+							<label class="" for="">Gender&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;</label>
 						<% if (Gender === '1') { %>
-							<label>Female</label>
+							&lt;&nbsp;<label class="email-label edit-label">Female</label>&nbsp;/&gt;
 						<% }
 						 if (Gender === '2') { %>
-							<label>Male</lable>
+						 	&lt;&nbsp;<label class="email-label edit-label">Male</label>&nbsp;/&gt;
 						<% }
 						 if (Gender === '3') { %>
-							<label>Other</label>
+						 	&lt;&nbsp;<label class="email-label edit-label">Other</label>&nbsp;/&gt;
 						<% } %>
 				</div>
 			</div>
@@ -160,6 +135,7 @@
 				<% } %>
 				</div>
 			</div>
+			<hr>
 		</div>
 		</div>
 	</div>

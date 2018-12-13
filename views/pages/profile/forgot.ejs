@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include ../../partials/head %>
+	<script src="js/forgot.js"></script>
+</head>
+<body class="container">
+	<main>
+		<div class="jumbotron page">
+			<h1>&lt;Forgot Password/&gt;</h1>
+			<hr>
+			<form>
+				<div class="form-group">
+				<label for="password">&lt;Password/&gt;</label>
+				<input pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' type="password" class="form-control" name="password" id="password" aria-describedby="helpId" placeholder="Password">
+				<small id="helpId" class="form-text text-muted">Password requires atleast 1 Uppercase, 1 Lowercase, 1 number and 1 special character</small>
+				</div>
+				<div class="form-group">
+				<label for="password">&lt;Confirm Password/&gt;</label>
+				<input pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' type="password" class="form-control" name="cpassword" id="cpassword" aria-describedby="helpId" placeholder="Password">
+				<small id="helpId" class="form-text text-muted">Password requires atleast 1 Uppercase, 1 Lowercase, 1 number and 1 special character</small>
+				</div>
+				<hr>
+				<button type="button" id='Signup-Button' class="btn btn-outline-custom">&lt;ResetPass/&gt;</button>
+			</form>
+			</div>
+		</div>
+	</main>
+	<% include ../../partials/error %>
+	<footer>
+		<% include ../../partials/footer %>
+	</footer>
+</body>
+</html>
