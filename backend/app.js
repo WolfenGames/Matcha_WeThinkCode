@@ -4,6 +4,12 @@ const app = express();
 const pageRoutes = require('./routes/pages');
 const session = require('express-session');
 const DB = require('./database/db');
+const fs = require('fs');
+var dir = './public/images';
+
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
