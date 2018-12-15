@@ -83,9 +83,9 @@ img {
 
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
 
-.starrating > input {display: none;}  /* Remove radio buttons */
+.fameRating > input {display: none;}  /* Remove radio buttons */
 
-.starrating > label:before { 
+.fameRating > label:before { 
   content: "\f005"; /* Star */
   margin: 2px;
   font-size: 8em;
@@ -93,15 +93,15 @@ img {
   display: inline-block; 
 }
 
-.starrating > label
+.fameRating > label
 {
   color: #222222; /* Start color when not clicked */
 }
 
-.starrating > input:checked ~ label
+.fameRating > input:checked ~ label
 { color: #ffca08 ; } /* Set yellow color when star checked */
 
-.starrating > input:hover ~ label
+.fameRating > input:hover ~ label
 { color: #ffca08 ;  } /* Set yellow color when star hover */
 
 .edit-label {
@@ -152,6 +152,8 @@ input {
 .img-thumbnail {
 	min-width: 100%;
 	min-height: 200px;
+	max-width: 100%;
+	max-height: 200px;
 }
 
 .pic-row {
@@ -172,5 +174,10 @@ input {
 		border: solid 5px #cccccc !important;
 		border-radius: 5px;
 	}
+}
 
+.card-img {
+	min-height: 400px;
+	max-height: 400px;
+	width: 100%;
 }
