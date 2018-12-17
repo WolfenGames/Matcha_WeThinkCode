@@ -504,7 +504,44 @@ router.get('/view/:id', function(req, res) {
 				res.render('potentials/profile', { user: user });
 			else
 				res.redirect('/404');
-	})
+		})
+	}
+	else
+		res.redirect('/404');
+})
+
+router.get('/block/:id', function(req, res) {
+	if (typeof req.params.id === 'string') {
+		manageUser.getUserInfoId(req.params.id, user => {
+			if (user) {
+				console.log(user);
+				manageUser.updateUserOne({email: req.session.user.email}, {
+					$addToSet: {
+						blocks: user._id
+					}
+				}, result => {
+					manageUser.getUserInfo(req.session.user.email, fn => {
+						req.session.user = fn;
+						res.redirect('/');
+					})
+				});
+			}
+			else
+				res.redirect('/404');
+		})
+	}
+	else
+		res.redirect('/404');
+})
+
+router.get('/like/:id', function(req, res) {
+	if (typeof req.params.id === 'string') {
+		manageUser.getUserInfoId(req.params.id, user => {
+			if (user)
+				res.render('potentials/profile', { user: user });
+			else
+				res.redirect('/404');
+		})
 	}
 	else
 		res.redirect('/404');
