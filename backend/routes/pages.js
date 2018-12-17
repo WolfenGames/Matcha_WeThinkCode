@@ -30,7 +30,9 @@ router.get('/', function(req, res) {
 					else
 						req.session.setup = true;
 			req.session.user = result;
-			res.render('pages/index', { user: req.session.user, setup: req.session.setup });
+			ListUsers.ListUser(result => {
+				res.render('pages/index', { user: req.session.user, users: result, setup: req.session.setup });
+			})
 		})
 	}
 });
@@ -495,13 +497,17 @@ router.get('/forgotpass', function(req, res) {
 	});
 });
 
-router.get('/view/:email', function(req, res) {
-	manageUser.getUserInfoId(req.params.email, user => {
-		if (user)
-			res.render('potentials/profile', { user: user });
-		else
-			res.redirect('/404');
+router.get('/view/:id', function(req, res) {
+	if (typeof req.params.id === 'string') {
+		manageUser.getUserInfoId(req.params.id, user => {
+			if (user)
+				res.render('potentials/profile', { user: user });
+			else
+				res.redirect('/404');
 	})
+	}
+	else
+		res.redirect('/404');
 })
 
 router.post('/resetpass', function(req, res) {

@@ -23,16 +23,19 @@
 			<div class="card-group mr-auto ml-auto">
 				<div class="column">
 					<!--Cards-->
+					<% for (var i = 0; i < users.length; i++) { %>
 					<div class="card text-white bg-dark rounded" class="w-25">
-						<img class="card-img" src="<%= user['Prof'] %>" alt="Card image cap">
+						<img class="card-img" src="<%= users[i]['Prof'] %>" alt="Card image cap">
 						<div class="card-body">
-						  <h5 class="card-title"><%= user['username'] %></h5>
-						  <p class="card-text"><%= user['biography'] %>></p>
-						  <a href="/view/<%= user['_id'] %>" class="btn btn-primary">View</a>
-						  <a href="/view/<%= user['email'] %>" class="btn btn-primary">Like</a>
-						  <a href="/view/<%= user['email'] %>" class="btn btn-primary">Block</a>
+						  <h5 class="card-title"><%= users[i]['username'] %></h5>
+						  <p class="card-text"><%= users[i]['biography'] %></p>
+						  <a href="/view/<%= users[i]['_id'] %>" class="btn btn-primary">View</a>
+						  <a href="/view/<%= users[i]['email'] %>" class="btn btn-primary">Like</a>
+						  <a href="/view/<%= users[i]['email'] %>" class="btn btn-primary">Block</a>
 						</div>
 					</div>
+					<hr>
+					<% } %>
 					<hr>
 					<!--End of Cards-->
 				</div>
