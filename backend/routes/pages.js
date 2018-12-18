@@ -514,7 +514,6 @@ router.get('/block/:id', function(req, res) {
 	if (typeof req.params.id === 'string') {
 		manageUser.getUserInfoId(req.params.id, user => {
 			if (user) {
-				console.log(user);
 				manageUser.updateUserOne({email: req.session.user.email}, {
 					$addToSet: {
 						blocks: user._id
@@ -538,7 +537,11 @@ router.get('/like/:id', function(req, res) {
 	if (typeof req.params.id === 'string') {
 		manageUser.getUserInfoId(req.params.id, user => {
 			if (user)
-				res.render('potentials/profile', { user: user });
+			{
+				manageUser.updateUserOne({email: req.session.user.email}, { $addToSet: {likes: req.params.id}}, result => {
+					res.redirect('/');
+				})
+			}
 			else
 				res.redirect('/404');
 		})

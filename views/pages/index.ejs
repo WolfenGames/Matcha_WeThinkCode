@@ -2,50 +2,58 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <% include ../partials/head %>
-</head>
-<body class="container">
-
-<header>
-    <% include ../partials/header %>
-</header>
-
-<main>
-    <div class="container page">
-		<hr>
-		<% if (setup === false) {
-		%>
-			<h1>Please setup account before you can search for users</h1>
-			<a class="nav-link" href="/profile">&lt;Profile/&gt;</a>
-		<%
-		} else { %>
-			<div class="card-group mr-auto ml-auto">
-				<div class="column">
-					<!--Cards-->
-					<% for (var i = 0; i < users.length; i++) { 
-						if (user.blocks.indexOf(users[i]['_id']) === -1) {%>
-					<div class="card text-white bg-dark rounded" class="w-25">
-						<img class="card-img" src="<%= users[i]['Prof'] %>" alt="Card image cap">
-						<div class="card-body">
-						  <h5 class="card-title"><%= users[i]['username'] %></h5>
-						  <p class="card-text"><%= users[i]['biography'] %></p>
-						  <a href="/view/<%= users[i]['_id'] %>" class="btn btn-primary">View</a>
-						  <a href="/like/<%= users[i]['_id'] %>" class="btn btn-primary">Like</a>
-						  <a href="/block/<%= users[i]['_id'] %>" class="btn btn-primary">Block</a>
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body class="container">
+		
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<main>
+			<div class="container page">
+				<hr>
+				<% if (setup === false) {
+					%>
+					<h1>Please setup account before you can search for users</h1>
+					<a class="nav-link" href="/profile">&lt;Profile/&gt;</a>
+					<%
+				} else { %>
+					<div class="card-group mr-auto ml-auto">
+						<div class="column">
+							<!--Cards-->
+							<% 
+								var blocklist = user.blocks;
+								for (var i = 0; i < blocklist.length; i++)
+								{
+									blocklist[i] = blocklist[i].toString();
+								}
+								for (var i = 0; i < users.length; i++) {
+								var bid = users[i]['_id'];
+								bid = bid.toString();
+								if (blocklist.indexOf(bid) === -1) { %>
+									<div class="card text-white bg-dark rounded" class="w-25">
+										<img class="card-img" src="<%= users[i]['Prof'] %>" alt="Card image cap">
+										<div class="card-body">
+											<h5 class="card-title"><%= users[i]['username'] %></h5>
+											<p class="card-text"><%= users[i]['biography'] %></p>
+											<a href="/view/<%= users[i]['_id'] %>" class="btn btn-primary">View</a>
+											<a href="/like/<%= users[i]['_id'] %>" class="btn btn-primary">Like</a>
+											<a href="/block/<%= users[i]['_id'] %>" class="btn btn-primary">Block</a>
+										</div>
+									</div>
+									<hr>
+									<% 
+								}
+							}	
+							%>
+							<hr>
+							<!--End of Cards-->
 						</div>
 					</div>
+					<% } %>
 					<hr>
-					<% 
-						}
-					}	
-				 	%>
-					<hr>
-					<!--End of Cards-->
-				</div>
-			</div>
-		<% } %>
-		<hr>
     </div>
 </main>
 
