@@ -18,7 +18,7 @@ function userSave(email, password, uType, sub, url) {
 				email_subscription: sub === 'true' ? true : false,
 				email: email,
 				password: password,
-				age: 100,
+				age: null,
 				fame: 0,
 				rating: 100,
 				type: uType,
