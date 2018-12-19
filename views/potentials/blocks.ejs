@@ -1,0 +1,57 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body class="container">
+		
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<main>
+			<div class="container page">
+				<hr>
+				<% if (user.setup === false) {
+					%>
+					<h1>Please setup account before you can search for blocks</h1>
+					<a class="nav-link" href="/profile">&lt;Profile/&gt;</a>
+					<%
+				} else { %>
+					<div class="card-group mr-auto ml-auto">
+						<div class="column">
+							<!--Cards-->
+							<% 
+                                for (var i = 0; i < blocks.length; i++) { 
+                                    if (blocks[i]['username'] || blocks[i]['firstname'] || blocks[i]['surname'] || blocks[i]['sex'] || blocks[i]['sexuality']
+                                    || blocks[i]['biography'] || blocks[i]['Prof']) {
+                                    %>
+									<div class="card text-white bg-dark rounded" class="w-25">
+										<img class="card-img" src="<%= blocks[i]['Prof'] %>" alt="Card image cap">
+										<div class="card-body">
+											<h5 class="card-title"><%= blocks[i]['username'] %></h5>
+											<p class="card-text"><%= blocks[i]['biography'] %></p>
+										</div>
+									</div>
+									<hr>
+                                    <% 
+                                    }
+								}
+							%>
+							<hr>
+							<!--End of Cards-->
+						</div>
+					</div>
+					<% } %>
+					<hr>
+    </div>
+</main>
+
+<footer>
+    <% include ../partials/footer %>
+</footer>
+
+</body>
+</html>

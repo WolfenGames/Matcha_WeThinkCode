@@ -24,11 +24,9 @@ router.get('/', function(req, res) {
 	else{
 		manageUser.getUserInfo(req.session.user.email, result => {
 			var user = req.session.user;
-			if (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
-					|| !user['biography'])
-						req.session.setup = false;
-					else
-						req.session.setup = true;
+			req.session.setup = (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
+					|| !user['biography'] || !user['Prof']) ?
+						false : true;
 			req.session.user = result;
 			ListUsers.ListUser(result => {
 				res.render('pages/index', { user: req.session.user, users: result, setup: req.session.setup });
@@ -571,6 +569,28 @@ router.post('/resetpass', function(req, res) {
 	}else
 		res.end('{"msg":"Passwords dont match"}');
 });
+
+router.get('/likes', function(req, res) {
+	if (req.session.user) {
+		ListUsers.getLikedUsers(req.session.user, likes => {
+			res.render('potentials/likes', {user: req.session.user, likes})
+		})
+	}
+	else
+		res.redirect('/404');
+})
+
+router.get('/blocks', function(req, res) {
+	if (req.session.user) {
+		ListUsers.getBlockedUsers(req.session.user, blocks => {
+			res.render('potentials/blocks', {user: req.session.user, blocks})
+		})
+	}
+	else
+		res.redirect('/404');
+})
+
+
 
 router.post('*', function(req, res) {
 	res.end('{"msg":"404"}');
