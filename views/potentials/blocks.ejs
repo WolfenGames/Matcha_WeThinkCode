@@ -21,15 +21,14 @@
 					<%
 				} else { %>
 					<div class="card-group mr-auto ml-auto">
-						<div class="column">
+						<div class="w-100">
 							<!--Cards-->
 							<% 
                                 for (var i = 0; i < blocks.length; i++) { 
                                     if (blocks[i]['username'] || blocks[i]['firstname'] || blocks[i]['surname'] || blocks[i]['sex'] || blocks[i]['sexuality']
                                     || blocks[i]['biography'] || blocks[i]['Prof']) {
                                     %>
-									<div class="card text-white bg-dark rounded" class="w-25">
-										<img class="card-img" src="<%= blocks[i]['Prof'] %>" alt="Card image cap">
+									<div class="card text-white bg-dark rounded" class="w-100">
 										<div class="card-body">
 											<h5 class="card-title"><%= blocks[i]['username'] %></h5>
 											<p class="card-text"><%= blocks[i]['biography'] %></p>

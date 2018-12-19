@@ -499,7 +499,11 @@ router.get('/view/:id', function(req, res) {
 	if (typeof req.params.id === 'string') {
 		manageUser.getUserInfoId(req.params.id, user => {
 			if (user)
-				res.render('potentials/profile', { user: user });
+			{
+				manageUser.updateUserOne({email: user.email}, { $set: {views: user.views + 1}}, () => {
+					res.render('potentials/profile', { user: user });
+				})
+			}
 			else
 				res.redirect('/404');
 		})

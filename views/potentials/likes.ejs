@@ -21,12 +21,11 @@
 					<%
 				} else { %>
 					<div class="card-group mr-auto ml-auto">
-						<div class="column">
+						<div class="w-100">
 							<!--Cards-->
 							<% 
 								for (var i = 0; i < likes.length; i++) { %>
-									<div class="card text-white bg-dark rounded" class="w-25">
-										<img class="card-img" src="<%= likes[i]['Prof'] %>" alt="Card image cap">
+									<div class="card text-white bg-dark rounded" class="w-100">
 										<div class="card-body">
 											<h5 class="card-title"><%= likes[i]['username'] %></h5>
 											<p class="card-text"><%= likes[i]['biography'] %></p>

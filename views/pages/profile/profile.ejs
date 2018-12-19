@@ -30,6 +30,8 @@
 		var firstname = user['firstname'] === null ? 'You\'re in dire need of a firstname' : user['firstname'];
 		var lastname = user['surname'] === null ? 'You\'re in dire need of a lastname' : user['surname'];
 		var tags = usertags;
+		var views = user['views'];
+		var lastTime = user['lastTime'];
 	}
 	%>
 	<main>
@@ -108,6 +110,8 @@
 							var myAge = date.getFullYear() - mydate.getFullYear();
 							%>
 								<p class="age">Age:: <%= myAge %></p>
+								<p class="age">Views:: <%= views %></p>
+								<p class="age">Last Online:: <%= lastTime %></p>
 						<% } %>
 					<!--Sexuality-->
 						<div class="input-group mb-3">
