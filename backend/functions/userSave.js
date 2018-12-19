@@ -12,7 +12,7 @@ function userSave(email, password, uType, sub, url) {
 				surname: null,
 				sex: "3",
 				sexuality: "1",
-				location: null,
+				location: [0,0],
 				verification: hash,
 				isVerified: false,
 				email_subscription: sub === 'true' ? true : false,

@@ -28,7 +28,7 @@ router.get('/', function(req, res) {
 					|| !user['biography'] || !user['Prof']) ?
 						false : true;
 			req.session.user = result;
-			ListUsers.ListUser(result => {
+			ListUsers.ListUser(user, result => {
 				res.render('pages/index', { user: req.session.user, users: result, setup: req.session.setup });
 			})
 		})
@@ -162,10 +162,13 @@ router.post('/login/user', function(req, res) {
 						if (result)
 						{
 							var loc = geoip.lookup(result);
-							req.session.loc = loc.ll;
-							manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
-								
-							});
+							if (loc)
+							{
+								req.session.loc = [loc.ll[1], loc.ll[0]];
+								manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
+									
+								});
+							}
 						}
 					});
 					res.end('{"msg": "OK"}');

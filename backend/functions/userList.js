@@ -1,10 +1,19 @@
 const db = require('../database/db');
 
 module.exports = {
-	ListUser(fn) {
+	ListUser(user, fn) {
 		db.mongo.connect(db.url, {useNewUrlParser: true}).then(db => {
 			var dbo = db.db('Matcha');
-			dbo.collection('Users').find({}).toArray().then(result => {
+			dbo.collection('Users').find({location: {
+				$nearSphere: {
+					$geometry: {
+						type: "Point",
+						coordinates: user.location
+					},
+					$maxDistance: 20
+				}
+				}
+			}).toArray().then(result => {
 				fn(result);
 				db.close();
 			}).catch(err => {
