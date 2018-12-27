@@ -12,6 +12,7 @@ const aux			= require('../functions/auxiliary');
 const geoip			= require('geoip-lite');
 const tags			= require('../functions/tags');
 const IS			= require('../functions/image_save');
+const db			= require('../database/db');
 
 var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 var e_regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$/;
@@ -566,8 +567,10 @@ router.get('/like/:id', function(req, res) {
 		manageUser.getUserInfoId(req.params.id, user => {
 			if (user)
 			{
-				manageUser.updateUserOne({email: req.session.user.email}, { $addToSet: {likes: req.params.id}}, result => {
-					res.redirect('/');
+				manageUser.updateUserOne({email: req.session.user.email}, { $addToSet: {likes: req.params.id}}, () => {
+					manageUser.updateUserOne({_id: req.params.id} , { $addToSet: { likedBy: req.session.user._id}}, () => {
+						res.redirect('/');
+					})
 				})
 			}
 			else
@@ -582,7 +585,6 @@ router.post('/resetpass', function(req, res) {
 	var email = req.body.Email;
 	var pass = req.body.oPassword;
 	var cpass = req.body.cPassword;
-	var verification = req.body.verify;
 	if (pass == cpass)
 	{
 		if (regex.test(pass))
