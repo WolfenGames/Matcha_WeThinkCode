@@ -29,7 +29,7 @@ module.exports = {
 		db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
 			var dbo = dbs.db('Matcha');
 			var prof_id = user.likes.map(id => { return  db._mongo.ObjectId(id) });
-			dbo.collection('Users').find({email: user.email, _id: {$in: prof_id}}).toArray().then(result => {
+			dbo.collection('Users').find({_id: {$in: prof_id}}).toArray().then(result => {
 				fn(result);
 				dbs.close();
 			}).catch(err => {
@@ -44,7 +44,6 @@ module.exports = {
 			var dbo = dbs.db('Matcha');
 			var prof_id = user.blocks.map(id => { return  db._mongo.ObjectId(id) });
 			dbo.collection('Users').find({ _id: {$in: prof_id}}).toArray().then(result => {
-				console.log(result);
 				fn(result);
 				dbs.close();
 			}).catch(err => {

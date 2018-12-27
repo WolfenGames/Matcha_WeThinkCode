@@ -14,9 +14,12 @@
 						%>
 							<li class="nav-item"><a class="nav-link" href="/admin">&lt;Admin Panel/&gt;</a></li>
 						<%
-					} %>
-					<li class="nav-item"><a class="nav-link" href="/likes">&lt;Likes/&gt;</a></li>
-					<li class="nav-item"><a class="nav-link" href="/blocks">&lt;Blocks/&gt;</a></li>
+					} 
+					var blockCount = user['blocks'].length;
+					var likeCount = user['likes'].length;
+					%>
+					<li class="nav-item"><a class="nav-link" href="/likes">&lt;Likes(<%= likeCount %>)/&gt;</a></li>
+					<li class="nav-item"><a class="nav-link" href="/blocks">&lt;Blocks(<%= blockCount %>)/&gt;</a></li>
 					<li class="nav-item"><a class="nav-link" href="/profile">&lt;Profile/&gt;</a></li>
 					<li class="nav-item"><a class="nav-link" href="/logout/user">&lt;Logout/&gt;</a></li>
 				<%}%>

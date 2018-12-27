@@ -537,6 +537,30 @@ router.get('/block/:id', function(req, res) {
 		res.redirect('/404');
 })
 
+router.get('/unblock/:id', function(req, res) {
+	if (typeof req.params.id === 'string') {
+		manageUser.getUserInfoId(req.params.id, user => {
+			if (user) {
+				manageUser.updateUserOne({email: req.session.user.email}, {
+					$pull: {
+						blocks: user._id
+					}
+				}, result => {
+					manageUser.getUserInfo(req.session.user.email, fn => {
+						req.session.user = fn;
+						res.redirect('/');
+					})
+				});
+			}
+			else
+				res.redirect('/404');
+		})
+	}
+	else
+		res.redirect('/404');
+})
+
+
 router.get('/like/:id', function(req, res) {
 	if (typeof req.params.id === 'string') {
 		manageUser.getUserInfoId(req.params.id, user => {
