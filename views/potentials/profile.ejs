@@ -7,30 +7,29 @@
 <body class="container">
 	<header>
 		<% include ../partials/header %>
-		<script src="../js/view.js"></script>
 	</header>
 	<% 
-	if (user) {
-		var username = user['username'] === null ? 'You\'re in dire need of an username' : user['username'];
-		var up = JSON.parse(JSON.stringify(user['picture']));
+	if (req_user) {
+		var username = req_user['username'] === null ? 'You\'re in dire need of an username' : req_user['username'];
+		var up = JSON.parse(JSON.stringify(req_user['picture']));
 		var img1 = up['Picture1'];
 		var img2 = up['Picture2'];
 		var img3 = up['Picture3'];
 		var img4 = up['Picture4'];
 		var img5 = up['Picture5'];
-		var prof = user['Prof'];
-		var subscription = user['email_subscription'];
-		var biography = user['biography'];
-		var fame = user['fame'];
-		var age = user['age'];
-		var email = user['email'];
-		var userType = user['type'];
-		var Sexuality = user['sexuality'];
-		var Gender = user['sex'];
-		var firstname = user['firstname'] === null ? 'You\'re in dire need of a firstname' : user['firstname'];
-		var lastname = user['surname'] === null ? 'You\'re in dire need of a lastname' : user['surname'];
-		var tags = user['tags'];
-		var id = user['_id'];
+		var prof = req_user['Prof'];
+		var subscription = req_user['email_subscription'];
+		var biography = req_user['biography'];
+		var fame = req_user['fame'];
+		var age = req_user['age'];
+		var email = req_user['email'];
+		var userType = req_user['type'];
+		var Sexuality = req_user['sexuality'];
+		var Gender = req_user['sex'];
+		var firstname = req_user['firstname'] === null ? 'You\'re in dire need of a firstname' : req_user['firstname'];
+		var lastname = req_user['surname'] === null ? 'You\'re in dire need of a lastname' : req_user['surname'];
+		var tags = req_user['tags'];
+		var id = req_user['_id'];
 	}
 	%>
 	<main>
@@ -47,6 +46,15 @@
 			<p>&lt;
 				<label class="email-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!"><%= email %></label>
 			/&gt;</p>
+			<script>
+				function likeMe(id) {
+					$.post('/likes', {
+						id: id
+					}).done(res => {
+						console.log("liked");
+					})				
+				}
+			</script>
 			<div class="row mx-auto w-100">
 				<div onclick="likeMe('<%= id %>')">
 					<i class="fa fa-heart fa-5x" aria-hidden="true"></i>

@@ -26,6 +26,7 @@ function userSave(email, password, uType, sub, url) {
 				likes: [],
 				blocks: [],
 				likedBy: [],
+				likedBy: [],
 				repors: 0,
 				picture: {
 					Picture1: null,

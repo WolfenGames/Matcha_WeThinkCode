@@ -1,8 +1,8 @@
 <!-- views/partials/header.ejs -->
-<nav class="navbar navbar-expand-sm bg-primary navbar-dark  nav-mycol rounded-top">
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark nav-mycol rounded-top">
 	<div class="container-fluid">
 		<div class="navbar-header nav-justified">
-				<h1 class="text-light">&lt;Matcha/&gt;</h1>
+			<h1 class="text-light">&lt;Matcha/&gt;</h1>
 			<ul class="nav navbar-nav">
 				<li class="nav-item"><a class="nav-link" href="/">&lt;Home/&gt;</a></li>
 				<%
@@ -14,12 +14,22 @@
 						%>
 							<li class="nav-item"><a class="nav-link" href="/admin">&lt;Admin Panel/&gt;</a></li>
 						<%
-					} 
+					}
 					var blockCount = user['blocks'].length;
 					var likeCount = user['likes'].length;
+					var likedUsers = user['likes'];
+					var likedBy = user['likedBy'];
+					var matchCount = 0;
+					likedUsers.forEach(likes => {
+						likedBy.forEach(liked => {
+							if (likes == liked)
+								matchCount++;
+						})
+					})
 					%>
 					<li class="nav-item"><a class="nav-link" href="/likes">&lt;Likes(<%= likeCount %>)/&gt;</a></li>
 					<li class="nav-item"><a class="nav-link" href="/blocks">&lt;Blocks(<%= blockCount %>)/&gt;</a></li>
+					<li class="nav-item"><a class="nav-link" href="/matches">&lt;Matches(<%= matchCount %>)/&gt;</a></li>
 					<li class="nav-item"><a class="nav-link" href="/profile">&lt;Profile/&gt;</a></li>
 					<li class="nav-item"><a class="nav-link" href="/logout/user">&lt;Logout/&gt;</a></li>
 				<%}%>

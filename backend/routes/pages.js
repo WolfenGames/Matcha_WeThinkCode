@@ -14,9 +14,9 @@ const tags			= require('../functions/tags');
 const IS			= require('../functions/image_save');
 const db			= require('../database/db');
 
-var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-var e_regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$/;
-var u_regex = /^[a-zA-Z0-9 ]{5,}$/;
+var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+var email_regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$/;
+var username_regex = /^[a-zA-Z0-9 ]{5,}$/;
 
 router.get('/', function(req, res) {
 	if (!req.session.user)
@@ -77,8 +77,8 @@ router.post('/User/Create', function(req, res) {
 	FuncUser.emailExists(email, function(result) {
 		if (!result)
 		{
-			if (e_regex.test(email)) {
-				if (regex.test(oPass) && regex.test(cPass))
+			if (email_regex.test(email)) {
+				if (password_regex.test(oPass) && password_regex.test(cPass))
 				{
 					if (cPass == oPass) {
 						let hash = bcrypt.hashSync(oPass, 10);
@@ -130,7 +130,7 @@ router.get('/logout/user', function(req, res) {
 
 router.post('/login/resend', function(req, res) {
 	var email = req.body.email;
-	if (e_regex.test(email)){
+	if (email_regex.test(email)){
 	if (email) {
 			var fullUrl = req.protocol + '://' + req.get('host') + "/verify?email=" + email + "&verify=";
 			mailer.resendVerify(email, fullUrl, function(ret) {
@@ -146,13 +146,12 @@ router.post('/login/resend', function(req, res) {
 });
 
 router.post('/login/user', function(req, res) {
-	if (e_regex.test(req.body.email)){
-		if (regex.test(req.body.password)){
+	if (email_regex.test(req.body.email)){
+		if (password_regex.test(req.body.password)){
 			login.login(req.body.email, req.body.password, function(loginres) {
 				if (loginres){
 					req.session.user = loginres;
 					var user = loginres;
-					var loc_found = false;
 					if (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
 					|| !user['biography'])
 						req.session.setup = false;
@@ -162,16 +161,19 @@ router.post('/login/user', function(req, res) {
 						if (result)
 						{
 							var loc = geoip.lookup(result);
-							if (loc)
+							if (!loc)
 							{
-								req.session.loc = [loc.ll[1], loc.ll[0]];
-								manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
-									
-								});
+								loc.ll[0] = 0;
+								loc.ll[1] = 0;
 							}
+							req.session.loc = [loc.ll[1], loc.ll[0]];
+							manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
+									res.end('{"msg": "OK"}');
+							});
 						}
+						else
+							res.end('{"msg": "error???"}');
 					});
-					res.end('{"msg": "OK"}');
 				}else{
 					res.end('{"msg": "Needs to be verified or can\'t be found"}');
 				}
@@ -185,7 +187,7 @@ router.post('/login/user', function(req, res) {
 
 router.post('/login/forgot', function(req, res) {
 	var email = req.body.email;
-	if (e_regex.test(email)){
+	if (email_regex.test(email)){
 		if (email) {
 				var fullUrl = req.protocol + '://' + req.get('host') + "/forgotpass/?email=" + email + "&verify=";
 				mailer.sendPassForget(email, fullUrl, function(ret) {
@@ -204,7 +206,7 @@ router.post('/update/Email', function(req, res) {
 	if (req.session.user)
 	{
 		var newEmail = req.body.email;
-		if (e_regex.test(newEmail)) {
+		if (email_regex.test(newEmail)) {
 			var query = { email: req.session.user.email};
 			var set = { $set: { email: newEmail }};
 			manageUser.updateUserOne(query, set, function(result) {
@@ -227,7 +229,7 @@ router.post('/update/Username', function(req, res) {
 	if (req.session.user)
 	{
 		var newusername = req.body.username;
-		if (newusername && newusername.length > 0 && u_regex.test(newusername))
+		if (newusername && newusername.length > 0 && username_regex.test(newusername))
 		{
 			var query = { email: req.session.user.email};
 			var set = { $set: { username: newusername }};
@@ -504,7 +506,7 @@ router.get('/view/:id', function(req, res) {
 			if (user)
 			{
 				manageUser.updateUserOne({email: user.email}, { $set: {views: user.views + 1}}, () => {
-					res.render('potentials/profile', { user: user });
+					res.render('potentials/profile', { user: req.session.user, req_user: user });
 				})
 			}
 			else
@@ -567,8 +569,9 @@ router.get('/like/:id', function(req, res) {
 		manageUser.getUserInfoId(req.params.id, user => {
 			if (user)
 			{
-				manageUser.updateUserOne({email: req.session.user.email}, { $addToSet: { likes: req.params.id } }, () => {
-					manageUser.updateUserOne( { _id: req.params.id } , { $addToSet: { likedBy: req.session.user._id } }, () => {
+				var id = db._mongo.ObjectId(req.params.id);
+				manageUser.updateUserOne( { email: req.session.user.email }, { $addToSet: { likes: req.params.id } }, () => {
+					manageUser.updateUserOne( { _id: id }, { $addToSet: { likedBy: req.session.user._id } }, () => {
 						res.redirect('/');
 					})
 				})
@@ -587,7 +590,7 @@ router.post('/resetpass', function(req, res) {
 	var cpass = req.body.cPassword;
 	if (pass == cpass)
 	{
-		if (regex.test(pass))
+		if (password_regex.test(pass))
 		{
 			let hash = bcrypt.hashSync(pass, 10);
 			manageUser.updateUserOne({email: email, verification: verify}, {$set : {password: hash}}, result => {
@@ -622,7 +625,15 @@ router.get('/blocks', function(req, res) {
 		res.redirect('/404');
 })
 
-
+router.get('/matches', function(req, res) {
+	if (req.session.user) {
+		ListUsers.getMatchedUsers(req.session.user, result => {
+			res.render('potentials/matches', {user: req.session.user, matches: result });
+		})
+	}
+	else
+		res.redirect('/404');
+})
 
 router.post('*', function(req, res) {
 	res.end('{"msg":"404"}');

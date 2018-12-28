@@ -14,7 +14,7 @@ module.exports = {
 					}
 				}
 			}
-			dbo.collection('Users').find(query).sort({age: 1}).toArray().then(result => {
+			dbo.collection('Users').find(query).toArray().then(result => {
 				fn(result);
 				db.close();
 			}).catch(err => {
@@ -54,5 +54,28 @@ module.exports = {
 			fn(null);
 			console.log("Cant connect to database => " + err)
 		})
+	},
+	getMatchedUsers(user, fn) {
+		var usersMatched = [];
+		var likedBy = user.likedBy;
+		var likes = user.likes;
+		if (likedBy && likes) {
+		likes.forEach(like => {
+				likedBy.forEach(liker => {
+					if (like == liker)
+						usersMatched.push(liker);
+				});
+			});
+		}
+		db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
+			var dbo = dbs.db('Matcha');
+			var prof_id = usersMatched.map(id => { return db._mongo.ObjectID(id) });
+			dbo.collection('Users').find({ _id: { $in: prof_id } }).toArray().then(result => {
+				fn(result);
+			})
+		}).catch(err => {
+			fn(null); 
+			console.log("Can't connect to database => " + err);
+		});
 	}
 }
