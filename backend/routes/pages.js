@@ -567,8 +567,8 @@ router.get('/like/:id', function(req, res) {
 		manageUser.getUserInfoId(req.params.id, user => {
 			if (user)
 			{
-				manageUser.updateUserOne({email: req.session.user.email}, { $addToSet: {likes: req.params.id}}, () => {
-					manageUser.updateUserOne({_id: req.params.id} , { $addToSet: { likedBy: req.session.user._id}}, () => {
+				manageUser.updateUserOne({email: req.session.user.email}, { $addToSet: { likes: req.params.id } }, () => {
+					manageUser.updateUserOne( { _id: req.params.id } , { $addToSet: { likedBy: req.session.user._id } }, () => {
 						res.redirect('/');
 					})
 				})
