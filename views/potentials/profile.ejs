@@ -51,7 +51,9 @@
 					$.post('/likes', {
 						id: id
 					}).done(res => {
-						console.log("liked");
+						$("#error-modal").modal();
+						$('#errorModalTitle').html("Notification");
+						$("#errorModalText").html("User is liked");
 					})				
 				}
 			</script>
