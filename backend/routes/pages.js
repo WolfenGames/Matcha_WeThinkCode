@@ -746,9 +746,25 @@ router.get('/report/:id', function(req, res) {
 		res.redirect('/404');
 })
 
+router.get('/generate', function(req, res) {
+	require('../functions/generator').UserGenerator();
+	res.redirect('/');
+})
+
+
+router.get('/resetall', function(req, res) {
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
+		var dbo = dbs.db('Matcha');
+		dbo.collection('Users').deleteMany({type: "Generated"}).then(result => {
+			res.redirect('/');
+		})
+	})
+})
+
 router.post('*', function(req, res) {
 	res.end('{"msg":"404"}');
 });
+
 
 router.get('*', function(req, res) {
 	res.render('pages/404');

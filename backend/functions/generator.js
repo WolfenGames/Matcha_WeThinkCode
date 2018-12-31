@@ -8,9 +8,7 @@ function UserGenerator() {
                 fNames = fNames.split('\n');
                 sNames = sNames.split('\n');
                 likes = likes.split('\n');
-                var i = 0;
-                var Users = {};
-                for(var i = 0; i < 1; i++)
+                for(var i = 0; i < 100; i++)
                 {
                     var x = Math.floor(Math.random() * fNames.length);
                     var y = Math.floor(Math.random() * sNames.length);

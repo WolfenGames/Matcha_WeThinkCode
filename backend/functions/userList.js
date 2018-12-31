@@ -17,11 +17,9 @@ module.exports = {
 			}
 			dbo.collection('Users').find(query).toArray().then(result => {
 				fn(result);
-				db.close();
 			}).catch(err => {
 				console.log("Cant list users " + err);
 			});
-            db.close();
 		}).catch(err => {
 			console.log("Cant connect " + err);
 		});
