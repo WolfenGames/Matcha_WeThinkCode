@@ -50,10 +50,18 @@ function getUserInfo(email, cb) {
 	db.mongo.connect(db.url, { useNewUrlParser: true }).then(db => {
 		var dbo = db.db('Matcha');
 		dbo.collection('Users').findOne({email: email}).then(res => {
-			updateUserOne({email: email}, {$set: { lastTime: Date()}}, () => {
-				cb(res);
-				db.close();
-			})
+			if (res.reports >= 5) {
+				updateUserOne({email: email}, {$set: { lastTime: Date(), banned: true}}, () => {
+					cb(res);
+					db.close();
+				})
+			}else
+			{
+				updateUserOne({email: email}, {$set: { lastTime: Date()}}, () => {
+					cb(res);
+					db.close();
+				})
+			}
 		}).catch(err => {
 			console.log("Cant fetch user " + err);
 		})
