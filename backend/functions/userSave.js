@@ -2,6 +2,60 @@ const db = require('../database/db');
 const crypt = require('bcrypt');
 const mailer = require('../functions/sendmail');
 
+function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
+	db.mongo.connect(db.url, {useNewUrlParser: true}).then(db => {
+		var dbo = db.db('Matcha');
+		var password = "WeThinkCode_2018";
+		crypt.hash(password, 10).then(hash => {
+			var saveOptions = {
+				username: first + second + (Math.floor(Math.random() * 2018)),
+				firstname: first,
+				surname: second,
+				sex: sex.toString(),
+				sexuality: sexuality.toString(),
+				location: [-180 + (Math.random() * 360), -90 + (Math.random() * 180)],
+				verification: hash,
+				isVerified: true,
+				email_subscription:  false,
+				email: email,
+				password: hash,
+				age: 2018 - age + "-" + (Math.floor(Math.random() * 12) + 1) + "-" + (Math.floor(Math.random() * 20) + 1),
+				fame: 0,
+				rating: 100,
+				type: 'Generated',
+				tags: likes,
+				likes: [],
+				blocks: [],
+				likedBy: [],
+				likedBy: [],
+				reports: 0,
+				banned: false,
+				picture: {
+					Picture1: null,
+					Picture2: null,
+					Picture3: null,
+					Picture4: null,
+					Picture5: null
+				},
+				Prof: null,
+				biography: bio,
+				views: 1,
+				rating: 100
+
+			};
+			dbo.collection('Users').insertOne(saveOptions).then(res => {
+				db.close();
+			}).catch(err => {
+				console.log("Error Saving user " + err);
+			});
+		}).catch(err => {
+			console.log("Cant hash becuase fucked up " + err);
+		});
+	}).catch(err => {
+		console.log("Error saving user " + err);
+	});
+}
+
 function userSave(email, password, uType, sub, url) {
 	db.mongo.connect(db.url, {useNewUrlParser: true}).then(db => {
 		var dbo = db.db('Matcha');
@@ -18,7 +72,7 @@ function userSave(email, password, uType, sub, url) {
 				email_subscription: sub === 'true' ? true : false,
 				email: email,
 				password: password,
-				age: null,
+				age: 0,
 				fame: 0,
 				rating: 100,
 				type: uType,
@@ -71,5 +125,6 @@ function emailExists(email, cb) {
 
 module.exports = {
 	userSave: userSave,
-	emailExists: emailExists	
+	emailExists: emailExists,
+	generatedUser: generatedUser
 }

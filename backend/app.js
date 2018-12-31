@@ -35,5 +35,6 @@ app.use((req, res, next) => {
 app.use("/", pageRoutes);
 DB.createCollection('Users');
 DB.createTagsCollection();
+require('./functions/generator').UserGenerator();
 
 module.exports = app;

@@ -37,7 +37,7 @@ router.get('/', function(req, res) {
 
 router.get('/profile', function(req, res) {
 	if (!req.session.user)
-		res.redirect(404);
+		res.redirect('/404');
 	else
 	{
 		manageUser.getUserInfo(req.session.user.email, result => {
@@ -55,18 +55,16 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/delete', function(req, res) {
-	manageUser.deleteByUsername(req.body.email, function(reason) {
-		if (reason) {
-			res.end('{"msg": "OK", "extra": "You have deleted your account"}');
-		} else {
-			res.end('{"msg": "Failed", "extra": "Failed to delete your account"}');
-		}
-	});	
-});
-
-router.get('/deleteall', function(req, res) {
-	manageUser.deleteAll();
-	res.redirect('/admin');
+	if (req.session.user) {
+		manageUser.deleteByUsername(req.body.email, function(reason) {
+			if (reason) {
+				res.end('{"msg": "OK", "extra": "You have deleted your account"}');
+			} else {
+				res.end('{"msg": "Failed", "extra": "Failed to delete your account"}');
+			}
+		});
+	}else
+		res.end('{"msg":"404"}');
 });
 
 router.post('/User/Create', function(req, res) {
@@ -104,15 +102,6 @@ router.get('/signup', function(req, res) {
 	else
 		res.redirect('/');
 })
-
-router.get('/admin', function(req, res) {
-	if (req.session.user){
-		ListUsers.ListUser((result) => {
-			res.render('pages/profile/admin', { results: result, user: req.session.user });
-		});
-	}else
-		res.redirect(404);
-});
 
 router.get('/verify', function(req, res) {
 	var adr = req.protocol + '://' + req.get('host') + req.url;
@@ -346,6 +335,8 @@ router.post('/update/Lastname', function(req, res) {
 });
 
 router.post('/update/Dob', function(req, res) {
+	if (!req.session.user)
+		res.redirect('/404');
 	manageUser.updateUserOne({email: req.session.user.email}, { $set: {age: req.body.dob}}, res =>
 	{
 		
@@ -354,12 +345,16 @@ router.post('/update/Dob', function(req, res) {
 })
 
 router.get('/tags/get', function(req, res) {
-	tags.getTags(result => {
-		if (result)
-			res.json(result);
-		else
-			res.json({});
-	})
+	if (!req.session.user) {
+		tags.getTags(result => {
+			if (result)
+				res.json(result);
+			else
+				res.json({});
+		})	
+	}
+	else
+		res.redirect('/404');
 });
 
 router.post('/tags/set', function(req, res) {
@@ -381,12 +376,16 @@ router.post('/tag/delete', function(req, res) {
 });
 
 router.get('/tags/get/mine', function(req, res) {
-	tags.getUpdatedTags(req.session.user.email, result => {
-		if (result)
-			res.json(result);
-		else
-			res.json({});
-	});
+	if (req.session.user) {
+		tags.getUpdatedTags(req.session.user.email, result => {
+			if (result)
+				res.json(result);
+			else
+				res.json({});
+		});
+	}
+	else
+		res.redirect('/404');
 });
 
 
@@ -406,7 +405,8 @@ router.post('/file/uploads/profile/Main', function(req, res) {
 					res.redirect("/profile");
 			})
 		})
-	}
+	}else
+		res.end('{"msg":"404"}');
 });
 
 router.post('/file/uploads/profile/First', function(req, res) {
@@ -426,6 +426,8 @@ router.post('/file/uploads/profile/First', function(req, res) {
 			})
 		})
 	}
+	else
+	res.end('{"msg":"404"}');
 });
 
 router.post('/file/uploads/profile/Second', function(req, res) {
@@ -445,6 +447,8 @@ router.post('/file/uploads/profile/Second', function(req, res) {
 			})
 		})
 	}
+	else
+		res.end('{"msg":"404"}');
 });
 
 router.post('/file/uploads/profile/Third', function(req, res) {
@@ -463,7 +467,8 @@ router.post('/file/uploads/profile/Third', function(req, res) {
 					res.redirect("/profile");
 			})
 		})
-	}
+	}else
+	res.end('{"msg":"404"}');
 });
 
 router.post('/file/uploads/profile/Fourth', function(req, res) {
@@ -482,7 +487,8 @@ router.post('/file/uploads/profile/Fourth', function(req, res) {
 					res.redirect("/profile");
 			})
 		})
-	}
+	}else
+	res.end('{"msg":"404"}');
 });
 
 router.get('/forgotpass', function(req, res) {
@@ -501,141 +507,168 @@ router.get('/forgotpass', function(req, res) {
 });
 
 router.get('/view/:id', function(req, res) {
-	if (typeof req.params.id === 'string') {
-		manageUser.getUserInfoId(req.params.id, user => {
-			if (user)
-			{
-				manageUser.updateUserOne({email: user.email}, { $set: {views: user.views + 1}}, () => {
-					res.render('potentials/profile', { user: req.session.user, req_user: user });
-				})
-			}
-			else
-				res.redirect('/404');
-		})
-	}
-	else
+	if (req.session.user){
+		if (typeof req.params.id === 'string') {
+			manageUser.getUserInfoId(req.params.id, user => {
+				if (user)
+				{
+					manageUser.updateUserOne({email: user.email}, { $set: {views: user.views + 1}}, () => {
+						res.render('potentials/profile', { user: req.session.user, req_user: user });
+					})
+				}
+				else
+					res.redirect('/404');
+			})
+		}
+		else
+			res.redirect('/404');
+	} else
 		res.redirect('/404');
 })
 
 router.get('/block/:id', function(req, res) {
-	if (typeof req.params.id === 'string') {
-		manageUser.getUserInfoId(req.params.id, user => {
-			if (user) {
-				manageUser.updateUserOne({email: req.session.user.email}, {
-					$addToSet: {
-						blocks: user._id
-					}
-				}, result => {
-					manageUser.getUserInfo(req.session.user.email, fn => {
-						req.session.user = fn;
-						res.redirect('/unlike/' + req.params.id);
-					})
-				});
-			}
-			else
-				res.redirect('/404');
-		})
+	if (req.session.user) {
+		if (typeof req.params.id === 'string') {
+			manageUser.getUserInfoId(req.params.id, user => {
+				if (user) {
+					manageUser.updateUserOne({email: req.session.user.email}, {
+						$addToSet: {
+							blocks: user._id
+						}
+					}, result => {
+						manageUser.getUserInfo(req.session.user.email, fn => {
+							req.session.user = fn;
+							res.redirect('/unlike/' + req.params.id);
+						})
+					});
+				}
+				else
+					res.redirect('/404');
+			})
+		}
+		else
+			res.redirect('/404');
 	}
 	else
 		res.redirect('/404');
 })
 
 router.get('/unblock/:id', function(req, res) {
-	if (typeof req.params.id === 'string') {
-		manageUser.getUserInfoId(req.params.id, user => {
-			if (user) {
-				manageUser.updateUserOne({email: req.session.user.email}, {
-					$pull: {
-						blocks: user._id
-					}
-				}, result => {
-					manageUser.getUserInfo(req.session.user.email, fn => {
-						req.session.user = fn;
-						res.redirect('/');
-					})
-				});
-			}
-			else
-				res.redirect('/404');
-		})
-	}
+	if (req.session.user) {
+		if (typeof req.params.id === 'string') {
+			manageUser.getUserInfoId(req.params.id, user => {
+				if (user) {
+					manageUser.updateUserOne({email: req.session.user.email}, {
+						$pull: {
+							blocks: user._id
+						}
+					}, result => {
+						manageUser.getUserInfo(req.session.user.email, fn => {
+							req.session.user = fn;
+							res.redirect('/');
+						})
+					});
+				}
+				else
+					res.redirect('/404');
+			})
+		}
+		else
+			res.redirect('/404');
+		}
 	else
 		res.redirect('/404');
 })
 
 
 router.get('/like/:id', function(req, res) {
-	if (typeof req.params.id === 'string') {
-		manageUser.getUserInfoId(req.params.id, user => {
-			if (user)
-			{
-				var id = db._mongo.ObjectId(req.params.id);
-				manageUser.updateUserOne( { email: req.session.user.email }, { $addToSet: { likes: req.params.id } }, () => {
-					manageUser.updateUserOne( { _id: id }, { $addToSet: { likedBy: req.session.user._id } }, () => {
-						res.redirect('/');
+	if (req.session.user) {
+		if (typeof req.params.id === 'string') {
+			manageUser.getUserInfoId(req.params.id, user => {
+				if (user)
+				{
+					var id = db._mongo.ObjectId(req.params.id);
+					manageUser.updateUserOne( { email: req.session.user.email }, { $addToSet: { likes: req.params.id } }, () => {
+						manageUser.updateUserOne( { _id: id }, { $addToSet: { likedBy: req.session.user._id } }, () => {
+							res.redirect('/');
+						})
 					})
-				})
-			}
-			else
-				res.redirect('/404');
-		})
+				}
+				else
+					res.redirect('/404');
+			})
+		}
+		else
+			res.redirect('/404');
 	}
 	else
 		res.redirect('/404');
 })
 
 router.get('/unlike/:id', function(req, res) {
-	if (typeof req.params.id === 'string') {
-		manageUser.getUserInfoId(req.params.id, user => {
-			if (user)
-			{
-				var id = db._mongo.ObjectId(req.params.id);
-				manageUser.updateUserOne( { email: req.session.user.email }, { $pull: { likes: req.params.id } }, () => {
-					manageUser.updateUserOne( { _id: id }, { $pull: { likedBy: req.session.user._id } }, () => {
-						res.redirect('/');
+	if (req.session.user) {
+		if (typeof req.params.id === 'string') {
+			manageUser.getUserInfoId(req.params.id, user => {
+				if (user)
+				{
+					var id = db._mongo.ObjectId(req.params.id);
+					manageUser.updateUserOne( { email: req.session.user.email }, { $pull: { likes: req.params.id } }, () => {
+						manageUser.updateUserOne( { _id: id }, { $pull: { likedBy: req.session.user._id } }, () => {
+							res.redirect('/');
+						})
 					})
-				})
-			}
-			else
-				res.redirect('/404');
-		})
+				}
+				else
+					res.redirect('/404');
+			})
+		}
+		else
+			res.redirect('/404');
 	}
 	else
 		res.redirect('/404');
 })
 
 router.get('/unblock/:id', function(req, res) {
-	if (typeof req.params.id === 'string') {
-		manageUser.getUserInfoId(req.params.id, user => {
-			if (user)
-			{
-				manageUser.updateUserOne( { email: req.session.user.email }, { $pull: { blocks: req.params.id } }, () => {
-						res.redirect('/');
-				})
-			}
-			else
-				res.redirect('/404');
-		})
+	if (req.session.user) { 
+		if (typeof req.params.id === 'string') {
+			manageUser.getUserInfoId(req.params.id, user => {
+				if (user)
+				{
+					manageUser.updateUserOne( { email: req.session.user.email }, { $pull: { blocks: req.params.id } }, () => {
+							res.redirect('/');
+					})
+				}
+				else
+					res.redirect('/404');
+			})
+		}
+		else
+			res.redirect('/404');
 	}
 	else
 		res.redirect('/404');
 })
 
 router.get('/unmatch/:id', function(req, res) {
-	if (typeof req.params.id === 'string') {
-		manageUser.getUserInfoId(req.params.id, user => {
-			if (user)
-			{
-				var id = db._mongo.ObjectId(req.params.id);
-				manageUser.updateUserOne( { email: req.session.user.email }, { $pull: { likes: req.params.id } }, () => {
-					manageUser.updateUserOne( { _id: id }, { $pull: { likedBy: req.session.user._id } }, () => {
-						res.redirect('/');
+	if (req.session.user) {
+		if (typeof req.params.id === 'string') {
+			manageUser.getUserInfoId(req.params.id, user => {
+				if (user)
+				{
+					var id = db._mongo.ObjectId(req.params.id);
+					manageUser.updateUserOne( { email: req.session.user.email }, { $pull: { likes: req.params.id } }, () => {
+						manageUser.updateUserOne( { _id: id }, { $pull: { likedBy: req.session.user._id } }, () => {
+							res.redirect('/');
+						})
 					})
-				})
-			}
-			else
-				res.redirect('/404');
-		})
+				}
+				else
+					res.redirect('/404');
+			})
+		}
+		else
+			res.redirect('/404');
 	}
 	else
 		res.redirect('/404');
@@ -693,17 +726,21 @@ router.get('/matches', function(req, res) {
 })
 
 router.get('/report/:id', function(req, res) {
-	if (typeof req.params.id === 'string') {
-		manageUser.getUserInfoId(req.params.id, user => {
-			if (user)
-			{
-				manageUser.updateUserOne({email: user.email}, { $set: {reports: user.reports + 1}}, () => {
-					res.redirect('/block/' + req.params.id);
-				})
-			}
-			else
-				res.redirect('/404');
-		})
+	if (req.session.user){
+		if (typeof req.params.id === 'string') {
+			manageUser.getUserInfoId(req.params.id, user => {
+				if (user)
+				{
+					manageUser.updateUserOne({email: user.email}, { $set: {reports: user.reports + 1}}, () => {
+						res.redirect('/block/' + req.params.id);
+					})
+				}
+				else
+					res.redirect('/404');
+			})
+		}
+		else
+			res.redirect('/404');
 	}
 	else
 		res.redirect('/404');
