@@ -17,8 +17,8 @@
 					}
 					var blockCount = user['blocks'].length;
 					var likeCount = user['likes'].length;
-					var likedUsers = user['likes'];
-					var likedBy = user['likedBy'];
+					var likedUsers = user['likes'] != null ? user['likes'] : [];
+					var likedBy = user['likedBy'] != null ? user['likedBy'] : [];
 					var matchCount = 0;
 					likedUsers.forEach(likes => {
 						likedBy.forEach(liked => {

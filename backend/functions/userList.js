@@ -4,7 +4,8 @@ module.exports = {
 	ListUser(user, fn) {
 		db.mongo.connect(db.url, {useNewUrlParser: true}).then(db => {
 			var dbo = db.db('Matcha');
-			var query = { location: {
+			var query = { banned: false,
+				location: {
 				$nearSphere: {
 					$geometry: {
 						type: "Point",

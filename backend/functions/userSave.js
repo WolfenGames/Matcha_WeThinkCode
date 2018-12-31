@@ -27,7 +27,8 @@ function userSave(email, password, uType, sub, url) {
 				blocks: [],
 				likedBy: [],
 				likedBy: [],
-				repors: 0,
+				reports: 0,
+				banned: false,
 				picture: {
 					Picture1: null,
 					Picture2: null,

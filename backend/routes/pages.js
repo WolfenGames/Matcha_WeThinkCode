@@ -528,7 +528,7 @@ router.get('/block/:id', function(req, res) {
 				}, result => {
 					manageUser.getUserInfo(req.session.user.email, fn => {
 						req.session.user = fn;
-						res.redirect('/');
+						res.redirect('/unlike/' + req.params.id);
 					})
 				});
 			}
@@ -572,6 +572,63 @@ router.get('/like/:id', function(req, res) {
 				var id = db._mongo.ObjectId(req.params.id);
 				manageUser.updateUserOne( { email: req.session.user.email }, { $addToSet: { likes: req.params.id } }, () => {
 					manageUser.updateUserOne( { _id: id }, { $addToSet: { likedBy: req.session.user._id } }, () => {
+						res.redirect('/');
+					})
+				})
+			}
+			else
+				res.redirect('/404');
+		})
+	}
+	else
+		res.redirect('/404');
+})
+
+router.get('/unlike/:id', function(req, res) {
+	if (typeof req.params.id === 'string') {
+		manageUser.getUserInfoId(req.params.id, user => {
+			if (user)
+			{
+				var id = db._mongo.ObjectId(req.params.id);
+				manageUser.updateUserOne( { email: req.session.user.email }, { $pull: { likes: req.params.id } }, () => {
+					manageUser.updateUserOne( { _id: id }, { $pull: { likedBy: req.session.user._id } }, () => {
+						res.redirect('/');
+					})
+				})
+			}
+			else
+				res.redirect('/404');
+		})
+	}
+	else
+		res.redirect('/404');
+})
+
+router.get('/unblock/:id', function(req, res) {
+	if (typeof req.params.id === 'string') {
+		manageUser.getUserInfoId(req.params.id, user => {
+			if (user)
+			{
+				manageUser.updateUserOne( { email: req.session.user.email }, { $pull: { blocks: req.params.id } }, () => {
+						res.redirect('/');
+				})
+			}
+			else
+				res.redirect('/404');
+		})
+	}
+	else
+		res.redirect('/404');
+})
+
+router.get('/unmatch/:id', function(req, res) {
+	if (typeof req.params.id === 'string') {
+		manageUser.getUserInfoId(req.params.id, user => {
+			if (user)
+			{
+				var id = db._mongo.ObjectId(req.params.id);
+				manageUser.updateUserOne( { email: req.session.user.email }, { $pull: { likes: req.params.id } }, () => {
+					manageUser.updateUserOne( { _id: id }, { $pull: { likedBy: req.session.user._id } }, () => {
 						res.redirect('/');
 					})
 				})
@@ -629,6 +686,23 @@ router.get('/matches', function(req, res) {
 	if (req.session.user) {
 		ListUsers.getMatchedUsers(req.session.user, result => {
 			res.render('potentials/matches', {user: req.session.user, matches: result });
+		})
+	}
+	else
+		res.redirect('/404');
+})
+
+router.get('/report/:id', function(req, res) {
+	if (typeof req.params.id === 'string') {
+		manageUser.getUserInfoId(req.params.id, user => {
+			if (user)
+			{
+				manageUser.updateUserOne({email: user.email}, { $set: {reports: user.reports + 1}}, () => {
+					res.redirect('/block/' + req.params.id);
+				})
+			}
+			else
+				res.redirect('/404');
 		})
 	}
 	else

@@ -28,6 +28,10 @@
 										<div class="card-body">
 											<h5 class="card-title"><%= matches[i]['username'] %></h5>
 											<p class="card-text"><%= matches[i]['biography'] %></p>
+											<a href="/view/<%= matches[i]['_id'] %>" class="btn btn-primary">View</a>
+											<a href="/unmatch/<%= matches[i]['_id'] %>" class="btn btn-primary">unMatch</a>
+											<a href="/block/<%= matches[i]['_id'] %>" class="btn btn-warning">Block</a>
+											<a href="/report/<%= matches[i]['_id'] %>" class="btn btn-danger">Report</a>
 										</div>
 									</div>
 									<hr>

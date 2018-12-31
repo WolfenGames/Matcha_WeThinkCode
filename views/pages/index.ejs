@@ -71,7 +71,8 @@
 												<p class="card-text">Possible match of :: <%= percent.toFixedDown(0) %> %</p>
 												<a href="/view/<%= users[i]['_id'] %>" class="btn btn-primary">View</a>
 												<a href="/like/<%= users[i]['_id'] %>" class="btn btn-primary">Like</a>
-												<a href="/block/<%= users[i]['_id'] %>" class="btn btn-primary">Block</a>
+												<a href="/block/<%= users[i]['_id'] %>" class="btn btn-warning">Block</a>
+												<a href="/report/<%= users[i]['_id'] %>" class="btn btn-danger">Report</a>
 											</div>
 										</div>
 										<hr>
