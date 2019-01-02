@@ -20,15 +20,15 @@ const onError = error => {
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + port;
   switch (error.code) {
     case "EACCESS":
-      console.error(bind + " requires elevated privileges");
-      process.exit(1);
-      break;
+    console.error(bind + " requires elevated privileges");
+    process.exit(1);
+    break;
     case "EADDRINUSE":
-      console.error(bind + " is already in use");
-      process.exit(1);
-      break;
+    console.error(bind + " is already in use");
+    process.exit(1);
+    break;
     default:
-      throw error;
+    throw error;
   }
 }
 
@@ -38,10 +38,30 @@ const onListening = () => {
   console.log("listening on " + bind);
 }
 
-const port = normalizePort(process.env.PORT || 8000);
+const port = normalizePort(process.env.PORT || 80);
 
 app.set('port', port)
 const server = http.createServer(app);
+const io = require('socket.io').listen(server);
+
+io.on('connection', function (socket) {
+  console.log("Connected succesfully to the socket ...");
+
+  var news = [
+      { title: 'The cure of the Sadness is to play Videogames',date:'04.10.2016'},
+      { title: 'Batman saves Racoon City, the Joker is infected once again',date:'05.10.2016'},
+      { title: "Deadpool doesn't want to do a third part of the franchise",date:'05.10.2016'},
+      { title: 'Quicksilver demand Warner Bros. due to plagiarism with Speedy Gonzales',date:'04.10.2016'},
+  ];
+
+  // Send news on the socket
+  socket.emit('news', news);
+
+  socket.on('my other event', function (data) {
+      console.log(data);
+  });
+});
+
 server.on("error", onError);
 server.on('listening', onListening);
 

@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(__dirname + '/../public'));
+app.use('/static', express.static('node_modules'));
 app.set('view engine', 'ejs');
 
 app.use(session({secret: "American Pie: Beta House", saveUninitialized: false, resave: false}));
