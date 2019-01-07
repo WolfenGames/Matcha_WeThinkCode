@@ -57,11 +57,11 @@
 					})				
 				}
 			</script>
-			<div class="row mx-auto w-100">
-				<div onclick="likeMe('<%= id %>')">
-					<i class="fa fa-heart fa-5x" aria-hidden="true"></i>
-				</div>
-				<a href="/block/<%= id %>" class="btn btn-primary">Block</a>
+			<div class="row w-100">
+				<a href="/unlike/<%= id %>" class="btn btn-primary">unLike</a>
+				<a href="/like/<%= id %>" class="btn btn-primary">Like</a>
+				<a href="/block/<%= id %>" class="btn btn-warning">block</a>
+				<a href="/report/<%= id %>" class="btn btn-danger">Report</a>
 			</div>
 			<hr>
 		<!--TEMPLATE-->
@@ -81,7 +81,7 @@
 					</div>
 					<div class="form-group">
 					<label for="biography">&lt;About me/&gt;</label>
-					<label class="form-control" id="biography"><%= biography %></label>
+					<div id="biography"><%= biography %></div>
 				</div>
 			</div>
 			<hr>
@@ -150,7 +150,7 @@
 			<div class="grid">
 				<div id='likes-list' class="mx-auto">
 				<% for (var i = 0; i < tags.length; i++) { %>
-					<button class="tag-button" onclick="removeTag('<%=tags[i] %>', this)"><%=tags[i] %></button>
+					<label class="edit-label"><%=tags[i] %></label>
 				<% } %>
 				</div>
 			</div>
