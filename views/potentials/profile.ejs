@@ -29,7 +29,9 @@
 		var firstname = req_user['firstname'] === null ? 'You\'re in dire need of a firstname' : req_user['firstname'];
 		var lastname = req_user['surname'] === null ? 'You\'re in dire need of a lastname' : req_user['surname'];
 		var tags = req_user['tags'];
-		var id = req_user['_id'];
+		var id = req_user['_id'];		
+		var views = req_user['views'];
+		var lastTime = req_user['lastTime'];
 	}
 	%>
 	<main>
@@ -43,20 +45,6 @@
 					</div>
 				<h3>"/&gt;</h3>
 			</div>
-			<p>&lt;
-				<label class="email-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!"><%= email %></label>
-			/&gt;</p>
-			<script>
-				function likeMe(id) {
-					$.post('/likes', {
-						id: id
-					}).done(res => {
-						$("#error-modal").modal();
-						$('#errorModalTitle').html("Notification");
-						$("#errorModalText").html("User is liked");
-					})				
-				}
-			</script>
 			<div class="row w-100">
 				<a href="/unlike/<%= id %>" class="btn btn-primary">unLike</a>
 				<a href="/like/<%= id %>" class="btn btn-primary">Like</a>
@@ -94,40 +82,44 @@
 					Surname&nbsp;::
 						&lt;&nbsp;<label class="lastname-label edit-label"><%= lastname %></label>&nbsp;/&gt;</p>
 					<div class="coloumn">
-						<%	var date = new Date();
-							var mydate = new Date(age);
-							var myAge = date.getFullYear() - mydate.getFullYear();
-							%>
-							<p class="age">Age&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:: &lt;&nbsp;<label class="email-label edit-label"><%= myAge %></label>&nbsp;/&gt;</p>
-					<!--Sexuality-->
+						<%
+						var date = new Date();
+						var mydate = new Date(age);
+						var myAge = date.getFullYear() - mydate.getFullYear();
+						%>
+						<p class="age">Age&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:: &lt;&nbsp;<label class="email-label edit-label"><%= myAge %></label>&nbsp;/&gt;</p>
+						<!--Sexuality-->
 						<div class="input-group mb-3">
-								<label class="" for="">Sexuality&nbsp;::&nbsp; </label>
-							<% if (Sexuality === '1') { %>
-								&lt;&nbsp;<label class="email-label edit-label">Bisexual</label>&nbsp;/&gt;
-							<% }
-							 if (Sexuality === '2') { %>
-							 	&lt;&nbsp;<label class="email-label edit-label">Heterosexual</label>&nbsp;/&gt;
-							<% } 
-							 if (Sexuality === '3') { %>
-							 	&lt;&nbsp;<label class="email-label edit-label">Homosexual</label>&nbsp;/&gt;
-							<% } %>
+						<label class="" for="">Sexuality&nbsp;::&nbsp; </label>
+						<% if (Sexuality === '1') { %>
+						&lt;&nbsp;<label class="email-label edit-label">Bisexual</label>&nbsp;/&gt;
+						<% }
+						if (Sexuality === '2') { %>
+						&lt;&nbsp;<label class="email-label edit-label">Heterosexual</label>&nbsp;/&gt;
+						<% } 
+						if (Sexuality === '3') { %>
+						&lt;&nbsp;<label class="email-label edit-label">Homosexual</label>&nbsp;/&gt;
+						<% } %>
 						</div>
 						<!--Gender-->
 						<div class="input-group mb-3">
-							<label class="" for="">Gender&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;</label>
+						<label class="" for="">Gender&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;</label>
 						<% if (Gender === '1') { %>
-							&lt;&nbsp;<label class="email-label edit-label">Female</label>&nbsp;/&gt;
+						&lt;&nbsp;<label class="email-label edit-label">Female</label>&nbsp;/&gt;
 						<% }
-						 if (Gender === '2') { %>
-						 	&lt;&nbsp;<label class="email-label edit-label">Male</label>&nbsp;/&gt;
+						if (Gender === '2') { %>
+						&lt;&nbsp;<label class="email-label edit-label">Male</label>&nbsp;/&gt;
 						<% }
-						 if (Gender === '3') { %>
-						 	&lt;&nbsp;<label class="email-label edit-label">Other</label>&nbsp;/&gt;
+						if (Gender === '3') { %>
+						&lt;&nbsp;<label class="email-label edit-label">Other</label>&nbsp;/&gt;
 						<% } %>
-				</div>
-			</div>
-		</div>
-		<div class="d-flex flex-column">
+						</div>
+						<p class="age">Age:: <%= myAge %></p>
+						<p class="age">Views:: <%= views %></p>
+						<p class="age">Last Online:: <%= lastTime %></p>
+						</div>
+						</div>
+						<div class="d-flex flex-column">
 			<div class="row pic-row">
 				<div class="container-img pic mx-auto my-auto col-md-6">
 					<img src="<%= img2 %>" alt="Prof Pic" class="img-thumbnail w-100">

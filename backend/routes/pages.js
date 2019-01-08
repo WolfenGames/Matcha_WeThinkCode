@@ -345,7 +345,7 @@ router.post('/update/Dob', function(req, res) {
 })
 
 router.get('/tags/get', function(req, res) {
-	if (!req.session.user) {
+	if (req.session.user) {
 		tags.getTags(result => {
 			if (result)
 				res.json(result);
@@ -512,7 +512,7 @@ router.get('/view/:id', function(req, res) {
 			manageUser.getUserInfoId(req.params.id, user => {
 				if (user)
 				{
-					manageUser.updateUserOne({email: user.email}, { $set: {views: user.views + 1}}, () => {
+					manageUser.updateUserOne( { email: user.email } , { $set: {views: user.views + 1}, $addToSet: { viewedBy: req.session.user._id } }, () => {
 						res.render('potentials/profile', { user: req.session.user, req_user: user });
 					})
 				}
@@ -678,6 +678,7 @@ router.post('/resetpass', function(req, res) {
 	var email = req.body.Email;
 	var pass = req.body.oPassword;
 	var cpass = req.body.cPassword;
+	var verify = req.body.verify;
 	if (pass == cpass)
 	{
 		if (password_regex.test(pass))
@@ -719,6 +720,16 @@ router.get('/matches', function(req, res) {
 	if (req.session.user) {
 		ListUsers.getMatchedUsers(req.session.user, result => {
 			res.render('potentials/matches', {user: req.session.user, matches: result });
+		})
+	}
+	else
+		res.redirect('/404');
+})
+
+router.get('/myViews', function(req, res) {
+	if (req.session.user) {
+		ListUsers.getViewedUsers(req.session.user, result => {
+			res.render('potentials/viewedBy', {user: req.session.user, likes: result });
 		})
 	}
 	else

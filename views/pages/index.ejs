@@ -67,6 +67,25 @@
 											<div class="card-body">
 												<h5 class="card-title"><%= users[i]['username'] %></h5>
 												<p class="card-text"><%= users[i]['biography'] %></p>
+												<% 
+													var sexuality = "";
+													if (users[i]['sexuality'] === "1")
+														sexuality = "Bisexual";
+													if (users[i]['sexuality'] === "2")
+														sexuality = "Heterosexual";
+													if (users[i]['sexuality'] === "3")
+														sexuality = "Homosexual";
+													
+													var sex = "";
+													if (users[i]['sex'] === "1")
+														sex = "Female";
+													if (users[i]['sex'] === "2")
+														sex = "Male";
+													if (users[i]['sex'] === "3")
+														sex = "Other";
+												%>
+												<p class="card-text">Sexuality :: <%= sexuality %></p>
+												<p class="card-text">Gender :: <%= sex %></p>
 												<p class="card-text">Distance from you :: <%= d.toFixedDown(0) %> KM away</p>
 												<p class="card-text">Possible match of :: <%= percent.toFixedDown(0) %> %</p>
 												<a href="/view/<%= users[i]['_id'] %>" class="btn btn-primary">View</a>

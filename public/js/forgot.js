@@ -8,7 +8,7 @@ $(document).ready(function(){
 			Email: email,
 			oPassword: pass,
 			cPassword: cpass,
-			verify: verify	
+			verify: verify
 		}).done(function(data) {
 			var msg = jQuery.parseJSON(data);
 			if (msg['msg'] != "OK")

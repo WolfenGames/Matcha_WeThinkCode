@@ -13,7 +13,7 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 				surname: second,
 				sex: sex.toString(),
 				sexuality: sexuality.toString(),
-				location: [-180 + (Math.random() * 360), -90 + (Math.random() * 180)],
+				location: [16.5 + (Math.random() * 17), -22 + (Math.random() * 12)],
 				verification: hash,
 				isVerified: true,
 				email_subscription:  false,
