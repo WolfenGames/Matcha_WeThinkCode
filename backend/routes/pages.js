@@ -233,7 +233,7 @@ router.post('/update/Username', function(req, res) {
 					res.end('{"msg": "Username could not be updated"}')
 			});
 		}else
-			res.end('{"msg":"Error", "extra":"Username can\'t be empty or null, Only spaces no special characters"}');
+			res.end('{"msg":"Error", "extra":"Username can\'t be empty or null, minimum 5 characters, Can only contain spaces no special characters"}');
 	}else
 		res.end('{"msg":"Need to be logged in to do this"}');
 });
