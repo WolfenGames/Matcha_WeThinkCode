@@ -23,7 +23,12 @@
 						<div class="w-100">
 							<!--Cards-->
 							<% 
-								for (var i = 0; i < matches.length; i++) { %>
+								for (var i = 0; i < matches.length; i++) {
+									var date = new Date();
+									var mydate = new Date(matches[i]['age']);
+									var myAge = date.getFullYear() - mydate.getFullYear();
+									if (myAge > 17) {
+									%>
 									<div class="card text-white bg-dark rounded" class="w-100">
 										<div class="card-body">
 											<h5 class="card-title"><%= matches[i]['username'] %></h5>
@@ -34,6 +39,7 @@
 											<a href="/report/<%= matches[i]['_id'] %>" class="btn btn-danger">Report</a>
 										</div>
 									</div>
+									<% } %>
 									<hr>
 									<% 
 								}

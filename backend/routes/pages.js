@@ -743,7 +743,14 @@ router.get('/report/:id', function(req, res) {
 				if (user)
 				{
 					manageUser.updateUserOne({email: user.email}, { $set: {reports: user.reports + 1}}, () => {
-						res.redirect('/block/' + req.params.id);
+						manageUser.updateUserOne({email: user.email}, { $set: { rating: user.rating - (user.reports) } }, () => {
+							if (user.reports + 1 > 6)
+								manageUser.updateUserOne( { email: user.email }, { $set: { banned: true } }, () => {
+									res.redirect('/block/' + req.params.id);
+								})
+							else
+								res.redirect('/block/' + req.params.id);
+						})
 					})
 				}
 				else

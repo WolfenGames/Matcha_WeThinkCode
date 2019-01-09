@@ -28,6 +28,7 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 				blocks: [],
 				likedBy: [],
 				likedBy: [],
+				viewedBy: [],
 				reports: 0,
 				banned: false,
 				picture: {
@@ -37,7 +38,7 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 					Picture4: null,
 					Picture5: null
 				},
-				Prof: null,
+				Prof: "undefined",
 				biography: bio,
 				views: 1,
 				rating: 100
@@ -81,6 +82,7 @@ function userSave(email, password, uType, sub, url) {
 				blocks: [],
 				likedBy: [],
 				likedBy: [],
+				viewedBy: [],
 				reports: 0,
 				banned: false,
 				picture: {

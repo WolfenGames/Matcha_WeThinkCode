@@ -26,7 +26,7 @@ function UserGenerator() {
                     var sex = Math.floor(Math.random() * 3) + 1;
                     var first = fNames[x];
                     var second = sNames[y];
-                    var email = first.trim('\r') + "::" + second.trim('\r') + (Math.floor(Math.random() * 2018) + i).toString() + "@bogusEmail.com";
+                    var email = first.trim('\r') + second.trim('\r') + (Math.floor(Math.random() * 2018) + i).toString() + "@bogusEmail.com";
                     userSave.generatedUser(first, second, email, age, bio, likesArray, sex, sexuality);
                 }
             })

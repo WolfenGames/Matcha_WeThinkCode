@@ -32,10 +32,11 @@ module.exports = {
 			var query = {
 				$or: ((check.length === 0) ? [{}] : check),
 				banned: false,
+				isVerified: true,
 				location: {
 				$nearSphere: {
 					$geometry: {
-						type: "Point",
+						type: "2dSphere",
 						coordinates: user.location
 						},
 					$maxDistance: 1000 * 1000
@@ -55,7 +56,7 @@ module.exports = {
 		db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
 			var dbo = dbs.db('Matcha');
 			var prof_id = user.likes.map(id => { return  db._mongo.ObjectId(id) });
-			dbo.collection('Users').find({_id: {$in: prof_id}}).toArray().then(result => {
+			dbo.collection('Users').find({_id: {$in: prof_id}, banned: false}).toArray().then(result => {
 				fn(result);
 				dbs.close();
 			}).catch(err => {
@@ -83,7 +84,7 @@ module.exports = {
 		db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
 			var dbo = dbs.db('Matcha');
 			var prof_id = user.blocks.map(id => { return  db._mongo.ObjectId(id) });
-			dbo.collection('Users').find({ _id: {$in: prof_id}}).toArray().then(result => {
+			dbo.collection('Users').find({ _id: {$in: prof_id}, banned: false}).toArray().then(result => {
 				fn(result);
 				dbs.close();
 			}).catch(err => {
@@ -110,7 +111,7 @@ module.exports = {
 		db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
 			var dbo = dbs.db('Matcha');
 			var prof_id = usersMatched.map(id => { return db._mongo.ObjectID(id) });
-			dbo.collection('Users').find({ _id: { $in: prof_id } }).toArray().then(result => {
+			dbo.collection('Users').find({ _id: { $in: prof_id } , banned: false}).toArray().then(result => {
 				fn(result);
 			})
 		}).catch(err => {

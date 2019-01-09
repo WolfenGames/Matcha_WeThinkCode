@@ -32,10 +32,13 @@
 		var id = req_user['_id'];		
 		var views = req_user['views'];
 		var lastTime = req_user['lastTime'];
+		var date = new Date();
+		var mydate = new Date(age);
+		var myAge = date.getFullYear() - mydate.getFullYear();
 	}
 	%>
 	<main>
-		<input type="hidden" id="hiddenemail" value="<%= email %>">
+		<% if (myAge > 17) { %>
 		<div class="container bg-light rounded-bottom mh-100 page">
 			<hr>
 			<div class="row">
@@ -82,11 +85,6 @@
 					Surname&nbsp;::
 						&lt;&nbsp;<label class="lastname-label edit-label"><%= lastname %></label>&nbsp;/&gt;</p>
 					<div class="coloumn">
-						<%
-						var date = new Date();
-						var mydate = new Date(age);
-						var myAge = date.getFullYear() - mydate.getFullYear();
-						%>
 						<p class="age">Age&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:: &lt;&nbsp;<label class="email-label edit-label"><%= myAge %></label>&nbsp;/&gt;</p>
 						<!--Sexuality-->
 						<div class="input-group mb-3">
@@ -149,7 +147,8 @@
 			<hr>
 		</div>
 		</div>
-	</div>
+		</div>
+		<% } %>
 		<!--End Template-->
 	</main>
 		<% include ../partials/error %>

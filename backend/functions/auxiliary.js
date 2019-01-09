@@ -13,10 +13,9 @@ function text_truncate(str, length, cb) {
 
 function getIp(cb){
     public_ip.v4({https: true, timeout: 10000}).then(ip => {
-        cb(ip);
-    }).catch(err => {
-        console.log("Cant get IP => " + err);
-        cb(null);
+		cb(ip);
+	    }).catch(err => {
+        cb("0.0.0.0");
     });
 }
 
