@@ -1,4 +1,4 @@
-const user = "jwolfmatcha@gmail.com", pass = "123asdwolf";
+const user = "jwolfmatcha@gmail.com", pass = "";
 
 module.exports = {
     user: user,
