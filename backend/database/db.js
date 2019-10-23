@@ -4,7 +4,7 @@ const _mongo = require('mongodb');
 
 const url = 'mongodb://localhost:27017/Matcha';
 function createCollection(collectionName) {
-	mongo.connect(url, { useNewUrlParser: true }).then(db => {
+	mongo.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }).then(db => {
 		var dbo = db.db('Matcha');
 		dbo.createCollection(collectionName).then(res => {
 			res.createIndex({email: 1}, {unique: true});
@@ -19,7 +19,7 @@ function createCollection(collectionName) {
 }
 
 function createTagsCollection() {
-	mongo.connect(url, { useNewUrlParser: true }).then(db => {
+	mongo.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }).then(db => {
 		var dbo = db.db('Matcha');
 		dbo.createCollection("Tags").then(res => {
 			res.createIndex({Tag: 1}, {unique: true});

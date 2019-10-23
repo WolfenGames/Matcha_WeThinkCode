@@ -3,3 +3,5 @@ node_modules/
 .vscode/
 out
 public/images/
+settings.js
+package-lock.json

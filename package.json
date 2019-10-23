@@ -5,7 +5,7 @@
 		"server": "nodemon server.js"
 	},
 	"description": "This is a student made project to simulate a dating website, ie tinder, zoosk",
-	"license": "",
+	"license": "UNLICENSED",
 	"repository": {
 		"url": "https://github.com/WolfenGames/Matcha_WeThinkCode"
 	},
@@ -22,7 +22,8 @@
 		"iplocation": "^6.0.4",
 		"ipware": "^1.0.0",
 		"mkdir": "0.0.2",
-		"mongodb": "^3.1.10",
+		"mongo": "^0.1.0",
+		"mongodb": "^3.3.3",
 		"multer": "^1.4.1",
 		"node": "^11.3.0",
 		"node-pre-gyp": "^0.12.0",
@@ -30,7 +31,6 @@
 		"nodemon": "^1.18.7",
 		"public-ip": "^2.4.0",
 		"routing": "0.0.2",
-		"sharp": "^0.21.0",
 		"socket.io": "^2.2.0"
 	}
 }

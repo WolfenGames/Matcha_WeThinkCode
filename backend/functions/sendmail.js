@@ -5,6 +5,7 @@ const db = require('../database/db');
 
 let transporter = mailer.createTransport({
 		service: 'gmail',
+		// host: "smtp.gmail.com",
 		auth : {
 			user: settings.user,
 			pass: settings.pass

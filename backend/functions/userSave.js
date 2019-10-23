@@ -42,7 +42,6 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 				biography: bio,
 				views: 1,
 				rating: 100
-
 			};
 			dbo.collection('Users').insertOne(saveOptions).then(res => {
 				db.close();
