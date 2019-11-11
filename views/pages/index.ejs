@@ -20,7 +20,6 @@
 					<a class="nav-link" href="/profile">&lt;Profile/&gt;</a>
 					<%
 				} else { %>
-					<div class="card-group mr-auto ml-auto">
 						<div class="w-100">
 							<!--Cards-->
 							<%
@@ -70,7 +69,7 @@
 												//%%%%%
 												var percent = (rate / Total) * 100;
 												%>
-											<div class="card text-white bg-dark rounded" class="w-25">
+												<div class="card text-white bg-dark rounded" class="w-25">
 												<img class="card-img" src="<%= users[i]['Prof'] %>" alt="Card image cap">
 												<div class="card-body">
 													<h5 class="card-title"><%= users[i]['username'] %></h5>
@@ -99,7 +98,7 @@
 													<a href="/view/<%= users[i]['_id'] %>" class="btn btn-primary">View</a>
 													<a href="/like/<%= users[i]['_id'] %>" class="btn btn-primary">Like</a>
 													<a href="/block/<%= users[i]['_id'] %>" class="btn btn-warning">Block</a>
-													<a href="/report/<%= users[i]['_id'] %>" class="btn btn-danger">Report</a>
+													<a href="/report/<%= users[i]['_id'] %>" class="btn btn-danger">Fake</a>
 												</div>
 											</div>
 											<hr>
