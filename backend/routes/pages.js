@@ -14,8 +14,8 @@ const tags			= require('../functions/tags');
 const IS			= require('../functions/image_save');
 const db			= require('../database/db');
 
-var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-var email_regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$/;
+var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$/;
+var email_regex = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]{0,})*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]{0,})*(\.[a-zA-Z]{2,10})$/;
 var username_regex = /^[a-zA-Z0-9 ]{5,}$/;
 
 router.get('/', function(req, res) {
