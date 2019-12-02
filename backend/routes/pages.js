@@ -779,17 +779,4 @@ router.get('/resetall', function(req, res) {
 	})
 })
 
-router.get('/iotest', function(req, res) {
-	res.render('pages/io');
-})
-
-router.post('*', function(req, res) {
-	res.end('{"msg":"404"}');
-});
-
-
-router.get('*', function(req, res) {
-	res.render('pages/404');
-});
-
 module.exports = router;

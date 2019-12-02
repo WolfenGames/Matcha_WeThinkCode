@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 const pageRoutes = require('./routes/pages');
+const chatRoutes = require('./routes/chats')
 const session = require('express-session');
 const DB = require('./database/db');
 const fs = require('fs');
@@ -33,6 +34,16 @@ app.use((req, res, next) => {
 });
 
 app.use("/", pageRoutes);
+app.use("/chat", chatRoutes);
+
+app.post('*', function(req, res) {
+	res.end('{"msg":"404"}');
+});
+
+app.get('*', function(req, res) {
+	res.render('pages/404');
+});
+
 DB.createCollection('Users');
 DB.createTagsCollection();
 
