@@ -46,5 +46,6 @@ app.get('*', function(req, res) {
 
 DB.createCollection('Users');
 DB.createTagsCollection();
+require('./functions/chat').CreateChatCollection();
 
 module.exports = app;
