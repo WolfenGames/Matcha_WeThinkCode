@@ -48,4 +48,19 @@ server.on('listening', onListening);
 
 server.listen(port);
 
-// 011 928 8300
+/******************************************************************************/
+/*********************************RYAN FUN TIMES*******************************/
+/******************************************************************************/
+
+// https://www.youtube.com/watch?v=tHbCkikFfDE
+
+var connections = [];
+const io = require('socket.io').listen();//server);
+
+io.sockets.on('connection',function(socket){
+    connections.push(socket);
+    console.log('Connected: %s', connections);
+
+    //Disconnect
+    connections.splice(connections.indexOf(socket), 1)
+})
