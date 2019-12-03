@@ -6,12 +6,12 @@
 <body class="container">
 	<header>
 		<% include ../../partials/header %>
-		<script src="js/login.js"></script>
 	</header>
 	<main>
 		<div class="jumbotron page">
 			<h1>&lt;Login Page/&gt;</h1>
-				<hr>
+			<hr>
+			<form>
 				<div class="form-group">
 					<label for="email">&lt;Email/&gt;</label>
 					<input type="email" name="email" id="email" class="form-control" placeholder="email@example.com" aria-describedby="helpId">
@@ -19,7 +19,7 @@
 				</div>
 				<div class="form-group">
 					<label for="password">&lt;Password/&gt;</label>
-					<input type="password" class="form-control" name="password" id="password" aria-describedby="helpId" placeholder="Password">
+					<input pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$' type="password" class="form-control" name="password" id="password" aria-describedby="helpId" placeholder="Password">
 					<small id="helpId" class="form-text text-muted">Password requires atleast 1 Uppercase, 1 Lowercase, 1 number and 1 special character, 8 characters minumum</small>
 				</div>
 				<hr>
@@ -28,10 +28,12 @@
 					<button id="Resend-Button" type="submit" class="btn btn-outline-custom">&lt;Resend Verification/&gt;</button>
 					<button id="Forgot-Button" type="submit" class="btn btn-outline-custom">&lt;Forgot Password/&gt;</button>
 				</div>
+			</form>
 		</div>
 	</main>
-		<% include ../../partials/error %>
+	<% include ../../partials/error %>
 	<footer>
+		<script src="js/login.js"></script>
 		<% include ../../partials/footer %>
 	</footer>
 </body>
