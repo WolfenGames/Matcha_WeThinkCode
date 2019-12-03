@@ -32,13 +32,13 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 				reports: 0,
 				banned: false,
 				picture: {
-					Picture1: null,
-					Picture2: null,
-					Picture3: null,
-					Picture4: null,
-					Picture5: null
+					Picture1: '/default.jpeg',
+					Picture2: '/default.jpeg',
+					Picture3: '/default.jpeg',
+					Picture4: '/default.jpeg',
+					Picture5: '/default.jpeg'
 				},
-				Prof: "undefined",
+				Prof: '/default.jpeg',
 				biography: bio,
 				views: 1,
 				rating: 100

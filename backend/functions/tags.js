@@ -29,7 +29,7 @@ function setTags(query, user, cb) {
                             db.close();
                             cb(result.tags);
                         }).catch(err => {
-                            console.log("Cant connect to collection -> " + err);
+                            console.log("1: Cant connect to collection -> " + err);
                         })
                     }).catch(err => {
                         console.log("Cant update the users tag due to => " + err);
@@ -44,7 +44,7 @@ function setTags(query, user, cb) {
                             db.close();
                             cb(result.tags);
                         }).catch(err => {
-                            console.log("Cant connect to collection -> " + err);
+                            console.log("2: Cant connect to collection -> " + err);
                         })
                     }).catch(err => {
                         console.log("Cant update the users tag due to => " + err);
@@ -66,7 +66,7 @@ function getUpdatedTags(email, cb) {
             db.close();
             cb(result.tags);
         }).catch(err => {
-            console.log("Cant connect to collection -> " + err);
+            console.log("3: Cant connect to collection -> " + err);
         })
     }).catch(err => {
         console.log("Cant connect to database due to => " + err);
