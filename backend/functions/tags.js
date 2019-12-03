@@ -39,16 +39,23 @@ function setTags(query, user, cb) {
                 })
             }).catch(err => {
                 dbo.collection("Users").findOne({email: user}).then(res => {
-                    dbo.collection("Users").updateOne({email: user}, { $addToSet: {tags: query}}).then(result => {
-                        dbo.collection("Users").findOne({email: user}).then(result => {
-                            db.close();
-                            cb(result.tags);
-                        }).catch(err => {
-                            console.log("2: Cant connect to collection -> " + err);
-                        })
-                    }).catch(err => {
-                        console.log("Cant update the users tag due to => " + err);
-                    })
+					if (query)
+					{
+						dbo.collection("Users").updateOne({email: user}, { $addToSet: {tags: query}}).then(result => {
+							dbo.collection("Users").findOne({email: user}).then(result => {
+								db.close();
+								if (result)
+									cb(result.tags);
+								else
+									cb({})
+							}).catch(err => {
+								console.log("2: Cant connect to collection -> " + err);
+							})
+						}).catch(err => {
+							console.log("Cant update the users tag due to => " + err);
+						})
+					}else
+					cb({})
                 }).catch(err => {
                     console.log("Cant find tags due to " + err);
                 })

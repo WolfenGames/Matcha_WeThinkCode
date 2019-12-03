@@ -177,6 +177,18 @@ function updateLoc(user)
 	})
 }
 
+function filter(thing, cb) {
+	db.mongo.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection("Users").find(thing).toArray().then(res => { cb(res) })
+		.catch(err => {
+
+		})
+	}).catch(err => {
+		console.log("Cant connect to database " + err);
+	})
+}
+
 module.exports = {
 	deleteByUsername: deleteByUsername,
 	deleteAll: deleteAll,
@@ -187,5 +199,6 @@ module.exports = {
 	setGeoLocBrowser: setGeoLocBrowser,
 	setTypeOfLoc: setTypeOfLoc,
 	updateLoc: updateLoc,
-	setCustomLoc: setCustomLoc
+	setCustomLoc: setCustomLoc,
+	filter: filter
 }

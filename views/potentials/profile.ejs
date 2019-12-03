@@ -33,6 +33,7 @@
 		var views = req_user['views'];
 		var lastTime = req_user['lastTime'];
 		var date = new Date();
+		var acAge = req_user['actualage']
 		var mydate = new Date(age);
 		var myAge = date.getFullYear() - mydate.getFullYear();
 		var tot = (views / highestView) * 5;
@@ -149,7 +150,6 @@
 						&lt;&nbsp;<label class="email-label edit-label">Other</label>&nbsp;/&gt;
 						<% } %>
 						</div>
-						<p class="age">Age:: <%= myAge %></p>
 						<p class="age">Views:: <%= views %></p>
 						<p class="age">Last Online:: <%= lastTime %></p>
 						</div>

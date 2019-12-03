@@ -867,4 +867,31 @@ router.get('/user/admin', (req, res) => {
 		res.redirect('/404');
 })
 
+router.post('/filter', (req, res) => {
+	
+})
+
+router.get('/filter', (req, res) => {
+	if (req.session.user)
+	{
+		manageUser.getUserInfo(req.session.user.email, result => {
+			var user = req.session.user;
+			req.session.setup = (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
+					|| !user['biography'] || !user['Prof']) ?
+						false : true;
+			req.session.user = result;
+			var date = new Date();
+			date.setFullYear(date.getFullYear() - 31);
+			console.log(date.toString("yyyy-mm-dd"));
+			var x = require('dateformat')
+			var y = x(date, "yyyy-mm-dd")
+			manageUser.filter({age:{$lt: y}}, result => {
+				res.render('pages/index', {user: req.session.user, users: result, setup: req.session.setup})
+			})
+		})
+	}
+	else
+		res.redirect('/404')
+})
+
 module.exports = router;
