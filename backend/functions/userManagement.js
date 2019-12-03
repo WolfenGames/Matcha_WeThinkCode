@@ -93,10 +93,27 @@ function getUserInfoId(id, cb) {
 		cb(null);
 }
 
+function getHighestView(cb) {
+	db.mongo.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection("Users").find().sort({views:-1}).limit(1).toArray().then(res => {
+			if (res[0] && res[0].views)
+				cb(res[0].views);
+			else
+				cb(0);
+		}).catch(err => {
+			console.log("Fuck " + err);
+		})
+	}).catch(err => {
+		console.log("Cant connect to database " + err);
+	})
+}
+
 module.exports = {
 	deleteByUsername: deleteByUsername,
 	deleteAll: deleteAll,
 	updateUserOne: updateUserOne,
 	getUserInfoId: getUserInfoId,
-	getUserInfo: getUserInfo
+	getUserInfo: getUserInfo,
+	getHighestView: getHighestView
 }

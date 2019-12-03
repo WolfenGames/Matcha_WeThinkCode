@@ -87,6 +87,16 @@ function removeTag(email, tag)
     })
 }
 
+function addTag(tag)
+{
+	conn.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection('Tags').insert({Tag: tag});
+	}).catch(err => {
+        console.log("Cannot connect to database due to reason => " + err);
+    })
+}
+
 module.exports = {
     getTags: getTags,
     setTags: setTags,

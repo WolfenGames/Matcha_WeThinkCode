@@ -513,7 +513,9 @@ router.get('/view/:id', function(req, res) {
 				if (user)
 				{
 					manageUser.updateUserOne( { email: user.email } , { $set: {views: user.views + 1}, $addToSet: { viewedBy: req.session.user._id } }, () => {
-						res.render('potentials/profile', { user: req.session.user, req_user: user });
+						manageUser.getHighestView(val => {
+							res.render('potentials/profile', { user: req.session.user, req_user: user, highestView: val });
+						})
 					})
 				}
 				else
