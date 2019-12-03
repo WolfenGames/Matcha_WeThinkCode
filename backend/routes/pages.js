@@ -771,12 +771,30 @@ router.get('/generate', function(req, res) {
 	res.redirect('/');
 })
 
+router.post('/generate', function(req, res) {
+	require('../functions/generator').UserGenerator();
+	// res.redirect('/');
+	res.sendStatus(200);
+})
+
 
 router.get('/resetall', function(req, res) {
 	db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
 		var dbo = dbs.db('Matcha');
 		dbo.collection('Users').deleteMany({type: "Generated"}).then(result => {
 			res.redirect('/');
+		})
+	})
+})
+
+router.post('/resetall', function(req, res) {
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
+		var dbo = dbs.db('Matcha');
+		dbo.collection('Users').deleteMany({type: "Generated"}).then(result => {
+			res.sendStatus(200)
+		}).catch(err => {
+			console.log("Can't reset -> " + err)
+			res.sendStatus(403)
 		})
 	})
 })
@@ -827,6 +845,17 @@ router.post('/update/loc/custom', (req, res) => {
 		manageUser.updateLoc(req.session.user);
 	}
 	res.sendStatus(200)
+})
+
+router.get('/user/admin', (req, res) => {
+	if (req.session.user && req.session.user.type === "Admin")
+	{
+		FuncUser.getAll(result => {
+			res.render('pages/profile/admin', {user: req.session.user, results: result});
+		})
+	}
+	else
+		res.redirect('/404');
 })
 
 module.exports = router;

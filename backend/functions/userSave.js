@@ -132,8 +132,22 @@ function emailExists(email, cb) {
 	});
 }
 
+function getAll(cb) {
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection('Users').find({}).toArray().then(res => {
+			cb(res);
+		}).catch(err => {
+			console.log("Cant use email Exists => " + err);
+		})
+	}).catch(err => {
+		console.log("Can't connect to database called by getAll() -> " + err);
+	});
+}
+
 module.exports = {
 	userSave: userSave,
 	emailExists: emailExists,
-	generatedUser: generatedUser
+	generatedUser: generatedUser,
+	getAll: getAll
 }
