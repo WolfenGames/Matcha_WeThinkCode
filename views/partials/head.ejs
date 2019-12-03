@@ -22,3 +22,18 @@
         background-size: cover;
     }
 </style>
+<script>
+	if (navigator.geolocation)
+	{
+		navigator.geolocation.getCurrentPosition(SetPostition)
+	}
+
+	function SetPostition(pos)
+	{
+		console.log(pos);
+		$.post('/user/updateLoc', {
+				long: pos.coords.longitude,
+				lat: pos.coords.longitude
+			}).done(function(data) {});
+	}
+</script>

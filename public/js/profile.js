@@ -1,5 +1,6 @@
 var availableTags = [];
 var myCurrTags = [];
+var map;
 $(document).ready(function(){
 
 	/*$(function () {
@@ -335,7 +336,41 @@ $(document).ready(function(){
 		$("#Image5").click();
 	});
 
+	$('input[type=radio][name=locType]').change((e) => {
+		console.log($('input[name=locType]:checked').val());
+		$.post('/user/locType', 
+		{
+			locType: $('input[name=locType]:checked').val()
+		}
+		).done()
+	})
+	google.maps.event.addListener(map, "click", function (event) {
+		var latitude = event.latLng.lat();
+		var longitude = event.latLng.lng();
+		$.post('/update/loc/custom',
+		{
+			long: longitude,
+			lat: latitude
+		}).done();
+	});
 });
+
+
+function initMap() {
+	console.log("lat " + lat)
+	console.log("long " + long)
+	try
+	{
+		map = new google.maps.Map(document.getElementById('map'), {
+		center: {lat: lat, lng: long},
+		zoom: 10,
+		disableDefaultUI: true
+		});
+	}catch(ex)
+	{
+		console.log(ex)
+	}
+}
 
 function removeTag(tagname, el)
 {
