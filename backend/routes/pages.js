@@ -847,6 +847,15 @@ router.post('/update/loc/custom', (req, res) => {
 	res.sendStatus(200)
 })
 
+router.get('/delete/:name', (req, res) => {
+	if (req.session.user && req.session.user.type === "Admin")
+	{
+		FuncUser.deleteUser(req.params.name);
+		res.redirect('/user/admin')
+	}else
+		res.redirect('/404')
+})
+
 router.get('/user/admin', (req, res) => {
 	if (req.session.user && req.session.user.type === "Admin")
 	{

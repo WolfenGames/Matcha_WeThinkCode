@@ -39,6 +39,7 @@
 			if (results){ 
 				%>
 			<p>Total Users:: <%= usercount %></p>
+			<div class="card-group mr-auto ml-auto">
 			<% for (var i = 0; i < usercount; i++){ %>
 				<% 
 				var uid = results[i]['_id']; 
@@ -47,18 +48,29 @@
 				var type = results[i]['type'];
 				var bio = results[i]['biography'];
 				%>
-				<p>
-					Username: <%= uname; %> Type : <%= type %>
-				</p>
-				<p>
-					biography: <%= bio; %>
-				</p>
-				<p>
-					id: <%= uid %>
-				</p>
-				<input class="btn btn-warning" type="submit" value="Delete User: <%= uname %>" onclick='location.href="/delete/<%= uname %>"'>
-				<hr>
+					<div class="w-100">
+						<div class="card text-white bg-dark rounded" class="w-100">
+							<div class="card-body">
+								<p>
+									Username: <%= uname; %> Type : <%= type %>
+								</p>
+								<p>
+									biography: <%= bio; %>
+								</p>
+								<p>
+									id: <%= uid %>
+								</p>
+								<% if (user['_id'] != results[i]['_id']) { %> 
+								<input class="btn btn-warning" type="submit" value="Delete User: <%= uname %>" onclick='location.href="/delete/<%= uname %>"'>
+								<%}%>
+								<hr>
+							</div>
+						</div>
+					</div>
 			<% }
+			%>
+			</div>
+			<%
 			 } %>
 		</div>
 	</main>

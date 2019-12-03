@@ -145,9 +145,24 @@ function getAll(cb) {
 	});
 }
 
+function deleteUser(name)
+{
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection('Users').deleteOne({username: name}).then(res => {
+			
+		}).catch(err => {
+			console.log("Cant use email Exists => " + err);
+		})
+	}).catch(err => {
+		console.log("Can't connect to database called by getAll() -> " + err);
+	});
+}
+
 module.exports = {
 	userSave: userSave,
 	emailExists: emailExists,
 	generatedUser: generatedUser,
-	getAll: getAll
+	getAll: getAll,
+	deleteUser: deleteUser
 }
