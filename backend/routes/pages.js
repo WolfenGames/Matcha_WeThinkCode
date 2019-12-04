@@ -13,6 +13,7 @@ const geoip			= require('geoip-lite');
 const tags			= require('../functions/tags');
 const IS			= require('../functions/image_save');
 const db			= require('../database/db');
+const qString	 	= require('querystring')
 
 var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$#!%*?&_]{8,}$/;
 var email_regex = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,10})$/;
@@ -868,11 +869,10 @@ router.get('/user/admin', (req, res) => {
 		res.redirect('/404');
 })
 
-router.post('/filter', (req, res) => {
-	
-})
-
 router.get('/filter', (req, res) => {
+	/*
+		/:minAge/:maxAge/:distance:/
+	*/
 	if (req.session.user)
 	{
 		manageUser.getUserInfo(req.session.user.email, result => {
@@ -881,11 +881,20 @@ router.get('/filter', (req, res) => {
 					|| !user['biography'] || !user['Prof']) ?
 						false : true;
 			req.session.user = result;
-			var date = new Date();
-			date.setFullYear(date.getFullYear() - 31);
-			console.log(date.toString("yyyy-mm-dd"));
+			if (!req.query.minAge || !(req.query.minAge instanceof Number))
+				req.query.minAge = 17
+			if (!req.query.maxAge || !(req.query.maxAge instanceof Number))
+				req.query.maxAge = 99
+			if (!req.query.dist || !(req.query.dist instanceof Number))
+				req.query.dist = 1000
+			var date = new Date()
+			var date2 = new Date()
+			date.setFullYear(date.getFullYear() - parseInt(req.query.minAge));
+			date2.setFullYear(date2.getFullYear() - parseInt(req.query.maxAge));
 			var x = require('dateformat')
 			var y = x(date, "yyyy-mm-dd")
+			var z = x(date2, "yyyy-mm-dd")
+			var dist = parseInt(req.query.dist) * parseInt(req.query.dist)
 			var check = [];
 			if (user['sex'] === "3")
 			{
@@ -924,12 +933,19 @@ router.get('/filter', (req, res) => {
 						type: "2dSphere",
 						coordinates: user.location
 						},
-					$maxDistance: 1000 * 1000
+					$maxDistance: dist
 					}
 				}
 			}
+			if (req.query.tags && req.query.tags.length != 0)
+			{
+				if (req.query.tags instanceof Array)
+					query.tags = {$in: req.query.tags}
+				else
+					query.tags = {$in: [req.query.tags]}
+			}
 			manageUser.filter(query, result => {
-				res.render('pages/index', {user: req.session.user, users: result, setup: req.session.setup})
+				res.render('pages/filter', {user: req.session.user, users: result, setup: req.session.setup})
 			})
 		})
 	}
