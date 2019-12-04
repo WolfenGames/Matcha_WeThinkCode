@@ -14,7 +14,7 @@ const tags			= require('../functions/tags');
 const IS			= require('../functions/image_save');
 const db			= require('../database/db');
 
-var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$/;
+var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!%#*?&_]{8,}$/;
 var email_regex = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,10})$/;
 var username_regex = /^[a-zA-Z0-9 ]{5,}$/;
 
