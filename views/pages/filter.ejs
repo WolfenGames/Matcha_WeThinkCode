@@ -12,34 +12,35 @@
 		</header>
 		<script>
 			var availableTags = []
-		$('#tags').keypress(function (e) {
-			console.log("eh?")
-			if (e.which == 13) {
-				var tag = $(this).val();
-				$(this).val('');
-				$(this).text('');
-				if (tag)
-				{
-					// if (myCurrTags.indexOf(tag) === -1)
-					// {
-						$('#likes-list').append(' <button class="tag-button" onclick="removeTag(\''+tag+'\', this)">'+ tag +'</button>');
-						// myCurrTags.push(tag);
-					// }
-				}
-			}
-		});
-		
-		setInterval(function(){
-			$.get('/tags/get').done(result => {
-				(result).forEach(element => {
-					if (availableTags.indexOf(element['Tag']) === -1)
-						availableTags.push(element['Tag']);
-					$('#tags').autocomplete({
-						source: availableTags
-					})
-				});
+			$(document).ready(() => {
+				$('#tags').keypress((e) => {
+					if (e.which == 13) {
+						e.preventDefault()
+						var tag = $('#tags').val();
+						$('#tags').val('');
+						$('#tags').text('');
+						if (tag)
+							$('#likes-list').append('<input type="text" id="inputTag" value="'+tag+'" class="tag-button" name="tags">');
+				}});
+				$('#filterSubmit').click(() => {
+					$('#filterForm').submit()
+				})
+				$('#inputTag').click(() => {
+					
+				})
+				$('#inputTag').keypress((e) => { e.preventDefault(); return false; })
 			})
-		}, 10000);
+			setInterval(function(){
+				$.get('/tags/get').done(result => {
+					(result).forEach(element => {
+						if (availableTags.indexOf(element['Tag']) === -1)
+							availableTags.push(element['Tag']);
+						$('#tags').autocomplete({
+							source: availableTags
+						})
+					});
+				})
+			}, 10000);
 		</script>
 		<main>
 			<div class="container page">
@@ -55,23 +56,24 @@
 						<div class="container w-auto">
 							<form id='filterForm' method="GET" action="/filter">
 								<div class="form-group">
-									<input type="number" style="background-color: white;" placeholder="MinAge" name="minAge">
+									<input type="number" style="background-color: white; color: black;" placeholder="MinAge" name="minAge">
 								</div>
 								<div class="form-group">
-									<input type="number" style="background-color: white;" placeholder="MaxAge" name="maxAge">
+									<input type="number" style="background-color: white; color: black;" placeholder="MaxAge" name="maxAge">
 								</div>
 								<div class="form-group">
-									<input type="number" style="background-color: white;" placeholder="Distance" name="distance">
+									<input type="number" style="background-color: white; color: black;" placeholder="Distance" name="distance">
 								</div>
-								<div class="ui-widgets w-100 row">
-									<input style="background-color: white;" placeholder="Likes" type="text" id="tags" class="w-75">
+								<div class="form-group ui-widgets w-100 row">
+									<input style="background-color: white; color: black;" placeholder="Likes" type="text" id="tags" class="w-75">
 								</div>
 								<hr>
 								<div class="grid">
 									<div id='likes-list' class="mx-auto">
 									</div>
 								</div>
-								<input type="button" value="Filter" style="background-color: black; color: white;" name="submit">
+								<hr>
+								<input id="filterSubmit" type="submit" value="Filter" style="background-color: black; color: white;" name="submit">
 							</form>
 							<hr>
 						</div>
