@@ -830,6 +830,7 @@ router.post('/user/locType', (req, res) => {
 		manageUser.setTypeOfLoc(val, req.session.user);
 		manageUser.updateLoc(req.session.user);
 	}
+	res.sendStatus(200)
 });
 
 router.post('/update/loc', (req, res) => {
@@ -886,7 +887,49 @@ router.get('/filter', (req, res) => {
 			console.log(date.toString("yyyy-mm-dd"));
 			var x = require('dateformat')
 			var y = x(date, "yyyy-mm-dd")
-			manageUser.filter({age:{$lt: y}}, result => {
+			var check = [];
+			if (user['sex'] === "3")
+			{
+				check.push( { sex: "3" });
+			} else {
+				if (user['sexuality'] === "3")
+				{
+					check.push( { sexuality: "1", sex: user['sex'] } );
+					check.push( { sexuality: "3", sex: user['sex'] } );
+				}
+				if (user['sexuality'] === "2")
+				{
+					check.push( { sexuality: "1", sex: user['sex'] === "1" ? "2" : "1" } );
+					check.push( { sexuality: "2", sex: user['sex'] === "1" ? "2" : "1" } );
+				}
+				if (user['sexuality'] === "1")
+				{
+					check.push( { sexuality: "1", sex: "1" } );
+					check.push( { sexuality: "1", sex: "2" } );
+					check.push( { sex: user['sex'] === "1" ? "2" : "1", sexuality: "2" } );
+					check.push( { sex: user['sex'], sexuality: "3" } );
+				}
+			}
+			
+			var query = {
+				age:{
+					$lt: y,
+					$gt: z
+				},
+				$or: ((check.length === 0) ? [{}] : check),
+				banned: false,
+				isVerified: true,
+				location: {
+				$nearSphere: {
+					$geometry: {
+						type: "2dSphere",
+						coordinates: user.location
+						},
+					$maxDistance: 1000 * 1000
+					}
+				}
+			}
+			manageUser.filter(query, result => {
 				res.render('pages/index', {user: req.session.user, users: result, setup: req.session.setup})
 			})
 		})

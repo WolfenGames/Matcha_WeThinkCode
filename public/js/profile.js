@@ -341,8 +341,7 @@ $(document).ready(function(){
 		$.post('/user/locType', 
 		{
 			locType: $('input[name=locType]:checked').val()
-		}
-		).done()
+		}).done(() => location.reload())
 	})
 	google.maps.event.addListener(map, "click", function (event) {
 		var latitude = event.latLng.lat();
