@@ -6,11 +6,19 @@ const chatRoutes = require('./routes/chats')
 const session = require('express-session');
 const DB = require('./database/db');
 const fs = require('fs');
+const {CreateChatCollection, CreateRoomCollection} = require('./functions/chat')
 var dir = './public/images';
+
+const { Room } = require('./classes/Room')
+const { Message } = require('./classes/Message')
+
 
 if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
 }
+
+CreateChatCollection()
+CreateRoomCollection()
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -46,6 +54,5 @@ app.get('*', function(req, res) {
 
 DB.createCollection('Users');
 DB.createTagsCollection();
-require('./functions/chat').CreateChatCollection();
 
 module.exports = app;

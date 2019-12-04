@@ -4,31 +4,31 @@ const app = require('./backend/app');
 const normalizePort = val => {
   var port = parseInt(val, 10);
   if (isNaN(port)){
-    return val;
+	return val;
   }
   if (port >= 0)
   {
-    return port;
+	return port;
   }
   return false;
 }
 
 const onError = error => {
   if (error.syscall !== "listen"){
-    throw error;
+	throw error;
   }
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + port;
   switch (error.code) {
-    case "EACCESS":
-    console.error(bind + " requires elevated privileges");
-    process.exit(1);
-    break;
-    case "EADDRINUSE":
-    console.error(bind + " is already in use");
-    process.exit(1);
-    break;
-    default:
-    throw error;
+	case "EACCESS":
+	console.error(bind + " requires elevated privileges");
+	process.exit(1);
+	break;
+	case "EADDRINUSE":
+	console.error(bind + " is already in use");
+	process.exit(1);
+	break;
+	default:
+	throw error;
   }
 }
 
@@ -52,15 +52,21 @@ server.listen(port);
 /*********************************RYAN FUN TIMES*******************************/
 /******************************************************************************/
 
-// https://www.youtube.com/watch?v=tHbCkikFfDE
+var io = require('socket.io')(server)
 
-var connections = [];
-const io = require('socket.io').listen();//server);
+io.on('connection', function(socket){
+	const {addChat, getAllChats, RoomLogin} = require('./backend/functions/chat')
+	console.log('A client has connected...');
 
-io.sockets.on('connection',function(socket){
-    connections.push(socket);
-    console.log('Connected: %s', connections);
+	socket.on('init', (id) => {
+		RoomLogin(id.id1, id.id2, res =>{
+				socket.join(res);
+				io.sockets.in(res).emit('joined', res)
+			})
+	})
 
-    //Disconnect
-    connections.splice(connections.indexOf(socket), 1)
-})
+	socket.on('chat message', function(roomname, msg){
+		console.log('Server has received: ' + msg);
+	  	io.sockets.in(roomname).emit(msg);//TODO: for the love of god why does this not work>?????????
+	});
+  });

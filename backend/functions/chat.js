@@ -2,6 +2,20 @@ const db = require("../database/db");
 // const bcrypt = require("bcrypt");
 'use strict'
 
+function CreateRoomCollection()
+{
+	db.mongo.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true }).then(db => {
+		var dbo = db.db('Matcha');
+		dbo.createCollection("Rooms").then(res => {
+			db.close();
+		}).catch(err => {
+			console.log("Cant create collection { Chat } due to -> " + err);
+		});
+	}).catch(err => {
+		console.log("Cant connect to database called by CreateChatCollection() due to -> " + err);
+	})
+}
+
 function CreateChatCollection()
 {
 	db.mongo.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true }).then(db => {
@@ -16,6 +30,24 @@ function CreateChatCollection()
 	}).catch(err => {
 		console.log("Cant connect to database called by CreateChatCollection() due to -> " + err);
 	})
+}
+
+function RoomLogin(id1, id2, cb) {
+    db.mongo.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true }).then(db => {
+		var dbo = db.db('Matcha');
+		dbo.collection('Rooms').findOne({$or: [{id1: id1, id2: id2}, {id1:id2, id2:id1}]}).then(result => {
+            if (!result)
+            {
+                dbo.collection('Rooms').insertOne({roomName: 'room-' + id1 + '-' + id2, id1: id1, id2: id2}).then(res => {
+                    console.log(res.ops.roomName);
+                    cb(res.ops.roomName)
+                }).catch(err => {console.log(err)})
+            }else
+                cb(result.roomName)
+            }).catch(err => {console.log(err)})
+		}).catch(err => {
+			console.log("Cant create collection { Chat } due to -> " + err);
+		});
 }
 
 async function addChat(sender, reciever, message)
@@ -59,5 +91,7 @@ function getAllChats(a, b, cb)
 module.exports = {
 	CreateChatCollection: CreateChatCollection,
 	addChat: addChat,
-	getAllChats: getAllChats
+    getAllChats: getAllChats,
+    CreateRoomCollection: CreateRoomCollection,
+    RoomLogin: RoomLogin
 }
