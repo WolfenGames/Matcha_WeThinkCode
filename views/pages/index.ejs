@@ -19,7 +19,14 @@
 					<h1>Please setup account before you can search for users</h1>
 					<a class="nav-link" href="/profile">&lt;Profile/&gt;</a>
 					<%
-				} else { %>
+				} else if (users.length == 1)
+				{
+					%>
+						<h1>You currently don't have any matches available</h1>
+					<%
+				}
+				else
+				{ %>
 						<div class="w-100">
 							<!--Cards-->
 							<%
