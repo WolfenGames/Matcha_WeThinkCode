@@ -1,5 +1,6 @@
 $(document).ready(function(){
-	$('#Signup-Button').click(function() {
+	$('#Signup-Button').click(function(e) {
+		e.preventDefault();
 		var email = $('#email').val();
 		var pass = $('#password').val();
 		var cpass = $('#cpassword').val();

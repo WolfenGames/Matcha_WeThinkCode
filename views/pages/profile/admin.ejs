@@ -6,20 +6,40 @@
 <body class="container">
 	<header>
 		<% include ../../partials/header %>
+		<script>
+				$(document).ready(function(){
+					$("#Create").click(() => {
+						$.post('/generate',
+						{}).done(
+							()=>{
+								location.reload()
+							}
+						);
+					})
+					$("#Delete").click(() => {
+						$.post('/resetall',
+						{}).done(
+							()=>{
+								location.reload()
+							});
+					})
+				})
+		</script>
 	</header>
 	<main>
 		<div class="container page rounded-bottom">
 			<h1>Admin Page</h1>
-			<div class="container">
-				<input class="btn btn-primary" type='submit' value="Create User" onclick="location.href='/create'"> <br>
-				<input class="btn btn-warning" type="submit" value="Delete Users" onclick="location.href='/deleteall'"> <br>
-				<input class="btn btm-sucess" type="submit" value="Create Dummy Admin" onclick="location.href='/createAdmin'">
+			<div class="row w-100" style="padding: 10px;">
+				<input id="Create" class="btn btn-primary" type='submit' value="Create Users" > <br>
+				<input id="Delete" class="btn btn-warning" type="submit" value="Delete Users"> <br>
+				<!-- <input class="btn btm-sucess" type="submit" value="Create Dummy Admin" onclick="location.href='/createAdmin'"> -->
 			</div>
 			<% 
 			var usercount = results.length;
 			if (results){ 
 				%>
 			<p>Total Users:: <%= usercount %></p>
+			<div class="card-group mr-auto ml-auto">
 			<% for (var i = 0; i < usercount; i++){ %>
 				<% 
 				var uid = results[i]['_id']; 
@@ -28,18 +48,29 @@
 				var type = results[i]['type'];
 				var bio = results[i]['biography'];
 				%>
-				<p>
-					Username: <%= uname; %> Type : <%= type %>
-				</p>
-				<p>
-					biography: <%= bio; %>
-				</p>
-				<p>
-					id: <%= uid %>
-				</p>
-				<input class="btn btn-warning" type="submit" value="Delete User: <%= uname %>" onclick='location.href="/delete/<%= uname %>"'>
-				<hr>
+					<div class="w-100">
+						<div class="card text-white bg-dark rounded" class="w-100">
+							<div class="card-body">
+								<p>
+									Username: <%= uname; %> Type : <%= type %>
+								</p>
+								<p>
+									biography: <%= bio; %>
+								</p>
+								<p>
+									id: <%= uid %>
+								</p>
+								<% if (user['_id'] != results[i]['_id']) { %> 
+								<input class="btn btn-warning" type="submit" value="Delete User: <%= uname %>" onclick='location.href="/delete/<%= uname %>"'>
+								<%}%>
+								<hr>
+							</div>
+						</div>
+					</div>
 			<% }
+			%>
+			</div>
+			<%
 			 } %>
 		</div>
 	</main>

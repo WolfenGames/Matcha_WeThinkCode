@@ -93,10 +93,99 @@ function getUserInfoId(id, cb) {
 		cb(null);
 }
 
+function getHighestView(cb) {
+	db.mongo.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection("Users").find().sort({views:-1}).limit(1).toArray().then(res => {
+			if (res[0] && res[0].views)
+				cb(res[0].views);
+			else
+				cb(0);
+		}).catch(err => {
+			console.log("Fuck " + err);
+		})
+	}).catch(err => {
+		console.log("Cant connect to database " + err);
+	})
+}
+
+function setGeoLocBrowser(long, lat, user)
+{
+	db.mongo.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection("Users").updateOne({'email':user.email}, {$set: {
+			'locationBrowser': [parseFloat(long), parseFloat(lat)]
+		}}).catch(err => {
+
+		})
+	}).catch(err => {
+		console.log("Cant connect to database " + err);
+	})
+}
+
+function setTypeOfLoc(locType, user)
+{
+	db.mongo.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection("Users").updateOne({'email':user.email}, {$set: {
+			'locationType': parseInt(locType)
+		}}).catch(err => {
+
+		})
+	}).catch(err => {
+		console.log("Cant connect to database " + err);
+	})
+}
+
+function setCustomLoc(user, long, lat)
+{
+	db.mongo.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection("Users").updateOne({'email':user.email}, {$set: {
+			locationCustom: [long, lat]
+		}}).catch(err => {
+
+		})
+	}).catch(err => {
+		console.log("Cant connect to database " + err);
+	})
+}
+
+function updateLoc(user)
+{
+	switch(user.locationType)
+	{
+		case 0:
+			user.location = user.locationIp
+			break;
+		case 1:
+			user.location = user.locationBrowser
+			break;
+		case 2:
+			user.location = user.locationCustom
+			break;
+	}
+	db.mongo.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
+		var dbo = db.db("Matcha");
+		dbo.collection("Users").updateOne({'email':user.email}, {$set: {
+			'location': user.location
+		}}).catch(err => {
+
+		})
+	}).catch(err => {
+		console.log("Cant connect to database " + err);
+	})
+}
+
 module.exports = {
 	deleteByUsername: deleteByUsername,
 	deleteAll: deleteAll,
 	updateUserOne: updateUserOne,
 	getUserInfoId: getUserInfoId,
-	getUserInfo: getUserInfo
+	getUserInfo: getUserInfo,
+	getHighestView: getHighestView,
+	setGeoLocBrowser: setGeoLocBrowser,
+	setTypeOfLoc: setTypeOfLoc,
+	updateLoc: updateLoc,
+	setCustomLoc: setCustomLoc
 }

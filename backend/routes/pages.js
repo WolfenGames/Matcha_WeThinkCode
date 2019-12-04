@@ -14,14 +14,14 @@ const tags			= require('../functions/tags');
 const IS			= require('../functions/image_save');
 const db			= require('../database/db');
 
-var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!#%*?&_]{8,}$/;
-var email_regex = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]{0,})*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]{0,})*(\.[a-zA-Z]{2,10})$/;
+var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$/;
+var email_regex = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,10})$/;
 var username_regex = /^[a-zA-Z0-9 ]{5,}$/;
 
 router.get('/', function(req, res) {
 	if (!req.session.user)
 		res.redirect('/login');
-	else{
+	else {
 		manageUser.getUserInfo(req.session.user.email, result => {
 			var user = req.session.user;
 			req.session.setup = (!user['username'] || !user['firstname'] || !user['surname'] || !user['sex'] || !user['sexuality']
@@ -156,7 +156,7 @@ router.post('/login/user', function(req, res) {
 								loc.ll[1] = 0;
 							}
 							req.session.loc = [loc.ll[1], loc.ll[0]];
-							manageUser.updateUserOne({email: req.session.user.email}, {$set : {location: req.session.loc}}, cb => {
+							manageUser.updateUserOne({email: req.session.user.email}, {$set : {locationIp: req.session.loc}}, cb => {
 									res.end('{"msg": "OK"}');
 							});
 						}
@@ -513,7 +513,9 @@ router.get('/view/:id', function(req, res) {
 				if (user)
 				{
 					manageUser.updateUserOne( { email: user.email } , { $set: {views: user.views + 1}, $addToSet: { viewedBy: req.session.user._id } }, () => {
-						res.render('potentials/profile', { user: req.session.user, req_user: user });
+						manageUser.getHighestView(val => {
+							res.render('potentials/profile', { user: req.session.user, req_user: user, highestView: val });
+						})
 					})
 				}
 				else
@@ -769,6 +771,12 @@ router.get('/generate', function(req, res) {
 	res.redirect('/');
 })
 
+router.post('/generate', function(req, res) {
+	require('../functions/generator').UserGenerator();
+	// res.redirect('/');
+	res.sendStatus(200);
+})
+
 
 router.get('/resetall', function(req, res) {
 	db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
@@ -777,6 +785,86 @@ router.get('/resetall', function(req, res) {
 			res.redirect('/');
 		})
 	})
+})
+
+router.post('/resetall', function(req, res) {
+	db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
+		var dbo = dbs.db('Matcha');
+		dbo.collection('Users').deleteMany({type: "Generated"}).then(result => {
+			res.sendStatus(200)
+		}).catch(err => {
+			console.log("Can't reset -> " + err)
+			res.sendStatus(403)
+		})
+	})
+})
+
+router.post('/user/updateLoc', (req, res) => {
+	if (req.body.long && req.body.lat)
+		if (req.session.user)
+			manageUser.setGeoLocBrowser(req.body.long, req.body.lat, req.session.user);
+})
+
+router.post('/user/locType', (req, res) => {
+	// console.log(req.body);
+	if (req.body.locType && req.session.user)
+	{
+		var val = 0;
+		switch(req.body.locType)
+		{
+			case "Ip":
+				val = 0;
+				break;
+			case "Browser":
+				val = 1;
+				break;
+			case "Custom":
+				val = 2;
+				break;
+			default:
+				val = 0;
+				break;
+		}
+		req.session.user.locationType = val;
+		manageUser.setTypeOfLoc(val, req.session.user);
+		manageUser.updateLoc(req.session.user);
+	}
+});
+
+router.post('/update/loc', (req, res) => {
+	if (req.body && req.body.long && req.body.lat && req.session.user)
+		manageUser.updateLoc(req.session.user);
+	res.sendStatus(200);
+})
+
+router.post('/update/loc/custom', (req, res) => {
+	if (req.body && req.body.long && req.body.lat && req.session.user)
+	{
+		let [long, lat] = [parseFloat(req.body.long), parseFloat(req.body.lat)]
+		manageUser.setCustomLoc(req.session.user, long, lat)
+		manageUser.updateLoc(req.session.user);
+	}
+	res.sendStatus(200)
+})
+
+router.get('/delete/:name', (req, res) => {
+	if (req.session.user && req.session.user.type === "Admin")
+	{
+		FuncUser.deleteUser(req.params.name);
+		res.redirect('/user/admin')
+	}else
+		res.redirect('/404')
+})
+
+router.get('/user/admin', (req, res) => {
+	if (req.session.user && req.session.user.type === "Admin")
+	{
+		FuncUser.getAll(result => {
+			res.render('pages/profile/admin', {user: req.session.user, results: result});
+		})
+	}
+	else
+		res.redirect('/404');
 })
 
 module.exports = router;

@@ -8,7 +8,10 @@ function createCollection(collectionName) {
 		var dbo = db.db('Matcha');
 		dbo.createCollection(collectionName).then(res => {
 			res.createIndex({email: 1}, {unique: true});
-			res.createIndex({location: "2dsphere"});
+			res.createIndex({location: "2dsphere"})
+			res.createIndex({locationIp: "2dsphere"});
+			res.createIndex({locationCustom: "2dsphere"})
+			res.createIndex({locationBrowser: "2dsphere"})
 			db.close();
 		}).catch(err => {
 			console.log("Cant create collection {" + collectionName + "} due to -> " + err);

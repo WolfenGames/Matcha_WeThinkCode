@@ -1,5 +1,6 @@
 $(document).ready(function(){
-	$('#Login-Button').click(function() {
+	$('#Login-Button').click(function(e) {
+		e.preventDefault();
 		var email = $('#email').val();
 		var pass = $('#password').val();
 		$.post('/login/user', {
@@ -16,7 +17,8 @@ $(document).ready(function(){
 				location.replace('/');
 		});
 	});
-	$('#Resend-Button').click(function() {
+	$('#Resend-Button').click(function(e) {
+		e.preventDefault();
 		var email = $('#email').val();
 		if (email != null)
 		{
@@ -41,7 +43,8 @@ $(document).ready(function(){
 			$("#errorModalText").html("Please enter your email address associated with the account");
 		}
 	});
-	$('#Forgot-Button').click(function() {
+	$('#Forgot-Button').click(function(e) {
+		e.preventDefault();
 		var email = $('#email').val();
 		if (email != null)
 		{
