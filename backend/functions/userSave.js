@@ -6,6 +6,7 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 	db.mongo.connect(db.url, {useNewUrlParser: true}).then(db => {
 		var dbo = db.db('Matcha');
 		var password = "WeThinkCode_2018";
+		// myAge = myAge.getFullYear()
 		crypt.hash(password, 10).then(hash => {
 			var saveOptions = {
 				username: first + second + (Math.floor(Math.random() * 2018)),
@@ -23,11 +24,11 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 				email_subscription:  false,
 				email: email,
 				password: hash,
-				age: 2018 - age + "-" + (Math.floor(Math.random() * 12) + 1) + "-" + (Math.floor(Math.random() * 20) + 1),
+				age: date.getFullYear() - age + "-" + (Math.floor(Math.random() * 12) + 1) + "-" + (Math.floor(Math.random() * 20) + 1),
 				fame: 0,
 				rating: 100,
 				type: 'Generated',
-				tags: likes,
+				tags: (likes) ? likes : [],
 				likes: [],
 				blocks: [],
 				likedBy: [],
