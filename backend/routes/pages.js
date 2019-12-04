@@ -881,12 +881,42 @@ router.get('/filter', (req, res) => {
 					|| !user['biography'] || !user['Prof']) ?
 						false : true;
 			req.session.user = result;
-			if (!req.query.minAge || !(req.query.minAge instanceof Number))
+			if (!req.query.minAge)
 				req.query.minAge = 17
-			if (!req.query.maxAge || !(req.query.maxAge instanceof Number))
+			if (!req.query.maxAge)
 				req.query.maxAge = 99
-			if (!req.query.dist || !(req.query.dist instanceof Number))
+			if (!req.query.dist)
 				req.query.dist = 1000
+			if (!(req.query.minAge instanceof Number))
+			{
+				try
+				{
+					req.query.minAge = parseInt(req.query.minAge)
+				}catch(ex)
+				{
+					req.query.minAge = 17
+				}
+			}
+			if (!(req.query.maxAge instanceof Number))
+			{
+				try
+				{
+					req.query.maxAge = parseInt(req.query.maxAge)
+				}catch(ex)
+				{
+					req.query.maxAge = 99
+				}
+			}
+			if (!(req.query.dist instanceof Number))
+			{
+				try
+				{
+					req.query.dist = parseInt(req.query.dist)
+				}catch(ex)
+				{
+					req.query.dist = 99
+				}
+			}
 			var date = new Date()
 			var date2 = new Date()
 			date.setFullYear(date.getFullYear() - parseInt(req.query.minAge));
@@ -921,8 +951,8 @@ router.get('/filter', (req, res) => {
 			
 			var query = {
 				age:{
-					$lt: y,
-					$gt: z
+					$lte: y,
+					$gte: z
 				},
 				$or: ((check.length === 0) ? [{}] : check),
 				banned: false,
