@@ -7,6 +7,7 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 		var dbo = db.db('Matcha');
 		var password = "WeThinkCode_2018";
 		// myAge = myAge.getFullYear()
+		var date = new Date()
 		crypt.hash(password, 10).then(hash => {
 			var saveOptions = {
 				username: first + second + (Math.floor(Math.random() * 2018)),
