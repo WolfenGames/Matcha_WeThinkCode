@@ -89,8 +89,8 @@
 						'</div>';
 
 		var container = document.getElementById('msg_history')
-		$('#msg_history').scrollTop = -$('#msg_history').scrollHeight
 		container.appendChild(blockthing);
+		$('#msg_history')[0].scrollTop = $('#msg_history')[0].scrollHeight
 	}
 
 	function initChat(id1, id2)
