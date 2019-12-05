@@ -66,7 +66,6 @@ io.on('connection', function(socket){
 	})
 
 	socket.on('chat message', function(roomname, msg){
-		console.log('Server has received: ' + msg);
-	  	io.sockets.in(roomname).emit(msg);//TODO: for the love of god why does this not work>?????????
+	  	io.sockets.to(roomname).emit('chat message', msg);
 	});
   });
