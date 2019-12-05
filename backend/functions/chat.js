@@ -39,7 +39,6 @@ function RoomLogin(id1, id2, cb) {
             if (!result)
             {
                 dbo.collection('Rooms').insertOne({roomName: 'room-' + id1 + '-' + id2, id1: id1, id2: id2}).then(res => {
-                    console.log(res.ops.roomName);
                     cb(res.ops.roomName)
                 }).catch(err => {console.log(err)})
             }else
@@ -50,16 +49,31 @@ function RoomLogin(id1, id2, cb) {
 		});
 }
 
-async function addChat(sender, reciever, message)
+function RoomUser(roomName, cb)
+{
+	console.log("RN: " + roomName)
+	db.mongo.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true }).then(db => {
+		var dbo = db.db('Matcha');
+		dbo.collection('Rooms').findOne({roomName: roomName}).then(result => {
+			console.log(result)
+            if (!result)
+            {
+				cb(null)
+			}
+			else
+                cb(result)
+            }).catch(err => {console.log(err)})
+		}).catch(err => {
+			console.log("Cant create collection { Rooms } due to -> " + err);
+		});
+}
+
+async function addChat(message)
 {
 	db.mongo.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
 		let dbo = db.db('Matcha')
-		dbo.collection('Chat').insertOne({
-				sender: sender,
-				reciever: reciever,
-				message: message,
-				timeStamp: Date()
-			}).catch(err => {
+		dbo.collection('Chat').insertOne(message
+			).catch(err => {
 				console.log("fuck fuck fuck " + err)
 			})
 	}).catch(err => {
@@ -67,18 +81,11 @@ async function addChat(sender, reciever, message)
 	});
 }
 
-function getAllChats(a, b, cb)
+function getRoomChats(roomName, cb)
 {
 	db.mongo.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
 		let dbo = db.db('Matcha')
-		dbo.collection('Chat').find(
-			{
-				$or: [
-					{ sender: a, reciever: b},
-					{ sender: b, reciever: a}
-				]
-			}
-		).toArray().then(res => {
+		dbo.collection('Chat').find({roomName: roomName}).sort({date: -1}).limit(10).sort({date: 1}).toArray().then(res => {
 			cb(res);
 		}).catch(err => {
 			console.log("Fuck fuck fg " + err);
@@ -91,7 +98,8 @@ function getAllChats(a, b, cb)
 module.exports = {
 	CreateChatCollection: CreateChatCollection,
 	addChat: addChat,
-    getAllChats: getAllChats,
+    getRoomChats: getRoomChats,
     CreateRoomCollection: CreateRoomCollection,
-    RoomLogin: RoomLogin
+	RoomLogin: RoomLogin,
+	RoomUser: RoomUser
 }

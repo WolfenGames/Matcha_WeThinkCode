@@ -1,6 +1,7 @@
 class Message {
-    constructor(sender, text, date)
+    constructor(roomName, sender, text, date)
     {
+		this.roomName = roomName;
         this.sender = sender;
         this.text = text;
         this.date = date;

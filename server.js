@@ -55,17 +55,36 @@ server.listen(port);
 var io = require('socket.io')(server)
 
 io.on('connection', function(socket){
-	const {addChat, getAllChats, RoomLogin} = require('./backend/functions/chat')
+	const { addChat, getRoomChats, RoomLogin, RoomUser } = require('./backend/functions/chat')
+	const { Message } = require('./backend/classes/Message')
 	console.log('A client has connected...');
+	console.log(socket.id)
 
-	socket.on('init', (id) => {
-		RoomLogin(id.id1, id.id2, res =>{
-				socket.join(res);
-				io.sockets.in(res).emit('joined', res)
-			})
+	socket.on('disconnect', (thing) => {
+		console.log(socket.id)
 	})
 
-	socket.on('chat message', function(roomname, msg){
-	  	io.sockets.to(roomname).emit('chat message', msg);
+	socket.on('init', (id) => {
+	// let thingmyjig = require('socket.io')
+		// console.log((socket.id = id));
+		RoomLogin(id.id1, id.id2, res =>{
+			getRoomChats(res, chats => {
+				console.log(' init res ' + res);
+				socket.join(res);
+				io.sockets.in(res).emit('joined', {roomName:res, history: chats})
+				res = null
+			})
+		})
+	})
+
+	socket.on('chat message', function(roomname, sender, msg){
+		RoomUser(roomname, res => {
+			if (res)
+			{
+				var newMessage = new Message(roomname, sender, msg, Date.now())
+				addChat(newMessage)
+				io.sockets.to(roomname).emit('chat message', newMessage);
+			}
+		})
 	});
   });

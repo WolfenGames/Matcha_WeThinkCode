@@ -66,19 +66,50 @@
 	var u1, u2
 	var roomname
 
+	function datestuffrename(newTime){
+			var date = new Date();
+			var currentDate = new Date(newTime)
+			var time = currentDate.toLocaleTimeString();
+			var date = currentDate.getDate();
+			var month = currentDate.getMonth(); 
+			var year = currentDate.getFullYear();
+
+			return ((month+1) + "/" + date + "/" + year + ' @ ' + time);
+		}
+
+	function showMessage(msg)
+	{
+		var blockthing = document.createElement('div');
+		blockthing.innerHTML = '<div class="incoming_msg">'+
+							'<div class="received_msg">'+
+								'<div class="received_withd_msg">'+
+								'<p>'+ msg.text +'</p>'+
+								'<span class="time_date">'+ datestuffrename(msg.date) +'</span></div>'+
+							'</div>'+
+						'</div>';
+
+		var container = document.getElementById('msg_history')
+		$('#msg_history').scrollTop = -$('#msg_history').scrollHeight
+		container.appendChild(blockthing);
+	}
+
 	function initChat(id1, id2)
 	{
-		console.log("HRLP!")
 		u1 = id1
 		u2 = id2
+		$('#msg_history').empty()
 		socket.emit('init', {id1: id1, id2: id2})
-		socket.on('joined', (msg) => {
-				console.log(msg)
-				roomname = msg
-		})
 	}
 
 	$(function () {
+
+		socket.on('joined', result => {
+				roomname = result.roomName
+				result.history.forEach(message => {
+					showMessage(message)
+				})
+		})
+
 		$('.chat_list').click(() => {
 			// getElementById('')
 			// $('.chat_list').attr('class', 'chat_list active_chat')
@@ -98,41 +129,14 @@
 		});
 
 		function sendmessage(){
-			socket.emit('chat message', roomname,$('#messagetosend').val());
-			
+			socket.emit('chat message', roomname, '<%=user._id%>',$('#messagetosend').val());
 			$('#messagetosend').val('');
 		}
 
 		//receiving messages
 
-		function datestuffrename(){
-			var date = new Date();
-			var currentDate = new Date();
-			var time = currentDate.toLocaleTimeString();
-			var date = currentDate.getDate();
-			var month = currentDate.getMonth(); 
-			var year = currentDate.getFullYear();
-
-			return ((month+1) + "/" + date + "/" + year + ' @ ' + time);
-		}
-
-
-		
-
 		socket.on('chat message', function(msg){
-			console.log('Client has received: ' + msg);
-
-			var blockthing = document.createElement('div');
-			blockthing.innerHTML = '<div class="incoming_msg">'+
-								'<div class="received_msg">'+
-									'<div class="received_withd_msg">'+
-									'<p>'+ msg +'</p>'+
-									'<span class="time_date">'+ datestuffrename() +'</span></div>'+
-								'</div>'+
-							'</div>';
-
-			var container = document.getElementById('msg_history')
-			container.appendChild(blockthing);
+			showMessage(msg)
 		});
 	});
 	</script>

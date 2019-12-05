@@ -100,8 +100,8 @@ module.exports = {
         if (!user)
             fn([])
 		var usersMatched = [];
-		var likedBy = (user.likedBy) ? user.likedBy : [];
-		var likes = (user.likes) ? user.likes: [];
+		var likedBy = (user && user.likedBy) ? user.likedBy : [];
+		var likes = (user && user.likes) ? user.likes: [];
 		if (likedBy && likes) {
 		likes.forEach(like => {
 				likedBy.forEach(liker => {
