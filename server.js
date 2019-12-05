@@ -4,31 +4,31 @@ const app = require('./backend/app');
 const normalizePort = val => {
   var port = parseInt(val, 10);
   if (isNaN(port)){
-    return val;
+	return val;
   }
   if (port >= 0)
   {
-    return port;
+	return port;
   }
   return false;
 }
 
 const onError = error => {
   if (error.syscall !== "listen"){
-    throw error;
+	throw error;
   }
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + port;
   switch (error.code) {
-    case "EACCESS":
-    console.error(bind + " requires elevated privileges");
-    process.exit(1);
-    break;
-    case "EADDRINUSE":
-    console.error(bind + " is already in use");
-    process.exit(1);
-    break;
-    default:
-    throw error;
+	case "EACCESS":
+	console.error(bind + " requires elevated privileges");
+	process.exit(1);
+	break;
+	case "EADDRINUSE":
+	console.error(bind + " is already in use");
+	process.exit(1);
+	break;
+	default:
+	throw error;
   }
 }
 
@@ -52,15 +52,39 @@ server.listen(port);
 /*********************************RYAN FUN TIMES*******************************/
 /******************************************************************************/
 
-// https://www.youtube.com/watch?v=tHbCkikFfDE
+var io = require('socket.io')(server)
 
-var connections = [];
-const io = require('socket.io').listen();//server);
+io.on('connection', function(socket){
+	const { addChat, getRoomChats, RoomLogin, RoomUser } = require('./backend/functions/chat')
+	const { Message } = require('./backend/classes/Message')
+	console.log('A client has connected...');
+	console.log(socket.id)
 
-io.sockets.on('connection',function(socket){
-    connections.push(socket);
-    console.log('Connected: %s', connections);
+	socket.on('disconnect', (thing) => {
+		console.log(socket.id)
+	})
 
-    //Disconnect
-    connections.splice(connections.indexOf(socket), 1)
-})
+	socket.on('init', (id) => {
+	// let thingmyjig = require('socket.io')
+		// console.log((socket.id = id));
+		RoomLogin(id.id1, id.id2, res =>{
+			getRoomChats(res, chats => {
+				console.log(' init res ' + res);
+				socket.join(res);
+				io.sockets.in(res).emit('joined', {roomName:res, history: chats})
+				res = null
+			})
+		})
+	})
+
+	socket.on('chat message', function(roomname, sender, msg){
+		RoomUser(roomname, res => {
+			if (res)
+			{
+				var newMessage = new Message(roomname, sender, msg, Date.now())
+				addChat(newMessage)
+				io.sockets.to(roomname).emit('chat message', newMessage);
+			}
+		})
+	});
+  });

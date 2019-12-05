@@ -156,7 +156,8 @@ router.post('/login/user', function(req, res) {
 								loc.ll[0] = 0;
 								loc.ll[1] = 0;
 							}
-							req.session.loc = [loc.ll[1], loc.ll[0]];
+                            req.session.loc = [loc.ll[1], loc.ll[0]];
+                            req.session.rooms = []
 							manageUser.updateUserOne({email: req.session.user.email}, {$set : {locationIp: req.session.loc}}, cb => {
 									res.end('{"msg": "OK"}');
 							});
