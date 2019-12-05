@@ -85,8 +85,9 @@ function getRoomChats(roomName, cb)
 {
 	db.mongo.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
 		let dbo = db.db('Matcha')
-		dbo.collection('Chat').find({roomName: roomName}).sort({date: -1}).limit(10).sort({date: 1}).toArray().then(res => {
-			cb(res);
+		dbo.collection('Chat').find({roomName: roomName},{date: 1}).limit(10).sort({date: -1}).toArray().then(res => {
+            var rev = res.reverse()
+            cb(rev);
 		}).catch(err => {
 			console.log("Fuck fuck fg " + err);
 		})

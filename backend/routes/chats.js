@@ -4,11 +4,26 @@ const chatFn		= require('../functions/chat')
 const io			= require('socket.io')
 const ListUsers		= require('../functions/userList');
 
+const {getRoomChats} = require('../functions/chat')
+
 // chatFn.addChat("Eyy", "Eyyyyy", "Etyyyyyy");
 // chatFn.getAllChats("Eyyyyy", "Eyy", res => {
 // 	console.log(res);
 // })
 
+
+// localhost:8000/chat/messages?roomName=........
+router.get('/messages', (req, res) => {
+    if (req.params.roomName)
+    {
+        getRoomChats(req.params.roomName, result => {
+            res.json(JSON.stringify(result))
+        })
+    }else
+    {
+        res.sendStatus(203)
+    }
+})
 
 router.get('*', (req, res, next) => {
     if (!req.session.user)
