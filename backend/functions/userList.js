@@ -3,7 +3,7 @@ const db = require("../database/db");
 module.exports = {
 	ListUser(user, fn) {
 		db.mongo
-			.connect(db.url, { useNewUrlParser: true })
+			.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 			.then(db => {
 				var dbo = db.db("Matcha");
 
@@ -66,7 +66,7 @@ module.exports = {
 	},
 	getLikedUsers(user, fn) {
 		db.mongo
-			.connect(db.url, { useNewUrlParser: true })
+			.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 			.then(dbs => {
 				var dbo = dbs.db("Matcha");
 				var prof_id = user.likes.map(id => {
@@ -89,7 +89,7 @@ module.exports = {
 	},
 	getViewedUsers(user, fn) {
 		db.mongo
-			.connect(db.url, { useNewUrlParser: true })
+			.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 			.then(dbs => {
 				var dbo = dbs.db("Matcha");
 				var prof_id = user.viewedBy.map(id => {
@@ -112,7 +112,7 @@ module.exports = {
 	},
 	getBlockedUsers(user, fn) {
 		db.mongo
-			.connect(db.url, { useNewUrlParser: true })
+			.connect(db.url, { useNewUrlParser: true , useUnifiedTopology: true})
 			.then(dbs => {
 				var dbo = dbs.db("Matcha");
 				var prof_id = user.blocks.map(id => {
@@ -148,7 +148,7 @@ module.exports = {
 			});
 		}
 		db.mongo
-			.connect(db.url, { useNewUrlParser: true })
+			.connect(db.url, { useNewUrlParser: true , useUnifiedTopology: true})
 			.then(dbs => {
 				var dbo = dbs.db("Matcha");
 				var prof_id = usersMatched.map(id => {

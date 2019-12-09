@@ -2,7 +2,7 @@ const db = require("../database/db");
 
 function verify(email, verify) {
 	db.mongo
-		.connect(db.url, { useNewUrlParser: true })
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			var query = { email: email, verification: verify };

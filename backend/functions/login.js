@@ -5,7 +5,7 @@ const mailer = require("./sendmail");
 
 function login(email, password, cb) {
 	db.mongo
-		.connect(db.url, { useNewUrlParser: true })
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			var searchQuery = {

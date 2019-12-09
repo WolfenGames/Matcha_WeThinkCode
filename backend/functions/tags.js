@@ -2,7 +2,7 @@ const db = require("../database/db");
 const conn = db.mongo;
 
 function getTags(cb) {
-	conn.connect(db.url, { useNewUrlParser: true })
+	conn.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			dbo.collection("Tags")
@@ -27,7 +27,10 @@ function getTags(cb) {
 
 function setTags(query, user, cb) {
 	if (query && user) {
-		conn.connect(db.url, { useNewUrlParser: true })
+		conn.connect(db.url, {
+			useNewUrlParser: true,
+			useUnifiedTopology: true
+		})
 			.then(db => {
 				var dbo = db.db("Matcha");
 				dbo.collection("Tags")
@@ -46,7 +49,9 @@ function setTags(query, user, cb) {
 											.findOne({ email: user })
 											.then(result => {
 												db.close();
-												cb(result.tags);
+												if (result && result.tags)
+													cb(result.tags);
+												else cb([]);
 											})
 											.catch(err => {
 												console.log(
@@ -113,7 +118,7 @@ function setTags(query, user, cb) {
 }
 
 function getUpdatedTags(email, cb) {
-	conn.connect(db.url, { useNewUrlParser: true })
+	conn.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			dbo.collection("Users")
@@ -132,7 +137,7 @@ function getUpdatedTags(email, cb) {
 }
 
 function removeTag(email, tag) {
-	conn.connect(db.url, { useNewUrlParser: true })
+	conn.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			dbo.collection("Users")

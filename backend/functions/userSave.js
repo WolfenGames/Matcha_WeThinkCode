@@ -4,7 +4,7 @@ const mailer = require("../functions/sendmail");
 
 function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 	db.mongo
-		.connect(db.url, { useNewUrlParser: true })
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			var password = "WeThinkCode_2018";
@@ -83,7 +83,7 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 
 function userSave(email, password, uType, sub, url) {
 	db.mongo
-		.connect(db.url, { useNewUrlParser: true })
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			crypt
@@ -150,7 +150,7 @@ function userSave(email, password, uType, sub, url) {
 
 function emailExists(email, cb) {
 	db.mongo
-		.connect(db.url, { useNewUrlParser: true })
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			dbo.collection("Users")
@@ -171,7 +171,7 @@ function emailExists(email, cb) {
 
 function getAll(cb) {
 	db.mongo
-		.connect(db.url, { useNewUrlParser: true })
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			dbo.collection("Users")
@@ -193,7 +193,7 @@ function getAll(cb) {
 
 function deleteUser(name) {
 	db.mongo
-		.connect(db.url, { useNewUrlParser: true })
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			dbo.collection("Users")

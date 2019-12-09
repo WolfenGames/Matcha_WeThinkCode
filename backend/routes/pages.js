@@ -858,29 +858,33 @@ router.post("/generate", function(req, res) {
 });
 
 router.get("/resetall", function(req, res) {
-	db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
-		var dbo = dbs.db("Matcha");
-		dbo.collection("Users")
-			.deleteMany({ type: "Generated" })
-			.then(result => {
-				res.redirect("/");
-			});
-	});
+	db.mongo
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
+		.then(dbs => {
+			var dbo = dbs.db("Matcha");
+			dbo.collection("Users")
+				.deleteMany({ type: "Generated" })
+				.then(result => {
+					res.redirect("/");
+				});
+		});
 });
 
 router.post("/resetall", function(req, res) {
-	db.mongo.connect(db.url, { useNewUrlParser: true }).then(dbs => {
-		var dbo = dbs.db("Matcha");
-		dbo.collection("Users")
-			.deleteMany({ type: "Generated" })
-			.then(result => {
-				res.sendStatus(200);
-			})
-			.catch(err => {
-				console.log("Can't reset -> " + err);
-				res.sendStatus(403);
-			});
-	});
+	db.mongo
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
+		.then(dbs => {
+			var dbo = dbs.db("Matcha");
+			dbo.collection("Users")
+				.deleteMany({ type: "Generated" })
+				.then(result => {
+					res.sendStatus(200);
+				})
+				.catch(err => {
+					console.log("Can't reset -> " + err);
+					res.sendStatus(403);
+				});
+		});
 });
 
 router.post("/user/updateLoc", (req, res) => {
