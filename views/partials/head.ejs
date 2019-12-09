@@ -30,7 +30,6 @@
 
 	function SetPostition(pos)
 	{
-		console.log(pos);
 		$.post('/user/updateLoc', {
 				long: pos.coords.longitude,
 				lat: pos.coords.latitude

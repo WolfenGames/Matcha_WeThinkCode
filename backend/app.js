@@ -3,6 +3,10 @@ const express = require("express");
 const app = express();
 const pageRoutes = require("./routes/pages");
 const chatRoutes = require("./routes/chats");
+const userRoutes = require("./routes/users");
+const headerRoute = require("./routes/header");
+const tagsRoute = require("./routes/tags");
+const updateUserRoute = require("./routes/updateUsers");
 const session = require("express-session");
 const DB = require("./database/db");
 const fs = require("fs");
@@ -50,6 +54,10 @@ app.use((req, res, next) => {
 });
 
 app.use("/", pageRoutes);
+app.use("/", userRoutes);
+app.use("/", headerRoute);
+app.use("/", updateUserRoute);
+app.use("/", tagsRoute);
 app.use("/chat", chatRoutes);
 
 app.post("*", function(req, res) {

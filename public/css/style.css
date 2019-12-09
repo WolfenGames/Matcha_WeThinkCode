@@ -7,7 +7,7 @@
 
 * {
 	font-size: 2.1vh;
-	color: #e7dfdd;
+	color: var(--secondary-color);
 }
 
 #map {
@@ -147,7 +147,24 @@ img {
 }
 
 #error-modal {
-	color: #222222;
+	color: var(--main-color);
+}
+
+.modal-content-color {
+	background-color: var(--secondary-color) !important;
+}
+
+.modal-content-color > * {
+	color: var(--main-color) !important;
+}
+
+.modal-body > * {
+	color: var(--main-color);
+}
+
+.modal-footer > button
+{
+	background-color: var(--main-color);
 }
 
 input {
@@ -239,6 +256,44 @@ input {
 #goog-gt-tt :hover {
 	visibility: hidden !important;
 }
+
+li > .ui-menu-item-wrapper{
+	background-color: var(--secondary-color);
+	color: var(--main-color);
+}
+
+/* .ui-autocomplete {
+	background-color: var(--secondary-color);
+	color: var(--main-color);
+} */
+
+.loader-container
+{
+	margin-top:auto;
+	margin-bottom:auto;
+	width: 50%;
+}
+
+.loader {
+	border: 16px solid #f3f3f300;
+	border-radius: 50%;
+	border-top: 16px solid var(--main-color);
+	border-bottom: 16px solid var(--main-color);
+	width: 120px;
+	height: 120px;
+	-webkit-animation: spin 2s linear infinite;
+	animation: spin 2s linear infinite;
+  }
+  
+  @-webkit-keyframes spin {
+	0% { -webkit-transform: rotate(0deg); }
+	100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+  }
 
 /* *************************************************** */
 /* Ryan making a mess */

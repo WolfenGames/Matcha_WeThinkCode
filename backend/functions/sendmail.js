@@ -73,7 +73,7 @@ function sendNotificationEmail(email, user) {
 
 function resendVerify(email, url, cb) {
 	db.mongo
-		.connect(db.url, { useNewUrlParser: tru, useUnifiedTopology: truee })
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			var query = { email: email };

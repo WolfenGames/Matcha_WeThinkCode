@@ -1,14 +1,19 @@
 $(document).ready(function() {
+	$(".loader").hide();
 	$("#Login-Button").click(function(e) {
 		e.preventDefault();
 		var email = $("#email").val();
 		var pass = $("#password").val();
+		$(".loader").show();
+		$(".login-form").hide();
 		$.post("/login/user", {
 			email: email,
 			password: pass
 		}).done(function(data) {
 			var msg = jQuery.parseJSON(data);
 			if (msg["msg"] != "OK") {
+				$(".loader").hide();
+				$(".login-form").show();
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
 				$("#errorModalText").html(msg["msg"]);

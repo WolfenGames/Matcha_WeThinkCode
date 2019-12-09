@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const chatFn = require("../functions/chat");
-const io = require("socket.io");
 const ListUsers = require("../functions/userList");
 
 const { getRoomChats } = require("../functions/chat");

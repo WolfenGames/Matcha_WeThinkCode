@@ -28,6 +28,7 @@ function deleteByUsername(email, cb) {
 			);
 		});
 }
+
 function deleteAll() {
 	db.mongo
 		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -235,7 +236,7 @@ function setCustomLoc(user, long, lat) {
 		});
 }
 
-function updateLoc(user) {
+async function updateLoc(user) {
 	switch (user.locationType) {
 		case 0:
 			user.location = user.locationIp;
@@ -247,7 +248,7 @@ function updateLoc(user) {
 			user.location = user.locationCustom;
 			break;
 	}
-	db.mongo
+	await db.mongo
 		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
