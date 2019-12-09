@@ -49,7 +49,7 @@ function deleteAll() {
 
 function updateUserOne(query, set, cb) {
 	db.mongo
-		.connect(db.url, { useNewUrlParser: true , useUnifiedTopology: true})
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			dbo.collection("Users")
@@ -85,7 +85,7 @@ function updateUserOne(query, set, cb) {
 
 function getUserInfo(email, cb) {
 	db.mongo
-		.connect(db.url, { useNewUrlParser: true , useUnifiedTopology: true})
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
 			dbo.collection("Users")
@@ -125,7 +125,10 @@ function getUserInfoId(id, cb) {
 	if (validID.test(id)) {
 		var o_id = new db._mongo.ObjectID(id);
 		db.mongo
-			.connect(db.url, { useNewUrlParser: true , useUnifiedTopology: true})
+			.connect(db.url, {
+				useNewUrlParser: true,
+				useUnifiedTopology: true
+			})
 			.then(db => {
 				var dbo = db.db("Matcha");
 				if (o_id !== null) {
