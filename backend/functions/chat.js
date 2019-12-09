@@ -132,20 +132,23 @@ function getRoomChats(roomName, cb) {
 		.then(db => {
 			let dbo = db.db("Matcha");
 			dbo.collection("Chat")
-				.find({ roomName: roomName })
-				.sort({ date: -1 })
+				.find({ roomName: roomName }, { date: 1 })
 				.limit(10)
-				.sort({ date: 1 })
+				.sort({ date: -1 })
 				.toArray()
 				.then(res => {
-					cb(res);
+					var rev = res.reverse();
+					cb(rev);
 				})
 				.catch(err => {
 					console.log("Fuck fuck fg " + err);
+				})
+				.catch(err => {
+					console.log("fuck fuck " + err);
 				});
 		})
 		.catch(err => {
-			console.log("fuck fuck " + err);
+			console.log("Error getting room chats: " + err);
 		});
 }
 

@@ -69,18 +69,21 @@ io.on("connection", function(socket) {
 	});
 
 	socket.on("init", id => {
-		// let thingmyjig = require('socket.io')
-		// console.log((socket.id = id));
-		RoomLogin(id.id1, id.id2, res => {
-			getRoomChats(res, chats => {
-				console.log(" init res " + res);
-				socket.join(res);
-				io.sockets
-					.in(res)
-					.emit("joined", { roomName: res, history: chats });
-				res = null;
+		if (!socket.id.connected) {
+			socket.id.connected = true;
+			// let thingmyjig = require('socket.io')
+			// console.log((socket.id = id));
+			RoomLogin(id.id1, id.id2, res => {
+				getRoomChats(res, chats => {
+					console.log(" init res " + res);
+					socket.join(res);
+					io.sockets
+						.in(res)
+						.emit("joined", { roomName: res, history: chats });
+					res = null;
+				});
 			});
-		});
+		}
 	});
 
 	socket.on("chat message", function(roomname, sender, msg) {
@@ -88,7 +91,7 @@ io.on("connection", function(socket) {
 			if (res) {
 				var newMessage = new Message(roomname, sender, msg, Date.now());
 				addChat(newMessage);
-				io.sockets.to(roomname).emit("chat message", newMessage);
+				io.sockets.in(roomname).emit("chat message", newMessage);
 			}
 		});
 	});
