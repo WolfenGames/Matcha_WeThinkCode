@@ -1,6 +1,7 @@
 *
 {
 	font-size: 2.1vh;
+	color: #e7dfdd;
 }
 
 #map {
@@ -10,6 +11,7 @@
 
 .page {
 	/*background-color: #9F6164 !important;*/
+	background-color: #0e0b16 !important;
 	background-image: url('https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fi.stack.imgur.com%2FpMAiU.jpg&f=1'); 
 	background-position: fixed;
 }
@@ -21,7 +23,7 @@
 
 body
 {
-	color: #F8F8F2;
+	color: #e7dfdd;
 }
 
 .text-muted
