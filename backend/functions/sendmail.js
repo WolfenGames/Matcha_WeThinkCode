@@ -28,7 +28,7 @@ function sendPassForgetEmail(email, url) {
 		.sendMail(mailOptions)
 		.then(info => {})
 		.catch(error => {
-			console.log("Error " + error);
+			console.log("Error sending mail: " + error);
 		});
 }
 
@@ -48,7 +48,7 @@ function sendVerifyEmail(email, verifykey) {
 		.sendMail(mailOptions)
 		.then(info => {})
 		.catch(error => {
-			console.log("Error " + error);
+			console.log("Error sending mail: " + error);
 		});
 }
 
@@ -67,7 +67,7 @@ function sendNotificationEmail(email, user) {
 		.sendMail(mailOptions)
 		.then(info => {})
 		.catch(error => {
-			console.log("Error " + error);
+			console.log("Error sending mail: " + error);
 		});
 }
 

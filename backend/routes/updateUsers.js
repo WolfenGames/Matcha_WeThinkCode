@@ -141,9 +141,10 @@ router.post("/update/Dob", function(req, res) {
 	manageUser.updateUserOne(
 		{ email: req.session.user.email },
 		{ $set: { age: req.body.dob } },
-		res => {}
+		res => {
+			res.send('{"msg":"OK"}');
+		}
 	);
-	res.send('{"msg":"OK"}');
 });
 
 module.exports = router;
