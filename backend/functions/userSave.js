@@ -2,8 +2,17 @@ const db = require("../database/db");
 const crypt = require("bcrypt");
 const mailer = require("../functions/sendmail");
 
-function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
-	db.mongo
+async function generatedUser(
+	first,
+	second,
+	email,
+	age,
+	bio,
+	likes,
+	sex,
+	sexuality
+) {
+	await db.mongo
 		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
