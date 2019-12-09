@@ -15,7 +15,8 @@
 }
 
 .nav-mycol {
-	background-color: #9F6164 !important;
+	/* background-color: #9F6164 !important; */
+	background-color: #0e0b16 !important;
 }
 
 body
@@ -83,7 +84,8 @@ img {
 }
 
 .card {
-	background-color: #9F6164;
+	/* background-color: #9F6164; */
+	background-color: #a239ca;
 }
 
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
@@ -129,8 +131,9 @@ img {
 	border-radius: 12px;
 }
 .tag-button:hover{
-	background-color: #9F6164;
+	background-color: #e7dfdd;
 	border: 2px solid #222222;
+	color: #0e0b16;
 }
 
 #error-modal {
@@ -150,8 +153,8 @@ input {
 		inset 0 0 8px  rgba(0,0,0,0.1),
 			0 0 16px rgba(0,0,0,0.1); 
 	padding: 2px 10px 2px 10px;
-	background: #9F6164;
-	color: whitesmoke;
+	background: #e7dfdd;
+	color: #0e0b16;
 }
 
 .img-thumbnail {
