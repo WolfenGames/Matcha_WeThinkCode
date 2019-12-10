@@ -44,15 +44,35 @@
 		<div class="container bg-light rounded-bottom mh-100 page">
 			<hr>
 			<div class="row">
-				<h3>&lt;Profile Page of "</h3>
+				<h3>Profile Page of "</h3>
 					<div class="control-group">
 						<h3 for="name" class="username-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your username!"><%= username %></h3>
 					</div>
-				<h3>"/&gt;</h3>
+				<h3>"</h3>
 			</div>
 			<div class="row w-100">
-				<a href="/unlike/<%= id %>" class="btn btn-primary">unLike</a>
-				<a href="/like/<%= id %>" class="btn btn-primary">Like</a>
+				<%
+					let found = false;
+					for (let like of user.likes) {
+						if (like == id) {
+							found = true;
+							break;
+						}
+					}
+					if (found)
+					{
+						%>
+						<a href="/unlike/<%= id %>" class="btn btn-primary">unLike</a>
+						<%
+					}
+					else
+					{
+						%>
+						<a href="/like/<%= id %>" class="btn btn-primary">Like</a>
+						<%
+					} %>
+				<!-- <a href="/unlike/<%= id %>" class="btn btn-primary">unLike</a>
+				<a href="/like/<%= id %>" class="btn btn-primary">Like</a> -->
 				<a href="/block/<%= id %>" class="btn btn-warning">block</a>
 				<a href="/report/<%= id %>" class="btn btn-danger">Report</a>
 			</div>
@@ -109,7 +129,7 @@
 						
 					</div>
 					<div class="form-group">
-					<label for="biography">&lt;About me/&gt;</label>
+					<label for="biography">About me</label>
 					<div id="biography"><%= biography %></div>
 				</div>
 			</div>
@@ -118,36 +138,36 @@
 			<div class="col-lg-8">
 				<div class="coloumn">
 					<p>
-					Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&lt;&nbsp;<label class="firstname-label edit-label"><%= firstname %></label>&nbsp;/&gt;</p>
+					Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;<label class="firstname-label edit-label"><%= firstname %></label>&nbsp;</p>
 					<p>
 					Surname&nbsp;::
-						&lt;&nbsp;<label class="lastname-label edit-label"><%= lastname %></label>&nbsp;/&gt;</p>
+						&nbsp;<label class="lastname-label edit-label"><%= lastname %></label>&nbsp;</p>
 					<div class="coloumn">
-						<p class="age">Age&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:: &lt;&nbsp;<label class="email-label edit-label"><%= myAge %></label>&nbsp;/&gt;</p>
+						<p class="age">Age&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:: &nbsp;<label class="email-label edit-label"><%= myAge %></label>&nbsp;</p>
 						<!--Sexuality-->
 						<div class="input-group mb-3">
 						<label class="" for="">Sexuality&nbsp;::&nbsp; </label>
 						<% if (Sexuality === '1') { %>
-						&lt;&nbsp;<label class="email-label edit-label">Bisexual</label>&nbsp;/&gt;
+						&nbsp;<label class="email-label edit-label">Bisexual</label>&nbsp;
 						<% }
 						if (Sexuality === '2') { %>
-						&lt;&nbsp;<label class="email-label edit-label">Heterosexual</label>&nbsp;/&gt;
+						&nbsp;<label class="email-label edit-label">Heterosexual</label>&nbsp;
 						<% } 
 						if (Sexuality === '3') { %>
-						&lt;&nbsp;<label class="email-label edit-label">Homosexual</label>&nbsp;/&gt;
+						&nbsp;<label class="email-label edit-label">Homosexual</label>&nbsp;
 						<% } %>
 						</div>
 						<!--Gender-->
 						<div class="input-group mb-3">
 						<label class="" for="">Gender&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;</label>
 						<% if (Gender === '1') { %>
-						&lt;&nbsp;<label class="email-label edit-label">Female</label>&nbsp;/&gt;
+						&nbsp;<label class="email-label edit-label">Female</label>&nbsp;
 						<% }
 						if (Gender === '2') { %>
-						&lt;&nbsp;<label class="email-label edit-label">Male</label>&nbsp;/&gt;
+						&nbsp;<label class="email-label edit-label">Male</label>&nbsp;
 						<% }
 						if (Gender === '3') { %>
-						&lt;&nbsp;<label class="email-label edit-label">Other</label>&nbsp;/&gt;
+						&nbsp;<label class="email-label edit-label">Other</label>&nbsp;
 						<% } %>
 						</div>
 						<p class="age">Views:: <%= views %></p>

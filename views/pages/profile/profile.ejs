@@ -46,17 +46,17 @@
 		<div class="container bg-light rounded-bottom mh-100 page">
 			<hr>
 			<div class="row">
-				<h3>&lt;Profile Page of "</h3>
+				<h3>Profile Page of "</h3>
 					<div class="control-group">
 						<h3 for="name" class="username-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your username!"><%= username %></h3>
 						<input type="text" class="username-edit-input" style="display: none;" />
 					</div>
-				<h3>"/&gt;</h3>
+				<h3>"</h3>
 			</div>
-			<p>&lt;
+			<p>
 				<label class="email-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!"><%= email %></label>
 				<input type="text" class="email-edit-input w-50" style="display: none;">
-			/&gt;</p>
+			</p>
 			<p>Type: <%= userType %></p>
 		<!--TEMPLATE-->
 		<div class="row">
@@ -79,7 +79,7 @@
 						<span id="fameRating" class="far fa-star"></span>
 					</div>
 					<div class="form-group">
-					<label for="biography">&lt;About me/&gt;</label>
+					<label for="biography">About me</label>
 					<textarea class="form-control" id="biography" rows="5" style="resize: none" maxlength="150"><%= biography %></textarea>
 					<label for="biography" id="biographylength"></label>
 					<p>Which method of location would you like to use:</p>
@@ -96,21 +96,21 @@
 				<div class="coloumn">
 					<p>
 					Name::
-					&lt;<label class="firstname-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your firstname!"><%= firstname %></label>
+					<label class="firstname-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your firstname!"><%= firstname %></label>
 						<input type="text" class="firstname-edit-input w-25" style="display: none;">
-					/&gt;</p>
+					</p>
 					<p>
 					Surname::
-					&lt;
+					
 						<label class="lastname-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your lastname!"><%= lastname %></label>
 						<input type="text" class="lastname-edit-input w-25" style="display: none;">
-					/&gt;</p>
+					</p>
 					<div class="coloumn">
 						<% if (!age) { %>
 							<!--Date input-->
 							<form>
 								<div class="form-group">
-									<label class="control-label" for="DateOfBirth">&lt;Date of birth/&gt;</label>
+									<label class="control-label" for="DateOfBirth">Date of birth</label>
 									<input class="form-control" id="DateOfBirth" name="date" type="date"/>
 									<script>
 										$('#DateOfBirth').val("<%= age %>");

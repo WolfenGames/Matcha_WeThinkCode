@@ -73,7 +73,6 @@ io.on("connection", function(socket) {
 			) {
 				RoomLogin(id.id1, id.id2, res => {
 					getRoomChats(res, chats => {
-						console.log(" init res " + res);
 						socket.join(res);
 						io.sockets
 							.in(res)

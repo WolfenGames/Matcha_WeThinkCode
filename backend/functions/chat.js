@@ -1,5 +1,4 @@
 const db = require("../database/db");
-// const bcrypt = require("bcrypt");
 ("use strict");
 
 function CreateRoomCollection() {
@@ -88,7 +87,6 @@ function RoomLogin(id1, id2, cb) {
 }
 
 function RoomUser(roomName, cb) {
-	console.log("RN: " + roomName);
 	db.mongo
 		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
