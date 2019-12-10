@@ -8,9 +8,9 @@ router.get("/generate", function(req, res) {
 });
 
 router.post("/generate", function(req, res) {
-	require("../functions/generator").UserGenerator();
-	// res.redirect('/');
-	res.sendStatus(200);
+	require("../functions/generator").UserGenerator(done => {
+		res.redirect("/user/admin");
+	});
 });
 
 router.get("/resetall", function(req, res) {

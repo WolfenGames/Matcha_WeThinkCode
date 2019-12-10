@@ -94,7 +94,6 @@ function RoomUser(roomName, cb) {
 			dbo.collection("Rooms")
 				.findOne({ roomName: roomName })
 				.then(result => {
-					console.log(result);
 					if (!result) {
 						cb(null);
 					} else cb(result);

@@ -55,7 +55,7 @@ function updateUserOne(query, set, cb) {
 			var dbo = db.db("Matcha");
 			dbo.collection("Users")
 				.updateOne(query, set)
-				.then(res => {
+				.then(() => {
 					cb(true);
 				})
 				.catch(err => {

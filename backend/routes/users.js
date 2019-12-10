@@ -7,6 +7,8 @@ const url = require("url");
 const IS = require("../functions/image_save");
 const db = require("../database/db");
 
+var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$#!%*?&_]{8,}$/;
+
 router.get("/view/:id", function(req, res) {
 	if (req.session.user) {
 		if (typeof req.params.id === "string") {
@@ -46,7 +48,7 @@ router.get("/block/:id", function(req, res) {
 								blocks: user._id
 							}
 						},
-						result => {
+						_result => {
 							manageUser.getUserInfo(
 								req.session.user.email,
 								fn => {
@@ -74,7 +76,7 @@ router.get("/unblock/:id", function(req, res) {
 								blocks: user._id
 							}
 						},
-						result => {
+						_result => {
 							manageUser.getUserInfo(
 								req.session.user.email,
 								fn => {
@@ -265,7 +267,7 @@ router.get("/user/admin", (req, res) => {
 
 router.post("/file/uploads/profile/Main", function(req, res) {
 	if (req.session.user) {
-		IS.upload.single("Image1")(req, res, err => {
+		IS.upload.single("Image1")(req, res, _err => {
 			var picture = {
 				Picture1: "/images/" + req.session.user.f1,
 				Picture2:
@@ -296,15 +298,16 @@ router.post("/file/uploads/profile/Main", function(req, res) {
 				},
 				function() {
 					res.redirect("/profile");
+					// response.end(JSON.stringify({ msg: "OK" }));
 				}
 			);
 		});
-	} else res.end('{"msg":"404"}');
+	} else res.redirect("/404");
 });
 
 router.post("/file/uploads/profile/First", function(req, res) {
 	if (req.session.user) {
-		IS.upload.single("Image2")(req, res, err => {
+		IS.upload.single("Image2")(req, res, _err => {
 			var picture = {
 				Picture1:
 					req.session.user.picture.Picture1 === null
@@ -338,7 +341,7 @@ router.post("/file/uploads/profile/First", function(req, res) {
 
 router.post("/file/uploads/profile/Second", function(req, res) {
 	if (req.session.user) {
-		IS.upload.single("Image3")(req, res, err => {
+		IS.upload.single("Image3")(req, res, _err => {
 			var picture = {
 				Picture1:
 					req.session.user.picture.Picture1 === null
@@ -408,7 +411,7 @@ router.get("/report/:id", function(req, res) {
 });
 router.post("/file/uploads/profile/Third", function(req, res) {
 	if (req.session.user) {
-		IS.upload.single("Image4")(req, res, err => {
+		IS.upload.single("Image4")(req, res, _err => {
 			var picture = {
 				Picture1:
 					req.session.user.picture.Picture1 === null
@@ -442,7 +445,7 @@ router.post("/file/uploads/profile/Third", function(req, res) {
 
 router.post("/file/uploads/profile/Fourth", function(req, res) {
 	if (req.session.user) {
-		IS.upload.single("Image5")(req, res, err => {
+		IS.upload.single("Image5")(req, res, _err => {
 			var picture = {
 				Picture1:
 					req.session.user.picture.Picture1 === null

@@ -3,7 +3,9 @@ const router = express.Router();
 const manageUser = require("../functions/userManagement");
 const aux = require("../functions/auxiliary");
 
-var username_regex = /^[a-zA-Z0-9 ]{5,}$/;
+var username_regex = /^[a-zA-Z0-9 ]{3,}$/;
+var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$#!%*?&_]{8,}$/;
+var email_regex = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,10})$/;
 
 router.post("/update/Email", function(req, res) {
 	if (req.session.user) {
@@ -143,8 +145,8 @@ router.post("/update/Dob", function(req, res) {
 	manageUser.updateUserOne(
 		{ email: req.session.user.email },
 		{ $set: { age: req.body.dob } },
-		res => {
-			res.send('{"msg":"OK"}');
+		() => {
+			res.end('{"msg":"OK"}');
 		}
 	);
 });

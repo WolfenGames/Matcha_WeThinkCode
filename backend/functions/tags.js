@@ -72,47 +72,45 @@ function setTags(query, user, cb) {
 							});
 					})
 					.catch(err => {
-						dbo.collection("Users")
-							.findOne({ email: user })
-							.then(res => {
-								if (query) {
-									dbo.collection("Users")
-										.updateOne(
-											{ email: user },
-											{ $addToSet: { tags: query } }
-										)
-										.then(result => {
-											dbo.collection("Users")
-												.findOne({ email: user })
-												.then(result => {
-													db.close();
-													if (result) cb(result.tags);
-													else cb({});
-												})
-												.catch(err => {
-													console.log(
-														"2: Cant connect to collection -> " +
-															err
-													);
-												});
-										})
-										.catch(err => {
-											console.log(
-												"Cant update the users tag due to => " +
-													err
-											);
-										});
-								} else cb({});
-							})
-							.catch(err => {
-								console.log("Cant find tags due to " + err);
-							});
+						// dbo.collection("Users")
+						// 	.findOne({ email: user })
+						// 	.then(res => {
+						// 		if (query) {
+						// 			dbo.collection("Users")
+						// 				.updateOne(
+						// 					{ email: user },
+						// 					{ $addToSet: { tags: query } }
+						// 				)
+						// 				.then(result => {
+						// 					dbo.collection("Users")
+						// 						.findOne({ email: user })
+						// 						.then(result => {
+						// 							db.close();
+						// 							if (result) cb(result.tags);
+						// 							else cb({});
+						// 						})
+						// 						.catch(err => {
+						// 							console.log(
+						// 								"2: Cant connect to collection -> " +
+						// 									err
+						// 							);
+						// 						});
+						// 				})
+						// 				.catch(err => {
+						// 					console.log(
+						// 						"Cant update the users tag due to => " +
+						// 							err
+						// 					);
+						// 				});
+						// 		} else cb({});
+						// 	})
+						// 	.catch(err => {
+						// 		console.log("Cant find tags due to " + err);
+						// 	});
 					});
 			})
 			.catch(err => {
-				console.log(
-					"Cant connect to database setTags(" + query + ") =>" + err
-				);
+				console.log("Error on setTags(" + query + ") =>" + err);
 			});
 	}
 }

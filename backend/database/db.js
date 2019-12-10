@@ -3,6 +3,7 @@ const _mongo = require("mongodb");
 ("use strict");
 
 const url = "mongodb://localhost:27017/Matcha";
+
 function createCollection(collectionName) {
 	mongo
 		.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })

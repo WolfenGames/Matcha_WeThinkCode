@@ -55,7 +55,7 @@ router.get("/profile", function(req, res) {
 });
 
 router.get("/login", function(req, res) {
-	if (req.session.user) res.redirect("/");
+	if (req.session && req.session.user) res.redirect("/");
 	else res.render("pages/profile/login", { user: req.session.user });
 });
 

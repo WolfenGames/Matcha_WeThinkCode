@@ -2,17 +2,12 @@ var availableTags = [];
 var myCurrTags = [];
 var map;
 $(document).ready(function() {
-	/*$(function () {
-		$('[data-toggle="tooltip"]').tooltip()
-	  })
-	*/
-	//Delete profile section
 	$("#deleteprofile").click(function() {
 		var email = $("#hiddenemail").val();
 		$.post("/delete", {
 			email: email
 		}).done(function(data) {
-			var msg = jQuery.parseJSON(data);
+			var msg = JSON.parse(data);
 			if (msg["msg"] != "OK") {
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
@@ -73,7 +68,7 @@ $(document).ready(function() {
 		$.post("/update/Username", {
 			username: username
 		}).done(function(data) {
-			var msg = jQuery.parseJSON(data);
+			var msg = JSON.parse(data);
 			if (msg["msg"] != "OK") {
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
@@ -116,7 +111,7 @@ $(document).ready(function() {
 		$.post("/update/Email", {
 			email: email
 		}).done(function(data) {
-			var msg = jQuery.parseJSON(data);
+			var msg = JSON.parse(data);
 			if (msg["msg"] != "OK") {
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
@@ -135,7 +130,7 @@ $(document).ready(function() {
 		$.post("/update/Biography", {
 			biography: biographydata
 		}).done(function(data) {
-			var msg = jQuery.parseJSON(data);
+			var msg = JSON.parse(data);
 			if (msg["msg"] != "OK") {
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
@@ -174,10 +169,11 @@ $(document).ready(function() {
 			.text($(this).val())
 			.show();
 		var firstname = $(".firstname-label").text();
-		$.post("/update/Firstname", {
-			firstname: firstname
+		$.post({
+			url: "/update/Firstname",
+			data: { firstname: firstname }
 		}).done(function(data) {
-			var msg = jQuery.parseJSON(data);
+			var msg = JSON.parse(data);
 			if (msg["msg"] != "OK") {
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
@@ -220,7 +216,7 @@ $(document).ready(function() {
 		$.post("/update/Lastname", {
 			lastname: lastname
 		}).done(function(data) {
-			var msg = jQuery.parseJSON(data);
+			var msg = JSON.parse(data);
 			if (msg["msg"] != "OK") {
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
@@ -240,7 +236,7 @@ $(document).ready(function() {
 		$.post("/update/Gender", {
 			gender: gender
 		}).done(function(data) {
-			var msg = jQuery.parseJSON(data);
+			var msg = JSON.parse(data);
 			if (msg["msg"] != "OK") {
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
@@ -258,7 +254,7 @@ $(document).ready(function() {
 		$.post("/update/Sex", {
 			sex: sex
 		}).done(function(data) {
-			var msg = jQuery.parseJSON(data);
+			var msg = JSON.parse(data);
 			if (msg["msg"] != "OK") {
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
@@ -277,7 +273,7 @@ $(document).ready(function() {
 		$.post("/update/Dob", {
 			dob: dob
 		}).done(function(data) {
-			var msg = jQuery.parseJSON(data);
+			var msg = JSON.parse(data);
 			if (msg["msg"] != "OK") {
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
@@ -418,8 +414,6 @@ $(document).ready(function() {
 });
 
 function initMap() {
-	console.log("lat " + lat);
-	console.log("long " + long);
 	try {
 		map = new google.maps.Map(document.getElementById("map"), {
 			center: { lat: lat, lng: long },

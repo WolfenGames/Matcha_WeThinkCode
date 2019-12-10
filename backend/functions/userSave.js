@@ -12,7 +12,7 @@ async function generatedUser(
 	sex,
 	sexuality
 ) {
-	await db.mongo
+	db.mongo
 		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
 			var dbo = db.db("Matcha");
@@ -78,7 +78,7 @@ async function generatedUser(
 							db.close();
 						})
 						.catch(err => {
-							console.log("Error Saving user " + err);
+							// console.log("Error Saving user " + err);
 						});
 				})
 				.catch(err => {
@@ -145,7 +145,7 @@ function userSave(email, password, uType, sub, url) {
 							db.close();
 						})
 						.catch(err => {
-							console.log("Error Saving user " + err);
+							// console.log("Error Saving user " + err);
 						});
 				})
 				.catch(err => {

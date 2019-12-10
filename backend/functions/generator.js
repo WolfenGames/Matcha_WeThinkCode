@@ -3,14 +3,15 @@ const userSave = require("./userSave");
 const db = require("./../database/db");
 const tags = require("./tags");
 
-function UserGenerator() {
+async function UserGenerator(cb) {
 	fs.readFile("./backend/data/firstnames.txt", "utf8", (err, fNames) => {
 		fs.readFile("./backend/data/surname.txt", "utf8", (err2, sNames) => {
 			fs.readFile("./backend/data/likes.txt", "utf8", (err3, likes) => {
 				fNames = fNames.split("\n");
 				sNames = sNames.split("\n");
 				likes = likes.split("\n");
-				for (var i = 0; i < 100; i++) {
+
+				for (var i = 0; i < 500; i++) {
 					var x = Math.floor(Math.random() * fNames.length);
 					var y = Math.floor(Math.random() * sNames.length);
 					var likeCountMax = Math.floor(Math.random() * likes.length);
@@ -47,6 +48,7 @@ function UserGenerator() {
 						sexuality
 					);
 				}
+				cb(null);
 			});
 		});
 	});

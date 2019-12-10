@@ -33,10 +33,12 @@
 							</div>
 						</div>
 						<div class="mesgs">
-						<div class="msg_history" id="msg_history"></div>
-						<div class="type_msg">
+						<div class="msg_history" id="msg_history">
+							<div style="text-align: center"><p><-- Please choose a chat on the left!</p></div>
+						</div>
+						<div class="type_msg" id="type_msg" style="display: none;">
 							<div class="input_msg_write">
-							<input id="messagetosend"class="write_msg" placeholder="Type a message" />
+							<input id="messagetosend" class="write_msg" placeholder="Type a message" />
 							<button id="send-button" class="msg_send_btn" type="submit">send!</button>
 							</div>
 						</div>
@@ -101,13 +103,18 @@
 		u1 = id1
 		u2 = id2
         $('#msg_history').empty()
-        $.get('/messages').done(() => console.log("I connected to route"))
-        socket.emit('init', {id1: id1, id2: id2})
+		$.get('/messages').done(() => {})
+		try
+		{
+			socket.emit('init', {id1: id1, id2: id2})
+		}catch(err){}
         
         document.getElementsByName('clickme').forEach(elem => {
                 elem.setAttribute('class', 'chat_list')
         })
-        me.setAttribute('class', 'chat_list active_chat')
+		me.setAttribute('class', 'chat_list active_chat')
+		var container = document.getElementById('type_msg');
+		$("#type_msg").show();
 	}
 	$(function () {
 		socket.on('joined', result => {

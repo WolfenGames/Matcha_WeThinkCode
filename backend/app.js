@@ -43,8 +43,8 @@ let sessionMiddleware = session({
 	secret: "American Pie: Beta House",
 	saveUninitialized: false,
 	cookie: {
-		maxAge: new Date(Date.now() + 3600000 * 24 * 7),
-		expires: new Date(Date.now() + 3600000 * 24 * 7)
+		maxAge: 3600000 * 24 * 7,
+		expires: 3600000 * 24 * 7
 	},
 	resave: true
 });

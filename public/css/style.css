@@ -306,14 +306,14 @@ img {
 	max-width: 100%;
 }
 .inbox_people {
-	background: #9f6164 none repeat scroll 0 0;
+	background: var(--accent-color) none repeat scroll 0 0;
 	float: left;
 	overflow: hidden;
 	width: 40%;
-	border-right: 1px solid #c4c4c4;
+	border-right: 1px solid var(--secondary-color);
 }
 .inbox_msg {
-	border: 1px solid #c4c4c4;
+	border: 1px solid var(--secondary-color);
 	clear: both;
 	overflow: hidden;
 }
@@ -405,7 +405,8 @@ img {
 	display: inline-block;
 	padding: 0 0 0 10px;
 	vertical-align: top;
-	width: 92%;
+	max-width: 92%;
+	/* width: auto; */
 }
 .received_withd_msg p {
 	background: #ebebeb none repeat scroll 0 0;
@@ -414,7 +415,8 @@ img {
 	font-size: 14px;
 	margin: 0;
 	padding: 5px 10px 5px 12px;
-	width: 100%;
+	min-width: 100px;
+	word-wrap: break-word;
 }
 .time_date {
 	color: #747474;
@@ -423,7 +425,7 @@ img {
 	margin: 8px 0 0;
 }
 .received_withd_msg {
-	width: 57%;
+	width: 70%;
 }
 .mesgs {
 	float: left;
@@ -442,11 +444,14 @@ img {
 }
 .outgoing_msg {
 	overflow: hidden;
-	margin: 26px 0 26px;
+	/* margin: 26px 0 26px; */
 }
 .sent_msg {
 	float: right;
-	width: 46%;
+	max-width: 70%;
+	width: auto;
+	min-width: 100px;
+	word-wrap: break-word;
 }
 .input_msg_write input {
 	background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
