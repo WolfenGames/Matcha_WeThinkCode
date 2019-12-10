@@ -3,6 +3,8 @@ const router = express.Router();
 const manageUser = require("../functions/userManagement");
 const aux = require("../functions/auxiliary");
 
+var username_regex = /^[a-zA-Z0-9 ]{5,}$/;
+
 router.post("/update/Email", function(req, res) {
 	if (req.session.user) {
 		var newEmail = req.body.email;

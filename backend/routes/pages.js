@@ -13,7 +13,6 @@ const geoip = require("geoip-lite");
 
 var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$#!%*?&_]{8,}$/;
 var email_regex = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,10})$/;
-var username_regex = /^[a-zA-Z0-9 ]{5,}$/;
 
 router.get("/", function(req, res) {
 	if (!req.session.user) res.redirect("/login");
