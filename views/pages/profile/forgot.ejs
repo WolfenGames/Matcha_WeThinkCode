@@ -9,23 +9,23 @@
 	</header>
 	<main>
 		<div class="jumbotron page">
-			<h1>&lt;Forgot Password/&gt;</h1>
+			<h1>Forgot Password</h1>
 			<hr>
 			<form>
 				<div class="form-group">
 					<input type="hidden" id="verify" value="<%= verify %>">
 					<input type="hidden" id="email" value="<%= email %>">
-				<label for="password">&lt;Password/&gt;</label>
+				<label for="password">Password</label>
 				<input pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' type="password" class="form-control" name="password" id="password" aria-describedby="helpId" placeholder="Password">
 				<small id="helpId" class="form-text text-muted">Password requires atleast 1 Uppercase, 1 Lowercase, 1 number and 1 special character, minumum 8 characters</small>
 				</div>
 				<div class="form-group">
-				<label for="password">&lt;Confirm Password/&gt;</label>
+				<label for="password">Confirm Password</label>
 				<input pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' type="password" class="form-control" name="cpassword" id="cpassword" aria-describedby="helpId" placeholder="Password">
 				<small id="helpId" class="form-text text-muted">Password requires atleast 1 Uppercase, 1 Lowercase, 1 number and 1 special character, minumum 8 characters</small>
 				</div>
 				<hr>
-				<button type="button" id='Forgot-Button' class="btn btn-outline-custom">&lt;ResetPass/&gt;</button>
+				<button type="button" id='Forgot-Button' class="btn btn-outline-custom">ResetPass</button>
 			</form>
 			</div>
 		</div>

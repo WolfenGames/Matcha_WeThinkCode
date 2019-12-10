@@ -33,15 +33,15 @@ $(document).ready(function() {
 	});
 	//About me section
 	$("#biographylength").html(
-		"&lt;" +
+		"" +
 			(150 - $("#biography").val().length).toString() +
-			" characters left/&gt;"
+			" characters left"
 	);
 	$("#biography").bind("input propertychange", function() {
 		$("#biographylength").html(
-			"&lt;" +
+			"" +
 				(150 - $("#biography").val().length).toString() +
-				" characters left/&gt;"
+				" characters left"
 		);
 	});
 	//Edit Sections --Username--

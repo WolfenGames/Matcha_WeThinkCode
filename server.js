@@ -65,10 +65,6 @@ io.use((socket, next) => {
 });
 
 io.on("connection", function(socket) {
-	socket.on("disconnect", thing => {
-		console.log(socket.id);
-	});
-
 	socket.on("init", id => {
 		if (!socket.id.connected) {
 			if (
@@ -77,7 +73,6 @@ io.on("connection", function(socket) {
 			) {
 				RoomLogin(id.id1, id.id2, res => {
 					getRoomChats(res, chats => {
-						console.log(" init res " + res);
 						socket.join(res);
 						io.sockets
 							.in(res)
@@ -91,7 +86,6 @@ io.on("connection", function(socket) {
 
 	socket.on("chat message", function(roomname, sender, msg) {
 		RoomUser(roomname, res => {
-			console.log(res);
 			if (res) {
 				if (
 					socket.request.session.user._id === res.id1 ||
