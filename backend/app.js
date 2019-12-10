@@ -28,6 +28,10 @@ if (!fs.existsSync(dir)) {
 CreateChatCollection();
 CreateRoomCollection();
 
+redisClient.on("error", err => {
+	console.log(err);
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -38,6 +42,10 @@ let sessionMiddleware = session({
 	store: new RedisStore({ client: redisClient }),
 	secret: "American Pie: Beta House",
 	saveUninitialized: false,
+	cookie: {
+		maxAge: new Date(Date.now() + 3600000 * 24 * 7),
+		expires: new Date(Date.now() + 3600000 * 24 * 7)
+	},
 	resave: false
 });
 

@@ -57,6 +57,19 @@ module.exports = {
 					.find(query)
 					.toArray()
 					.then(result => {
+						result.forEach(elem => {
+							let found = false;
+							user.likes.forEach(like => {
+								if (like == elem._id) {
+									found = true;
+								}
+							});
+							if (found) {
+								elem.isLiked = true;
+							} else {
+								elem.isLiked = false;
+							}
+						});
 						fn(result);
 					})
 					.catch(err => {

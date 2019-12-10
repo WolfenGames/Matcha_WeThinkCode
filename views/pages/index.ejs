@@ -104,7 +104,20 @@
 													<p class="card-text">Distance from you :: <%= d.toFixedDown(0) %> KM away</p>
 													<p class="card-text">Possible match of :: <%= percent.toFixedDown(0) %> %</p>
 													<a href="/view/<%= users[i]['_id'] %>" class="btn btn-primary">View</a>
-													<a href="/like/<%= users[i]['_id'] %>" class="btn btn-primary">Like</a>
+													<%
+														if (users[i].isLiked)
+														{
+															%>
+															<a href="/unlike/<%= users[i]['_id'] %>" class="btn btn-primary">unLike</a>
+															<%
+														}
+														else
+														{
+															%>
+															<a href="/like/<%= users[i]['_id'] %>" class="btn btn-primary">Like</a>
+															<%
+														}
+													%>
 													<a href="/block/<%= users[i]['_id'] %>" class="btn btn-warning">Block</a>
 													<a href="/report/<%= users[i]['_id'] %>" class="btn btn-danger">Fake</a>
 												</div>
