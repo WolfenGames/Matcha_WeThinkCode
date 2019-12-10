@@ -15,14 +15,11 @@ const {
 	CreateChatCollection,
 	CreateRoomCollection
 } = require("./functions/chat");
-var dir = "./public/images";
-
-const { Room } = require("./classes/Room");
-const { Message } = require("./classes/Message");
 const redis = require("redis");
+const RedisStore = require("connect-redis")(session);
+const redisClient = redis.createClient();
 
-let RedisStore = require("connect-redis")(session);
-let redisClient = redis.createClient();
+var dir = "./public/images";
 
 if (!fs.existsSync(dir)) {
 	fs.mkdirSync(dir);

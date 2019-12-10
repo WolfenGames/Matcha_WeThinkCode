@@ -44,7 +44,7 @@ const onListening = () => {
 	console.log("listening on " + bind);
 };
 
-const port = normalizePort(process.env.PORT || 8000);
+const port = normalizePort(process.env.PORT || 8080);
 
 app.set("port", port);
 const server = http.createServer(app);
@@ -65,38 +65,47 @@ io.use((socket, next) => {
 });
 
 io.on("connection", function(socket) {
-	console.log("A client has connected...");
-	// console.log(socket.id);
-	// console.log(socket.request.session);
-
 	socket.on("disconnect", thing => {
 		console.log(socket.id);
 	});
 
 	socket.on("init", id => {
 		if (!socket.id.connected) {
-			socket.id.connected = true;
-			// let thingmyjig = require('socket.io')
-			// console.log((socket.id = id));
-			RoomLogin(id.id1, id.id2, res => {
-				getRoomChats(res, chats => {
-					console.log(" init res " + res);
-					socket.join(res);
-					io.sockets
-						.in(res)
-						.emit("joined", { roomName: res, history: chats });
-					res = null;
+			if (
+				socket.request.session &&
+				socket.request.session.user._id === id.id1
+			) {
+				RoomLogin(id.id1, id.id2, res => {
+					getRoomChats(res, chats => {
+						console.log(" init res " + res);
+						socket.join(res);
+						io.sockets
+							.in(res)
+							.emit("joined", { roomName: res, history: chats });
+						res = null;
+					});
 				});
-			});
+			}
 		}
 	});
 
 	socket.on("chat message", function(roomname, sender, msg) {
 		RoomUser(roomname, res => {
+			console.log(res);
 			if (res) {
-				var newMessage = new Message(roomname, sender, msg, Date.now());
-				addChat(newMessage);
-				io.sockets.in(roomname).emit("chat message", newMessage);
+				if (
+					socket.request.session.user._id === res.id1 ||
+					socket.request.session.user._id === res.id2
+				) {
+					var newMessage = new Message(
+						roomname,
+						sender,
+						msg,
+						Date.now()
+					);
+					addChat(newMessage);
+					io.sockets.in(roomname).emit("chat message", newMessage);
+				}
 			}
 		});
 	});
