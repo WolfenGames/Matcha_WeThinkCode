@@ -19,6 +19,10 @@ var dir = "./public/images";
 
 const { Room } = require("./classes/Room");
 const { Message } = require("./classes/Message");
+const redis = require("redis");
+
+let RedisStore = require("connect-redis")(session);
+let redisClient = redis.createClient();
 
 if (!fs.existsSync(dir)) {
 	fs.mkdirSync(dir);
@@ -33,13 +37,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + "/../public"));
 app.set("view engine", "ejs");
 
-app.use(
-	session({
-		secret: "American Pie: Beta House",
-		saveUninitialized: false,
-		resave: false
-	})
-);
+let sessionMiddleware = session({
+	store: new RedisStore({ client: redisClient }),
+	secret: "American Pie: Beta House",
+	saveUninitialized: false,
+	resave: false
+});
+
+app.use(sessionMiddleware);
 
 app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
@@ -73,4 +78,7 @@ app.get("*", function(req, res) {
 DB.createCollection("Users");
 DB.createTagsCollection();
 
-module.exports = app;
+module.exports = {
+	app: app,
+	sessionMiddleware: sessionMiddleware
+};

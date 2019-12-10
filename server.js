@@ -1,5 +1,5 @@
 const http = require("http");
-const app = require("./backend/app");
+const { app, sessionMiddleware } = require("./backend/app");
 const {
 	addChat,
 	getRoomChats,
@@ -60,9 +60,14 @@ server.listen(port);
 
 var io = require("socket.io")(server);
 
+io.use((socket, next) => {
+	sessionMiddleware(socket.request, socket.request.res, next);
+});
+
 io.on("connection", function(socket) {
 	console.log("A client has connected...");
-	console.log(socket.id);
+	// console.log(socket.id);
+	// console.log(socket.request.session);
 
 	socket.on("disconnect", thing => {
 		console.log(socket.id);
