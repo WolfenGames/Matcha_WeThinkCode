@@ -46,7 +46,7 @@ let sessionMiddleware = session({
 		maxAge: new Date(Date.now() + 3600000 * 24 * 7),
 		expires: new Date(Date.now() + 3600000 * 24 * 7)
 	},
-	resave: false
+	resave: true
 });
 
 app.use(sessionMiddleware);
