@@ -35,82 +35,61 @@ function setTags(query, user, cb) {
 				var dbo = db.db("Matcha");
 				dbo.collection("Tags")
 					.insertOne({ Tag: query })
-					.then(result => {
+					.then(res => {
+						console.log(res);
 						dbo.collection("Users")
-							.findOne({ email: user })
-							.then(res => {
+							.findOneAndUpdate(
+								{ email: user },
+								{ $addToSet: { tags: query } }
+							)
+							.then(() => {
 								dbo.collection("Users")
-									.updateOne(
-										{ email: user },
-										{ $addToSet: { tags: query } }
-									)
+									.findOne({ email: user })
 									.then(result => {
-										dbo.collection("Users")
-											.findOne({ email: user })
-											.then(result => {
-												db.close();
-												if (result && result.tags)
-													cb(result.tags);
-												else cb([]);
-											})
-											.catch(err => {
-												console.log(
-													"1: Cant connect to collection -> " +
-														err
-												);
-											});
+										db.close();
+										if (result && result.tags)
+											cb(result.tags);
+										else cb([]);
 									})
 									.catch(err => {
 										console.log(
-											"Cant update the users tag due to => " +
+											"1: Cant connect to collection -> " +
 												err
 										);
 									});
-							})
-							.catch(err => {
-								console.log("Cant find tags due to " + err);
 							});
 					})
 					.catch(err => {
-						// dbo.collection("Users")
-						// 	.findOne({ email: user })
-						// 	.then(res => {
-						// 		if (query) {
-						// 			dbo.collection("Users")
-						// 				.updateOne(
-						// 					{ email: user },
-						// 					{ $addToSet: { tags: query } }
-						// 				)
-						// 				.then(result => {
-						// 					dbo.collection("Users")
-						// 						.findOne({ email: user })
-						// 						.then(result => {
-						// 							db.close();
-						// 							if (result) cb(result.tags);
-						// 							else cb({});
-						// 						})
-						// 						.catch(err => {
-						// 							console.log(
-						// 								"2: Cant connect to collection -> " +
-						// 									err
-						// 							);
-						// 						});
-						// 				})
-						// 				.catch(err => {
-						// 					console.log(
-						// 						"Cant update the users tag due to => " +
-						// 							err
-						// 					);
-						// 				});
-						// 		} else cb({});
-						// 	})
-						// 	.catch(err => {
-						// 		console.log("Cant find tags due to " + err);
-						// 	});
+						// console.log("Cant find tags due to " + err);
 					});
 			})
-			.catch(err => {
-				console.log("Error on setTags(" + query + ") =>" + err);
+			.catch(() => {
+				// dbo.collection("Users")
+				// 	.findOneAndUpdate(
+				// 		{ email: user },
+				// 		{ $addToSet: { tags: query } }
+				// 	)
+				// 	.then(res => {
+				// 		console.log(res);
+				// 		if (query) {
+				// 			dbo.collection("Users")
+				// 				.findOne({ email: user })
+				// 				.then(result => {
+				// 					db.close();
+				// 					if (result) cb(result.tags);
+				// 					else cb({});
+				// 				})
+				// 				.catch(err => {
+				// 					console.log(
+				// 						"2: Cant connect to collection -> " +
+				// 							err
+				// 					);
+				// 				});
+				// 		} else cb({});
+				// 	})
+				// 	.catch(err => {
+				// 		// console.log("Cant find tags due to " + err);
+				// 	});
 			});
 	}
 }
@@ -140,23 +119,12 @@ function removeTag(email, tag) {
 			var dbo = db.db("Matcha");
 			dbo.collection("Users")
 				.updateOne({ email: email }, { $pull: { tags: tag } })
-				.then(result => {
+				.then(() => {
 					db.close();
 				})
 				.catch(err => {
 					console.log("Cannot remove due to reason " + err);
 				});
-		})
-		.catch(err => {
-			console.log("Cannot connect to database due to reason => " + err);
-		});
-}
-
-function addTag(tag) {
-	conn.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Tags").insert({ Tag: tag });
 		})
 		.catch(err => {
 			console.log("Cannot connect to database due to reason => " + err);

@@ -1,9 +1,8 @@
 :root {
-	--main-color:#0e0b16;
+	--main-color: #0e0b16;
 	--secondary-color: #e7dfdd;
 	--accent-color: #a239ca;
 }
-
 
 * {
 	font-size: 2.1vh;
@@ -162,8 +161,7 @@ img {
 	color: var(--main-color);
 }
 
-.modal-footer > button
-{
+.modal-footer > button {
 	background-color: var(--main-color);
 }
 
@@ -257,7 +255,7 @@ input {
 	visibility: hidden !important;
 }
 
-li > .ui-menu-item-wrapper{
+li > .ui-menu-item-wrapper {
 	background-color: var(--secondary-color);
 	color: var(--main-color);
 }
@@ -267,10 +265,9 @@ li > .ui-menu-item-wrapper{
 	color: var(--main-color);
 } */
 
-.loader-container
-{
-	margin-top:auto;
-	margin-bottom:auto;
+.loader-container {
+	margin-top: auto;
+	margin-bottom: auto;
 	width: 50%;
 }
 
@@ -283,17 +280,25 @@ li > .ui-menu-item-wrapper{
 	height: 120px;
 	-webkit-animation: spin 2s linear infinite;
 	animation: spin 2s linear infinite;
-  }
-  
-  @-webkit-keyframes spin {
-	0% { -webkit-transform: rotate(0deg); }
-	100% { -webkit-transform: rotate(360deg); }
-  }
-  
-  @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
-  }
+}
+
+@-webkit-keyframes spin {
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
 
 /* *************************************************** */
 /* Ryan making a mess */
@@ -306,7 +311,7 @@ img {
 	max-width: 100%;
 }
 .inbox_people {
-	background: var(--accent-color) none repeat scroll 0 0;
+	background: var(--main-color) none repeat scroll 0 0;
 	float: left;
 	overflow: hidden;
 	width: 40%;

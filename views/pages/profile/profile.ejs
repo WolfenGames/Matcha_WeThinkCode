@@ -106,7 +106,7 @@
 						<input type="text" class="lastname-edit-input w-25" style="display: none;">
 					</p>
 					<div class="coloumn">
-						<% if (!age) { %>
+						<% if (true || !age) { %>
 							<!--Date input-->
 							<form>
 								<div class="form-group">
@@ -117,14 +117,8 @@
 									</script>
 								</div>
 							</form>
-							<% } else {  
-							var date = new Date();
-							var mydate = new Date(age);
-							var myAge = date.getFullYear() - mydate.getFullYear();
-							%>
-								<p class="age">Age:: <%= myAge %></p>
-								<p class="age">Views:: <%= views %></p>
-								<p class="age">Last Online:: <%= lastTime %></p>
+							<p class="age">Views:: <%= views %></p>
+							<p class="age">Last Online:: <%= lastTime %></p>
 						<% } %>
 					<!--Sexuality-->
 						<div class="input-group mb-3">

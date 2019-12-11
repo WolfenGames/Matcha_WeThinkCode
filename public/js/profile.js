@@ -350,9 +350,9 @@ $(document).ready(function() {
 	$("#MainImageUpload").click(() => {
 		$("#Image1").on("change", function() {
 			$("#MainPic").submit();
-			$("#Image1")
-				.get(0)
-				.reset();
+			// $("#Image1")
+			// 	.get(0)
+			// 	.reset();
 		});
 		$("#Image1").click();
 	});
@@ -360,9 +360,9 @@ $(document).ready(function() {
 	$("#FirstImageUpload").click(() => {
 		$("#Image2").on("change", function() {
 			$("#FirstPic").submit();
-			$("#Image2")
-				.get(0)
-				.reset();
+			// $("#Image2")
+			// 	.get(0)
+			// 	.reset();
 		});
 		$("#Image2").click();
 	});
@@ -370,9 +370,9 @@ $(document).ready(function() {
 	$("#SecondImageUpload").click(() => {
 		$("#Image3").on("change", function() {
 			$("#SecondPic").submit();
-			$("#Image3")
-				.get(0)
-				.reset();
+			// $("#Image3")
+			// 	.get(0)
+			// 	.reset();
 		});
 		$("#Image3").click();
 	});
@@ -380,9 +380,9 @@ $(document).ready(function() {
 	$("#ThirdImageUpload").click(() => {
 		$("#Image4").on("change", function() {
 			$("#ThirdPic").submit();
-			$("#Image4")
-				.get(0)
-				.reset();
+			// $("#Image4")
+			// 	.get(0)
+			// 	.reset();
 		});
 		$("#Image4").click();
 	});
@@ -390,9 +390,9 @@ $(document).ready(function() {
 	$("#FourthImageUpload").click(() => {
 		$("#Image5").on("change", function() {
 			$("#FourthPic").submit();
-			$("#Image5")
-				.get(0)
-				.reset();
+			// $("#Image5")
+			// 	.get(0)
+			// 	.reset();
 		});
 		$("#Image5").click();
 	});

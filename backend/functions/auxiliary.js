@@ -13,7 +13,7 @@ function text_truncate(str, length, cb) {
 
 function getIp(cb) {
 	public_ip
-		.v4({ https: true, timeout: 10000 })
+		.v4({ https: true, timeout: 100 })
 		.then(ip => {
 			cb(ip);
 		})

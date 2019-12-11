@@ -11,6 +11,7 @@
 	<% 
 	if (req_user) {
 		var username = req_user['username'] === null ? 'You\'re in dire need of an username' : req_user['username'];
+		var email = req_user['email'];
 		var up = JSON.parse(JSON.stringify(req_user['picture']));
 		var img1 = up['Picture1'];
 		var img2 = up['Picture2'];
@@ -50,6 +51,11 @@
 					</div>
 				<h3>"</h3>
 			</div>
+		</br>
+		<p>
+			<label class="email-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!">Generated account :: <%= email %></label>		
+			<!-- <input type="text" class="email-edit-input w-50" style="display: none;" value="<%=email%>"> -->
+		</p>
 			<div class="row w-100">
 				<%
 					let found = false;
