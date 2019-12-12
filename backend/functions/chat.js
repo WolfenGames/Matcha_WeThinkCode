@@ -70,7 +70,7 @@ function RoomLogin(id1, id2, cb) {
 								id2: id2
 							})
 							.then(res => {
-								cb(res.ops.roomName);
+								cb(res.ops[0].roomName);
 							})
 							.catch(err => {
 								console.log(err);

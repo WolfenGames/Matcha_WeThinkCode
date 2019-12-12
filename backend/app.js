@@ -18,6 +18,7 @@ const {
 const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
 const redisClient = redis.createClient();
+const { addStartingTags } = require("./functions/tags");
 
 var dir = "./public/images";
 
@@ -27,6 +28,7 @@ if (!fs.existsSync(dir)) {
 
 CreateChatCollection();
 CreateRoomCollection();
+addStartingTags();
 
 redisClient.on("error", err => {
 	console.log(err);

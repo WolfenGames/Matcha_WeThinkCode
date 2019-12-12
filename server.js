@@ -66,21 +66,23 @@ io.use((socket, next) => {
 
 io.on("connection", function(socket) {
 	socket.on("init", id => {
-		if (!socket.id.connected) {
-			if (
-				socket.request.session &&
-				socket.request.session.user._id === id.id1
-			) {
-				RoomLogin(id.id1, id.id2, res => {
-					getRoomChats(res, chats => {
-						socket.join(res);
-						io.sockets
-							.in(res)
-							.emit("joined", { roomName: res, history: chats });
-						res = null;
-					});
+		if (
+			socket.request.session &&
+			socket.request.session.user._id === id.id1
+		) {
+			RoomLogin(id.id1, id.id2, res => {
+				getRoomChats(res, chats => {
+					socket.join(res);
+					io.sockets
+						.in(res)
+						.emit("joined", {
+							roomName: res,
+							history: chats,
+							person: socket.request.session.user.username
+						});
+					res = null;
 				});
-			}
+			});
 		}
 	});
 
@@ -91,14 +93,18 @@ io.on("connection", function(socket) {
 					socket.request.session.user._id === res.id1 ||
 					socket.request.session.user._id === res.id2
 				) {
-					var newMessage = new Message(
-						roomname,
-						sender,
-						msg,
-						Date.now()
-					);
-					addChat(newMessage);
-					io.sockets.in(roomname).emit("chat message", newMessage);
+					if (msg) {
+						var newMessage = new Message(
+							roomname,
+							sender,
+							msg,
+							Date.now()
+						);
+						addChat(newMessage);
+						io.sockets
+							.in(roomname)
+							.emit("chat message", newMessage);
+					}
 				}
 			}
 		});

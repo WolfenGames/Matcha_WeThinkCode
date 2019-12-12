@@ -1,5 +1,6 @@
 const db = require("../database/db");
 const conn = db.mongo;
+const fs = require("fs");
 
 function getTags(cb) {
 	conn.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -25,6 +26,26 @@ function getTags(cb) {
 		});
 }
 
+function addStartingTags() {
+	fs.readFile("./backend/data/likes.txt", "utf8", (_err, likes) => {
+		likes = likes.split("\r\n");
+		let newArr = [];
+		likes.forEach(element => {
+			newArr.push({ Tags: element });
+		});
+		conn.connect(db.url, {
+			useNewUrlParser: true,
+			useUnifiedTopology: true
+		}).then(db => {
+			var dbo = db.db("Matcha");
+			dbo.collection("Tags")
+				.insertMany(newArr)
+				.then(() => {})
+				.catch(() => {});
+		});
+	});
+}
+
 function setTags(query, user, cb) {
 	if (query && user) {
 		conn.connect(db.url, {
@@ -35,62 +56,19 @@ function setTags(query, user, cb) {
 				var dbo = db.db("Matcha");
 				dbo.collection("Tags")
 					.insertOne({ Tag: query })
-					.then(res => {
-						console.log(res);
+					.then(_res => {
 						dbo.collection("Users")
 							.findOneAndUpdate(
 								{ email: user },
 								{ $addToSet: { tags: query } }
 							)
-							.then(() => {
-								dbo.collection("Users")
-									.findOne({ email: user })
-									.then(result => {
-										db.close();
-										if (result && result.tags)
-											cb(result.tags);
-										else cb([]);
-									})
-									.catch(err => {
-										console.log(
-											"1: Cant connect to collection -> " +
-												err
-										);
-									});
+							.then(res => {
+								cb(res.tags);
 							});
 					})
-					.catch(err => {
-						// console.log("Cant find tags due to " + err);
-					});
+					.catch(_err => {});
 			})
-			.catch(() => {
-				// dbo.collection("Users")
-				// 	.findOneAndUpdate(
-				// 		{ email: user },
-				// 		{ $addToSet: { tags: query } }
-				// 	)
-				// 	.then(res => {
-				// 		console.log(res);
-				// 		if (query) {
-				// 			dbo.collection("Users")
-				// 				.findOne({ email: user })
-				// 				.then(result => {
-				// 					db.close();
-				// 					if (result) cb(result.tags);
-				// 					else cb({});
-				// 				})
-				// 				.catch(err => {
-				// 					console.log(
-				// 						"2: Cant connect to collection -> " +
-				// 							err
-				// 					);
-				// 				});
-				// 		} else cb({});
-				// 	})
-				// 	.catch(err => {
-				// 		// console.log("Cant find tags due to " + err);
-				// 	});
-			});
+			.catch(() => {});
 	}
 }
 
@@ -135,5 +113,6 @@ module.exports = {
 	getTags: getTags,
 	setTags: setTags,
 	getUpdatedTags: getUpdatedTags,
-	removeTag: removeTag
+	removeTag: removeTag,
+	addStartingTags: addStartingTags
 };

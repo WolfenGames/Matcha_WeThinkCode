@@ -72,6 +72,22 @@
                 return ((month+1) + "/" + date + "/" + year + ' @ ' + time);
             }
 		}
+
+		function joinedChat(joiner)
+		{
+			var blockthing = document.createElement('div');
+			var container = document.getElementById('msg_history');
+			blockthing.innerHTML = '<div class="incoming_msg">'+
+										'<div class="joinedMessage">'+
+											joiner + ' has joined the chat, you are no longer lonely :)'
+											// '<p>'+ msg.text +'</p>'+
+											// '<span class="time_date">'+ datestuffrename(msg.date) +'</span>' +
+										'</div>'+
+								'</div>';
+			container.appendChild(blockthing)
+		$('#msg_history')[0].scrollTop = $('#msg_history')[0].scrollHeight
+		}
+
 	function showMessage(msg)
 	{
         var blockthing = document.createElement('div');
@@ -123,6 +139,8 @@
 				result.history.forEach(message => {
 					showMessage(message)
 				})
+				if (result.person != '<%= user.username %>')
+					joinedChat(result.person)
 		})
 		//send message
 		$('#messagetosend').keypress((e) => {
