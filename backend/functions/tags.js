@@ -28,10 +28,11 @@ function getTags(cb) {
 
 function addStartingTags() {
 	fs.readFile("./backend/data/likes.txt", "utf8", (_err, likes) => {
-		likes = likes.split("\r\n");
+		likes = likes.split("\n");
 		let newArr = [];
+		console.log(likes.length)
 		likes.forEach(element => {
-			newArr.push({ Tags: element });
+			newArr.push({ Tag: element });
 		});
 		conn.connect(db.url, {
 			useNewUrlParser: true,
@@ -60,7 +61,7 @@ function setTags(query, user, cb) {
 						dbo.collection("Users")
 							.findOneAndUpdate(
 								{ email: user },
-								{ $addToSet: { tags: query } }
+								{ $addToSet: { Tag: query } }
 							)
 							.then(res => {
 								cb(res.tags);
@@ -96,7 +97,7 @@ function removeTag(email, tag) {
 		.then(db => {
 			var dbo = db.db("Matcha");
 			dbo.collection("Users")
-				.updateOne({ email: email }, { $pull: { tags: tag } })
+				.updateOne({ email: email }, { $pull: { Tag: tag } })
 				.then(() => {
 					db.close();
 				})

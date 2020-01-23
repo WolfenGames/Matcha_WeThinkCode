@@ -72,7 +72,7 @@ async function UserGenerator(cb) {
 						})
 						.catch(err => {});
 				}
-				cb(null);
+				// cb(null);
 			});
 		});
 	});

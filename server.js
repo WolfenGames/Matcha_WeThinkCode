@@ -7,6 +7,8 @@ const {
 	RoomUser
 } = require("./backend/functions/chat");
 const { Message } = require("./backend/classes/Message");
+const _mongo          = require('mongodb');
+const db = require("./backend/database/db")
 
 const normalizePort = val => {
 	var port = parseInt(val, 10);
@@ -104,6 +106,21 @@ io.on("connection", function(socket) {
 						io.sockets
 							.in(roomname)
 							.emit("chat message", newMessage);
+						if (socket.request.session.user._id === res.id1) {
+							var rec = res.id2;
+						} else {
+							var rec = res.id1;
+						};
+						var oID =  new _mongo.ObjectID(rec);
+						db.mongo
+							.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
+							.then(db => {
+								var dbo = db.db("Matcha");
+								return dbo.collection("Users")
+									.findOne({_id: oID}, {username: 1})
+							}).then(function(res){
+								console.log(res.username);
+							});
 					}
 				}
 			}

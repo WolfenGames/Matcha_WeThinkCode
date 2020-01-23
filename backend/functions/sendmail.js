@@ -5,10 +5,11 @@ const db = require("../database/db");
 
 let transporter = mailer.createTransport({
 	service: "gmail",
-	// host: "smtp.gmail.com",
+	host: "smtp.gmail.com",
+	port: 465,
 	auth: {
-		user: settings.user,
-		pass: settings.pass
+		user: "jwolfmatcha@gmail.com",
+		pass: "foyjiatrodzqtogl"
 	}
 });
 

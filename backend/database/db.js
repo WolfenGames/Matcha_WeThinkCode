@@ -44,11 +44,11 @@ function createTagsCollection() {
 			var dbo = db.db("Matcha");
 			dbo.createCollection("Tags")
 				.then(res => {
-					res.createIndex({ Tag: 1 }, { unique: true });
+					res.createIndex({ Tag: 1 }, { unique: true});
 					db.close();
 				})
 				.catch(err => {
-					console.log("Cant create collection {Tags} due to " + err);
+					// console.log("Cant create collection {Tags} due to " + err);
 				});
 		})
 		.catch(err => {

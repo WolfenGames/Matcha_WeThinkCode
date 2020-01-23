@@ -303,7 +303,7 @@ $(document).ready(function() {
 					myCurrTags.push(tag);
 				}
 				$.post("/tags/set", {
-					tag: tag
+					Tag: tag
 				}).done(result => {
 					$.get("/tags/get").done(result => {
 						result.forEach(element => {
@@ -426,7 +426,7 @@ function initMap() {
 }
 
 function removeTag(tagname, el) {
-	$.post("/tag/delete", { tag: tagname }).done(data => {
+	$.post("/tag/delete", { Tag: tagname }).done(data => {
 		$(el).remove();
 		availableTags.splice(availableTags.indexOf(tagname), 1);
 		myCurrTags.splice(myCurrTags.indexOf(tagname), 1);

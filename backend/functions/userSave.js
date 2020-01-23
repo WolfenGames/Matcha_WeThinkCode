@@ -32,7 +32,7 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 		fame: 0,
 		rating: 100,
 		type: "Generated",
-		tags: likes ? likes : [],
+		Tag: likes ? likes : [],
 		likes: [],
 		blocks: [],
 		likedBy: [],
@@ -47,6 +47,7 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 			Picture4: "/default.jpeg",
 			Picture5: "/default.jpeg"
 		},
+		notifications: [],
 		Prof: "/default.jpeg",
 		biography: bio,
 		views: 1,
@@ -55,7 +56,7 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 	return saveOptions;
 }
 
-function userSave(email, password, uType, sub, url) {
+function userSave(uname, email, password, uType, sub, url) {
 	db.mongo
 		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
 		.then(db => {
@@ -64,7 +65,7 @@ function userSave(email, password, uType, sub, url) {
 				.hash(password, 10)
 				.then(hash => {
 					var saveOptions = {
-						username: null,
+						username: uname,
 						firstname: null,
 						surname: null,
 						sex: "3",
@@ -83,7 +84,7 @@ function userSave(email, password, uType, sub, url) {
 						fame: 0,
 						rating: 100,
 						type: uType,
-						tags: [],
+						Tag: [],
 						likes: [],
 						blocks: [],
 						likedBy: [],
@@ -98,6 +99,7 @@ function userSave(email, password, uType, sub, url) {
 							Picture4: null,
 							Picture5: null
 						},
+						notifications: [],
 						Prof: null,
 						biography: null,
 						views: 1,
@@ -139,6 +141,27 @@ function emailExists(email, cb) {
 		.catch(err => {
 			console.log(
 				"Can't connect to database called by emailExists(" + email + ")"
+			);
+		});
+}
+
+function unameExists(uname, cb) {
+	db.mongo
+		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
+		.then(db => {
+			var dbo = db.db("Matcha");
+			dbo.collection("Users")
+				.findOne({ username: uname })
+				.then(res => {
+					cb(res);
+				})
+				.catch(err => {
+					console.log("Cant use Username Exists => " + err);
+				});
+		})
+		.catch(err => {
+			console.log(
+				"Can't connect to database called by unameExists(" + email + ")"
 			);
 		});
 }
@@ -187,6 +210,7 @@ function deleteUser(name) {
 module.exports = {
 	userSave: userSave,
 	emailExists: emailExists,
+	unameExists: unameExists,
 	generatedUser: generatedUser,
 	getAll: getAll,
 	deleteUser: deleteUser
