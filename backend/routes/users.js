@@ -6,6 +6,8 @@ const bcrypt = require("bcrypt");
 const url = require("url");
 const IS = require("../functions/image_save");
 const db = require("../database/db");
+const _mongo          = require('mongodb');
+const notification = require("../functions/notification");
 
 var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$#!%*?&_]{8,}$/;
 
@@ -14,11 +16,23 @@ router.get("/view/:id", function(req, res) {
 		if (typeof req.params.id === "string") {
 			manageUser.getUserInfoId(req.params.id, user => {
 				if (user) {
+					var sen = req.session.user._id;
+					var rec = req.params.id;
+					var oID =  new _mongo.ObjectID(sen);
+						db.mongo
+							.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
+							.then(db => {
+								var dbo = db.db("Matcha");
+								return dbo.collection("Users")
+									.findOne({_id: oID}, {username: 1})
+							}).then(function(rem){
+								notification.addNotification(rec ,"<img src='"+rem.Prof+"'>"+rem.username+" viewed your profile.");
+							});
 					manageUser.updateUserOne(
 						{ email: user.email },
 						{
 							$set: { views: user.views + 1 },
-							$addToSet: { viewedBy: req.session.user._id }
+							$addToSet: { viewedBy: req.session.user._id },
 						},
 						() => {
 							manageUser.getHighestView(val => {
@@ -41,6 +55,18 @@ router.get("/block/:id", function(req, res) {
 		if (typeof req.params.id === "string") {
 			manageUser.getUserInfoId(req.params.id, user => {
 				if (user) {
+					var sen = req.session.user._id;
+					var rec = req.params.id;
+					var oID =  new _mongo.ObjectID(sen);
+						db.mongo
+							.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
+							.then(db => {
+								var dbo = db.db("Matcha");
+								return dbo.collection("Users")
+									.findOne({_id: oID}, {username: 1})
+							}).then(function(rem){
+								notification.addNotification(rec ,"<img src='"+rem.Prof+"'>"+rem.username+" BLOCKED YOU!!!");
+							});
 					manageUser.updateUserOne(
 						{ email: req.session.user.email },
 						{
@@ -97,6 +123,18 @@ router.get("/like/:id", function(req, res) {
 		if (typeof req.params.id === "string") {
 			manageUser.getUserInfoId(req.params.id, user => {
 				if (user) {
+					var sen = req.session.user._id;
+					var rec = req.params.id;
+					var oID =  new _mongo.ObjectID(sen);
+						db.mongo
+							.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
+							.then(db => {
+								var dbo = db.db("Matcha");
+								return dbo.collection("Users")
+									.findOne({_id: oID}, {username: 1})
+							}).then(function(rem){
+								notification.addNotification(rec ,"<img src='"+rem.Prof+"'>"+rem.username+" LIKED YOU <3");
+							});
 					var id = db._mongo.ObjectId(req.params.id);
 					manageUser.updateUserOne(
 						{ email: req.session.user.email },
@@ -124,6 +162,18 @@ router.get("/unlike/:id", function(req, res) {
 		if (typeof req.params.id === "string") {
 			manageUser.getUserInfoId(req.params.id, user => {
 				if (user) {
+					var sen = req.session.user._id;
+					var rec = req.params.id;
+					var oID =  new _mongo.ObjectID(sen);
+						db.mongo
+							.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
+							.then(db => {
+								var dbo = db.db("Matcha");
+								return dbo.collection("Users")
+									.findOne({_id: oID}, {username: 1})
+							}).then(function(rem){
+								notification.addNotification(rec ,"<img src='"+rem.Prof+"'>"+rem.username+" UNLIKED YOU =(");
+							});
 					var id = db._mongo.ObjectId(req.params.id);
 					manageUser.updateUserOne(
 						{ email: req.session.user.email },
