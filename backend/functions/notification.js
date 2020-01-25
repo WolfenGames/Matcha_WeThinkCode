@@ -80,5 +80,7 @@ function getNotifications() {
 
 module.exports = {
     addNotification: addNotification,
-    clearNotification: clearNotification
+    clearNotification: clearNotification,
+    isNewNotifications: isNewNotifications,
+    getNotifications: getNotifications
 };
