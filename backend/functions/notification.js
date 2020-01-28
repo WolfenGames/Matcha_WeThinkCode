@@ -51,16 +51,20 @@ function clearNotification(user, message) {
     });
 }
 
-function isNewNotifications(user) {
+function isNewNotifications(user, cb) {
     var oID =  new _mongo.ObjectID(user);
+    var noti;
+    console.log(user)
     db.mongo
     .connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(db => {
+    .then(function(db) {
         var dbo = db.db("Matcha");
-        dbo.collection("Users")
-            .findOne({_id: oID}, {})
-    }).then(function(res) {
-        return res.nNotification
+        var t = dbo.collection("Users")
+            .findOne({ _id: oID },)
+            .then( function(rep) {
+                //console.log(rep.nNotification)
+                cb(rep.nNotification)
+            })
     })
 }
 

@@ -5,9 +5,13 @@ const notification = require("../functions/notification");
 // localhost:8000/notification/new
 router.post("/new", (req, res) => {
 	if (req.session.user) {
-        var isN = notification.isNewNotifications(req.session.user._id);
-        res.json(JSON.stringify(isN))
+		notification.isNewNotifications(req.session.user._id, result => {
+			console.log(result)
+			res.end(JSON.stringify(result))
+		});
 	} else {
 		res.sendStatus(203);
 	}
 });
+
+module.exports = router

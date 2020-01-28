@@ -1,5 +1,4 @@
 const mailer = require("nodemailer");
-const settings = require("./settings");
 const db = require("../database/db");
 ("use strict");
 

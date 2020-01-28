@@ -8,6 +8,7 @@ const headerRoute = require("./routes/header");
 const tagsRoute = require("./routes/tags");
 const updateUserRoute = require("./routes/updateUsers");
 const generatedUser = require("./routes/generator");
+const notificationRoutes = require("./routes/notification")
 const session = require("express-session");
 const DB = require("./database/db");
 const fs = require("fs");
@@ -73,6 +74,7 @@ app.use("/", updateUserRoute);
 app.use("/", tagsRoute);
 app.use("/", generatedUser);
 app.use("/chat", chatRoutes);
+app.use("/notification", notificationRoutes)
 
 app.post("*", function(req, res) {
 	res.end('{"msg":"404"}');
