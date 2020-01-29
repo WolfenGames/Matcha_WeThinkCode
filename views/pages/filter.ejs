@@ -121,16 +121,16 @@
 												var d = R * c; // Distance in km 
 												//Calculate mTags
 													var rate = 0;
-													for(var k = 0; k < user['tags'].length; k++) {
-														for (var j = 0; j < users[i]['tags'].length; j++) {
-															if (user['tags'][k] == users[i]['tags'][j]) {
+													for(var k = 0; k < user['Tag'].length; k++) {
+														for (var j = 0; j < users[i]['Tag'].length; j++) {
+															if (user['Tag'][k] == users[i]['Tag'][j]) {
 																rate++;
 																break;
 															}
 														}
 													}
 												//Calculate max match
-												var Total = (user['tags'].length > users[i]['tags'].length ? users[i]['tags'].length : user['tags'].length);
+												var Total = (user['Tag'].length > users[i]['Tag'].length ? users[i]['Tag'].length : user['Tag'].length);
 												if (Total === 0)
 													Total = 1;
 												//%%%%%

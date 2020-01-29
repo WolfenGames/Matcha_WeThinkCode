@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const manageUser = require("../functions/userManagement");
 const FuncUser = require("../functions/userSave");
+const UserList = require("../functions/userList")
 const bcrypt = require("bcrypt");
 const url = require("url");
 const IS = require("../functions/image_save");
@@ -107,6 +108,7 @@ router.get("/unblock/:id", function(req, res) {
 								req.session.user.email,
 								fn => {
 									req.session.user = fn;
+									notification.addNotification(user._id ,"<img src='"+req.session.user.Prof+"'>"+req.session.user.username+" UNBLOCKED YOU =(");
 									res.redirect("/");
 								}
 							);
@@ -146,6 +148,7 @@ router.get("/like/:id", function(req, res) {
 									$addToSet: { likedBy: req.session.user._id }
 								},
 								() => {
+									
 									res.redirect("/");
 								}
 							);
@@ -203,6 +206,8 @@ router.get("/unblock/:id", function(req, res) {
 						{ email: req.session.user.email },
 						{ $pull: { blocks: req.params.id } },
 						() => {
+							console.log(user._id)
+							notification.addNotification(user._id ,"<img src='"+req.session.user.Prof+"'>"+req.session.user.username+" UNBLOCKED YOU =(");
 							res.redirect("/");
 						}
 					);
@@ -226,6 +231,7 @@ router.get("/unmatch/:id", function(req, res) {
 								{ _id: id },
 								{ $pull: { likedBy: req.session.user._id } },
 								() => {
+									notification.addNotification(user._id ,"<img src='"+req.session.user.Prof+"'>"+req.session.user.username+" UNMATCHED YOU =(");
 									res.redirect("/");
 								}
 							);

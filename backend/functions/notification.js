@@ -30,14 +30,15 @@ function addNotification(user, message) {
     });
 }
 
-function clearNotification(user, message) {
+function clearNotification(user) {
+    var oID =  new _mongo.ObjectID(user);
     db.mongo
     .connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(db => {
         var dbo = db.db("Matcha");
         dbo.collection("Users")
             .updateOne(
-                { email: user.email },
+                { _id: oID },
                 {
                     $set: {
                         nNotification: false
@@ -53,8 +54,6 @@ function clearNotification(user, message) {
 
 function isNewNotifications(user, cb) {
     var oID =  new _mongo.ObjectID(user);
-    var noti;
-    console.log(user)
     db.mongo
     .connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(function(db) {
@@ -62,22 +61,22 @@ function isNewNotifications(user, cb) {
         var t = dbo.collection("Users")
             .findOne({ _id: oID },)
             .then( function(rep) {
-                //console.log(rep.nNotification)
                 cb(rep.nNotification)
             })
     })
 }
 
-function getNotifications() {
+function getNotifications(user, cb) {
         var oID =  new _mongo.ObjectID(user);
         db.mongo
         .connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-        .then(db => {
+        .then(db => { 
             var dbo = db.db("Matcha");
             dbo.collection("Users")
                 .findOne({_id: oID}, {})
-        }).then(function(res) {
-            return res.notifications
+                .then(function(res) {
+                    cb(res.notifications)
+                })
         })
     }
     

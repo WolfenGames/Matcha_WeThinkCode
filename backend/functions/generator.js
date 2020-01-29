@@ -8,9 +8,9 @@ async function UserGenerator(cb) {
 	fs.readFile("./backend/data/firstnames.txt", "utf8", (err, fNames) => {
 		fs.readFile("./backend/data/surname.txt", "utf8", (err2, sNames) => {
 			fs.readFile("./backend/data/likes.txt", "utf8", (err3, likes) => {
-				fNames = fNames.split("\n\r");
-				sNames = sNames.split("\n\r");
-				likes = likes.split("\n\r");
+				fNames = fNames.split("\n");
+				sNames = sNames.split("\n");
+				likes = likes.split("\n");
 				var i;
 				for (i = 0; i < 500; i++) {
 					var x = Math.floor(Math.random() * fNames.length);

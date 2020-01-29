@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body class="container">
+		
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<main>
+			<div class="container page">
+				<hr>
+				<% if (user.setup === false) {
+					%>
+					<h1>Please setup account before you can search for viewed by</h1>
+					<a class="nav-link" href="/profile">Profile</a>
+					<%
+				} else {
+					%>
+					<div class="card-group mr-auto ml-auto">
+						<div class="w-100">
+							<!--Cards-->
+                            <% 
+								for (var i = 0; i < notifications.length; i++) { %>
+									<div class="card text-white bg-dark rounded" class="w-100">
+										<div class="card-body">
+											<p>
+                                                <%- notifications[i]%>
+                                            </p>
+										</div>
+									</div>
+									<hr>
+									<% 
+								}
+							%>
+							<hr>
+							<!--End of Cards-->
+						</div>
+					</div>
+					<% } %>
+					<hr>
+    </div>
+</main>
+
+<footer>
+    <% include ../partials/footer %>
+</footer>
+
+</body>
+</html>

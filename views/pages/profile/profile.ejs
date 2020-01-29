@@ -18,7 +18,7 @@
 	<%
 	var tags = [];
 	if (user) {
-		var username = user['username'] == null ? 'You\'re in dire need of an username' : user['username'];
+		var username = user['username'];
 		var up = JSON.parse(JSON.stringify(user['picture']));
 		var img1 = up['Picture1'];
 		var img2 = up['Picture2'];
@@ -48,12 +48,7 @@
 		<div class="container bg-light rounded-bottom mh-100 page">
 			<hr>
 			<div class="row">
-				<h3>Profile Page of "</h3>
-					<div class="control-group">
-						<h3 for="name" class="username-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your username!"><%= username %></h3>
-						<input type="text" class="username-edit-input" style="display: none;" />
-					</div>
-				<h3>"</h3>
+				<h3>Profile Page of <%= username %></h3>
 			</div>
 			<p>
 				<label class="email-label edit-label" data-toggle="tooltip" data-placement="right" title="Click here to change your email!"><%= email %></label>

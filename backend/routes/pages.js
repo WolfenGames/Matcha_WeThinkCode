@@ -80,7 +80,7 @@ router.post("/User/Create", function(req, res) {
 	const cPass = req.body.cPassword;
 	const email = req.body.Email;
 	const sub = req.body.emailpref;
-	const uname = req.body.uname;
+	const uname = req.body.Username;
 	FuncUser.emailExists(email, function(result) {
 		if (!result) {
 			FuncUser.unameExists(uname, function(result) {
