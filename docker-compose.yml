@@ -19,4 +19,10 @@ services:
         image: tmp_matcha_redis_db:latest
         ports:
             - 6379:6379
-        
+    old_db:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/MongoDockerfile
+        image: tmp_matcha_mongo_db:latest
+        ports: 
+            - 27017:27017

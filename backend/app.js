@@ -27,6 +27,7 @@ if (!fs.existsSync(dir)) {
 	fs.mkdirSync(dir);
 }
 
+DB.testPostgress();
 CreateChatCollection();
 CreateRoomCollection();
 addStartingTags();

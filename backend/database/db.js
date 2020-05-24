@@ -2,7 +2,29 @@ const mongo = require("mongodb").MongoClient;
 const _mongo = require("mongodb");
 ("use strict");
 
+const Pool = require('pg').Pool
+const pool = new Pool({
+	user: 'matcha',
+	password: 'secret',
+	database: 'matcha',
+	host: 'localhost',
+	port: 5432
+});
+
 const url = "mongodb://localhost:27017/Matcha";
+
+function testPostgress() {
+	pool.query("SELECT $1::text as message", ['Hello World']).then(res => {
+		console.log(res);
+	}).catch(err => {
+		console.log(err);
+	})
+	pool.query("SELECT * FROM matcha.USERS").then(res => {
+		console.log(res);
+	}).catch(err => {
+		console.log(err);
+	})
+}
 
 function createCollection(collectionName) {
 	mongo
@@ -63,5 +85,6 @@ module.exports = {
 	mongo,
 	_mongo,
 	createCollection: createCollection,
-	createTagsCollection: createTagsCollection
+	createTagsCollection: createTagsCollection,
+	testPostgress: testPostgress
 };
