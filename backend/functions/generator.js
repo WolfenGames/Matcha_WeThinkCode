@@ -1,6 +1,6 @@
 const fs = require("fs");
 const userSave = require("./userSave");
-const db = require("./../database/db");
+const db = require("../database/db");
 const tags = require("./tags");
 
 async function UserGenerator(cb) {

@@ -1,6 +1,6 @@
 const db = require("../database/db");
 const crypt = require("bcrypt");
-const mailer = require("../functions/sendmail");
+const mailer = require("./sendmail");
 
 function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 	var password = "WeThinkCode_2018";

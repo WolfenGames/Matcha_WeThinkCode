@@ -1,0 +1,22 @@
+version: "2.4"
+services: 
+    posgress_db:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/PgDockerfile
+        environment:
+            POSTGRES_PASSWORD: secret
+            APP_USER: matcha
+            APP_DATABASE: matcha
+            APP_USER_PASSWORD: secret
+        image: tmp_matcha_db:latest
+        ports:
+            - 5432:5432
+    redis_db:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/RedisDockerfile
+        image: tmp_matcha_redis_db:latest
+        ports:
+            - 6379:6379
+        
