@@ -14,13 +14,8 @@ const pool = new Pool({
 const url = "mongodb://localhost:27017/Matcha";
 
 function testPostgress() {
-	pool.query("SELECT $1::text as message", ['Hello World']).then(res => {
-		console.log(res);
-	}).catch(err => {
-		console.log(err);
-	})
-	pool.query("SELECT * FROM matcha.USERS").then(res => {
-		console.log(res);
+	pool.query("SELECT * FROM get_user(11)").then(res => {
+		console.log(res.rows[0]);
 	}).catch(err => {
 		console.log(err);
 	})
