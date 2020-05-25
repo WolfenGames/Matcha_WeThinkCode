@@ -12,7 +12,7 @@ async function UserGenerator(cb) {
 				sNames = sNames.split("\n");
 				likes = likes.split("\n");
 				var i;
-				for (i = 0; i < 500; i++) {
+				for (i = 0; i < 5; i++) {
 					var x = Math.floor(Math.random() * fNames.length);
 					var y = Math.floor(Math.random() * sNames.length);
 					var likeCountMax = Math.floor(Math.random() * likes.length);
@@ -58,19 +58,21 @@ async function UserGenerator(cb) {
 						index === self.findIndex(t => t.email == arr.email)
 				);
 				if (cleanUserArr.length !== 0) {
-					db.mongo
-						.connect(db.url, {
-							useNewUrlParser: true,
-							useUnifiedTopology: true
-						})
-						.then(db => {
-							var dbo = db.db("Matcha");
-							dbo.collection("Users")
-								.insertMany(cleanUserArr)
-								.then(() => {})
-								.catch(err => {});
-						})
-						.catch(err => {});
+					cleanUserArr.forEach(user => {
+
+						db.pool.query("call add_user($1, $2, $3, $4, $5, $6)",
+							[
+								user.username,
+								user.email,
+								user.password,
+								user.firstname,
+								user.surname,
+								"N/A"
+							]
+						).then(res => {})
+						.catch(err => { console.log(user); console.log(err); throw ("FUCK")})
+
+					})
 				}
 				// cb(null);
 			});
