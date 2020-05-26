@@ -56,114 +56,32 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 	return saveOptions;
 }
 
-function userSave(uname, email, password, uType, sub, url) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			crypt
-				.hash(password, 10)
-				.then(hash => {
-					var saveOptions = {
-						username: uname,
-						firstname: null,
-						surname: null,
-						sex: "3",
-						sexuality: "1",
-						locationType: 0,
-						location: [0, 0],
-						locationIp: [0, 0],
-						locationCustom: [0, 0],
-						locationBrowser: [0, 0],
-						verification: hash,
-						isVerified: false,
-						email_subscription: sub === "true" ? true : false,
-						email: email,
-						password: password,
-						age: 0,
-						fame: 0,
-						rating: 100,
-						type: uType,
-						Tag: [],
-						likes: [],
-						blocks: [],
-						likedBy: [],
-						likedBy: [],
-						viewedBy: [],
-						reports: 0,
-						banned: false,
-						picture: {
-							Picture1: null,
-							Picture2: null,
-							Picture3: null,
-							Picture4: null,
-							Picture5: null
-						},
-						notifications: [],
-						Prof: null,
-						biography: null,
-						views: 1,
-						rating: 100
-					};
-					dbo.collection("Users")
-						.insertOne(saveOptions)
-						.then(res => {
-							mailer.sendVerifyEmail(email, url + hash);
-							db.close();
-						})
-						.catch(err => {
-							// console.log("Error Saving user " + err);
-						});
-				})
-				.catch(err => {
-					console.log("Cant hash becuase fucked up " + err);
-				});
-		})
-		.catch(err => {
-			console.log("Error saving user " + err);
-		});
+async function userSave(uname, email, password, uType, sub, url) {
+	let verifyKey = await crypt.hashSync(uname + email, 10)
+	console.log("password: " + password)
+	await db.pool.query('CALL add_user($1, $2, $3, $4, $5, $6, $7, $8)',
+		[
+			uname,
+			email,
+			password,
+			'Give me FirstName Pls',
+			'Give me Surname Pls',
+			verifyKey,
+			uType,
+			sub
+		]
+	)
+	mailer.sendVerifyEmail(email, url + verifyKey)
 }
 
-function emailExists(email, cb) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.findOne({ email: email })
-				.then(res => {
-					cb(res);
-				})
-				.catch(err => {
-					console.log("Cant use email Exists => " + err);
-				});
-		})
-		.catch(err => {
-			console.log(
-				"Can't connect to database called by emailExists(" + email + ")"
-			);
-		});
+async function emailExists(email) {
+	const res = await db.pool.query("SELECT * FROM Users as u WHERE u.email = $1", [email])
+	return (res.rowCount > 0)
 }
 
-function unameExists(uname, cb) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.findOne({ username: uname })
-				.then(res => {
-					cb(res);
-				})
-				.catch(err => {
-					console.log("Cant use Username Exists => " + err);
-				});
-		})
-		.catch(err => {
-			console.log(
-				"Can't connect to database called by unameExists(" + email + ")"
-			);
-		});
+async function unameExists(uname) {
+	const res = await db.pool.query("SELECT * FROM Users as u WHERE u.username = $1", [uname])
+	return (res.rowCount > 0)
 }
 
 function getAll(cb) {

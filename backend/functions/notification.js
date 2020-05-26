@@ -53,17 +53,18 @@ function clearNotification(user) {
 }
 
 function isNewNotifications(user, cb) {
-    var oID =  new _mongo.ObjectID(user);
-    db.mongo
-    .connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(function(db) {
-        var dbo = db.db("Matcha");
-        var t = dbo.collection("Users")
-            .findOne({ _id: oID },)
-            .then( function(rep) {
-                cb(rep.nNotification)
-            })
-    })
+    // var oID =  new _mongo.ObjectID(user);
+    // db.mongo
+    // .connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
+    // .then(function(db) {
+    //     var dbo = db.db("Matcha");
+    //     var t = dbo.collection("Users")
+    //         .findOne({ _id: oID },)
+    //         .then( function(rep) {
+    //             cb(rep.nNotification)
+    //         })
+    // })
+    cb(null)
 }
 
 function getNotifications(user, cb) {

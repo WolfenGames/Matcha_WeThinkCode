@@ -13,6 +13,7 @@ $(document).ready(function() {
 			cPassword: cpass,
 			emailpref: emailpref
 		}).done(function(data) {
+			console.log(data)
 			var msg = jQuery.parseJSON(data);
 			if (msg["msg"] != "OK") {
 				$("#error-modal").modal();

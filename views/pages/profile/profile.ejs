@@ -16,32 +16,32 @@
 		<% include ../../partials/header %>
 	</header>
 	<%
-	var tags = [];
-	if (user) {
-		var username = user['username'];
-		var up = JSON.parse(JSON.stringify(user['picture']));
-		var img1 = up['Picture1'];
-		var img2 = up['Picture2'];
-		var img3 = up['Picture3'];
-		var img4 = up['Picture4'];
-		var img5 = up['Picture5'];
-		var prof = user['Prof'];
-		var subscription = user['email_subscription'];
-		var biography = user['biography'];
-		var fame = user['fame'];
-		var age = user['age'];
-		var email = user['email'];
-		var userType = user['type'];
-		var Sexuality = user['sexuality'];
-		var Gender = user['sex'];
-		var firstname = user['firstname'] === null ? 'You\'re in dire need of a firstname' : user['firstname'];
-		var lastname = user['surname'] === null ? 'You\'re in dire need of a lastname' : user['surname'];
-		if (usertags)
-			var tags = usertags;
-		var views = user['views'];
-		var lastTime = user['lastTime'];
-		var locTpye = user['locationType']
-	}
+		var tags = [];
+		if (user) {
+			var username = user['username'];
+			var prof = user['profile_picture'];
+			var img1 = prof
+			var img2 = user['picture_one'];
+			var img3 = user['picture_two'];
+			var img4 = user['picture_three'];
+			var img5 = user['picture_four'];
+			var subscription = user['email_subscription'];
+			var biography = user['biography'];
+			var fame = user['fame'];
+			var age = user['dob'];
+			console.log(age)
+			var email = user['email'];
+			var userType = user['utype'];
+			var Sexuality = user['sexuality'];
+			var Gender = user['sex'];
+			var firstname = user['firstname'] === null ? 'You\'re in dire need of a firstname' : user['firstname'];
+			var lastname = user['surname'] === null ? 'You\'re in dire need of a lastname' : user['surname'];
+			if (usertags)
+				var tags = usertags;
+			var views = user['views'];
+			var lastTime = ''// user['lastTime'];
+			var locTpye = ''// user['locationType']
+		}
 	%>
 	<main>
 		<input type="hidden" id="hiddenemail" value="<%= email %>">

@@ -84,70 +84,199 @@ function updateUserOne(query, set, cb) {
 		});
 }
 
-function getUserInfo(email, cb) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.findOne({ email: email })
-				.then(res => {
-					if (res.reports >= 5) {
-						updateUserOne(
-							{ email: email },
-							{ $set: { lastTime: Date(), banned: true } },
-							() => {
-								cb(res);
-								db.close();
-							}
-						);
-					} else {
-						updateUserOne(
-							{ email: email },
-							{ $set: { lastTime: Date() } },
-							() => {
-								cb(res);
-								db.close();
-							}
-						);
-					}
-				})
-				.catch(err => {
-					console.log("Cant fetch user " + err);
-				});
-		})
-		.catch(err => {
-			console.log("Cant connect to database " + err);
-		});
+async function getTags(uid){
+	let res = await db.pool.query("SELECT * FROM get_tags_for_user($1::int);", [uid])
+	return (res.rows[0])
 }
 
-function getUserInfoId(id, cb) {
-	var validID = /^[0-9a-fA-F]{24}$/;
-	if (validID.test(id)) {
-		var o_id = new db._mongo.ObjectID(id);
-		db.mongo
-			.connect(db.url, {
-				useNewUrlParser: true,
-				useUnifiedTopology: true
-			})
-			.then(db => {
-				var dbo = db.db("Matcha");
-				if (o_id !== null) {
-					dbo.collection("Users")
-						.findOne({ _id: o_id })
-						.then(res => {
-							cb(res);
-							db.close();
-						})
-						.catch(err => {
-							console.log("Cant fetch user " + err);
-						});
-				} else cb(null);
-			})
-			.catch(err => {
-				console.log("Cant connect to database " + err);
-			});
-	} else cb(null);
+async function getUserInfo(uid) {
+	let res = await db.pool.query('SELECT * FROM get_user($1::int);', [uid])
+	return (res.rows[0])
+}
+
+
+async function getUserInfoByEmail(email) {
+	let res = await db.pool.query('SELECT * FROM get_user($1::varchar);', [email])
+	return (res.rows[0])
+}
+
+async function getMatches(uid) {
+	let res = await db.pool.query('SELECT * FROM matches($1::int);', [uid])
+	return res.rowCount
+}
+
+async function getLikes(uid) {
+	let res = await db.pool.query('SELECT * FROM get_likes($1::int);', [uid])
+	return res.rowCount
+}
+
+async function getViewedBy(uid) {
+	let res = await db.pool.query('SELECT * FROM get_views($1::int);', [uid])
+	return res.rowCount
+}
+
+async function getBlocks(uid) {
+	let res = await db.pool.query('SELECT * FROM get_blocks($1::int);', [uid])
+	return res.rowCount
+}
+
+async function reportUser(reporter, bad) {
+	// TODO: HIGHLY UNTESTED
+	await db.pool.query('CALL report_user($1::int, $2::int);', [reporter, bad])
+}
+
+async function updateEmail(uid, email) {
+	await db.pool.query(`
+
+		UPDATE Users
+			SET email = $2::varchar
+		WHERE
+			_id = $1::int
+	
+	`,[uid, email])
+}
+
+async function updateBio(uid, bio) {
+	await db.pool.query(`
+
+		UPDATE UserInfo
+			SET biography = $2::varchar
+		FROM UserInfo as ui
+		INNER JOIN Users as u on u._id = ui.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, bio])
+}
+
+async function updateGender(uid, sex) {
+	await db.pool.query(`
+
+		UPDATE UserInfo
+			SET sex = $2::int
+		FROM UserInfo as ui
+		INNER JOIN Users as u on u._id = ui.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, sex])
+}
+
+async function updateSex(uid, sex) {
+	await db.pool.query(`
+
+		UPDATE UserInfo
+			SET sexuality = $2::int
+		FROM UserInfo as ui
+		INNER JOIN Users as u on u._id = ui.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, sex])
+}
+
+async function updateFirstname(uid, firstname) {
+	await db.pool.query(`
+
+		UPDATE UserInfo
+			SET firstname = $2::varchar
+		FROM UserInfo as ui
+		INNER JOIN Users as u on u._id = ui.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, firstname])
+}
+
+async function updateLastname(uid, lastname) {
+	await db.pool.query(`
+
+		UPDATE UserInfo
+			SET surname = $2::varchar
+		FROM UserInfo as ui
+		INNER JOIN Users as u on u._id = ui.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, lastname])
+}
+
+async function updateDOB(uid, dob) {
+	await db.pool.query(`
+
+		UPDATE UserInfo
+			SET date_of_birth = $2::TIMESTAMP
+		FROM UserInfo as ui
+		INNER JOIN Users as u on u._id = ui.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, dob])
+}
+
+async function updateProfilePicture(uid, imgloc) {
+	await db.pool.query(`
+
+		UPDATE Pictures
+			SET profile_picture = $2::varchar
+		FROM Pictures as p
+		INNER JOIN Users as u on u._id = p.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, imgloc])
+}
+
+async function updateProfilePictureOne(uid, imgloc) {
+	await db.pool.query(`
+
+		UPDATE Pictures
+			SET picture_one = $2::varchar
+		FROM Pictures as p
+		INNER JOIN Users as u on u._id = p.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, imgloc])
+}
+
+async function updateProfilePictureTwo(uid, imgloc) {
+	await db.pool.query(`
+
+		UPDATE Pictures
+			SET picture_two = $2::varchar
+		FROM Pictures as p
+		INNER JOIN Users as u on u._id = p.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, imgloc])
+}
+
+async function updateProfilePictureThree(uid, imgloc) {
+	await db.pool.query(`
+
+		UPDATE Pictures
+			SET picture_three = $2::varchar
+		FROM Pictures as p
+		INNER JOIN Users as u on u._id = p.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, imgloc])
+}
+
+async function updateProfilePictureFour(uid, imgloc) {
+	await db.pool.query(`
+
+		UPDATE Pictures
+			SET picture_four = $2::varchar
+		FROM Pictures as p
+		INNER JOIN Users as u on u._id = p.uid
+		WHERE
+			u._id = $1::int;
+	
+	`,[uid, imgloc])
 }
 
 function getHighestView(cb) {
@@ -290,12 +419,30 @@ module.exports = {
 	deleteByUsername: deleteByUsername,
 	deleteAll: deleteAll,
 	updateUserOne: updateUserOne,
-	getUserInfoId: getUserInfoId,
-	getUserInfo: getUserInfo,
 	getHighestView: getHighestView,
 	setGeoLocBrowser: setGeoLocBrowser,
 	setTypeOfLoc: setTypeOfLoc,
 	updateLoc: updateLoc,
 	setCustomLoc: setCustomLoc,
-	filter: filter
+	filter: filter,
+	getUserInfo: getUserInfo,
+	getUserInfoByEmail,
+	getTags,
+	getMatches,
+	getLikes,
+	getViewedBy,
+	getBlocks,
+	reportUser,
+	updateEmail,
+	updateBio,
+	updateGender,
+	updateSex,
+	updateFirstname,
+	updateLastname,
+	updateDOB,
+	updateProfilePicture,
+	updateProfilePictureOne,
+	updateProfilePictureTwo,
+	updateProfilePictureThree,
+	updateProfilePictureFour
 };

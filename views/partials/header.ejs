@@ -15,22 +15,14 @@
 							<li class="nav-item"><a class="nav-link" href="/user/admin">Admin Panel</a></li>
 						<%
 					}
-					var blockCount = user['blocks'].length;
-					var likeCount = user['likes'].length;
-					var likedUsers = user['likes'] != null ? user['likes'] : [];
-					var likedBy = user['likedBy'] != null ? user['likedBy'] : [];
-					var matchCount = 0;
-					likedUsers.forEach(likes => {
-						likedBy.forEach(liked => {
-							if (likes == liked)
-								matchCount++;
-						})
-					})
+					var likes = user['likes']
+					var match = user['matches']
+					var blocks = user['blocks']
 					%>
-					<li class="nav-item"><a class="nav-link" href="/likes">Likes(<%= likeCount %>)</a></li>
+					<li class="nav-item"><a class="nav-link" href="/likes">Likes(<%= likes %>)</a></li>
 					<li class="nav-item"><a class="nav-link" href="/myViews">Viewed_By</a></li>
-					<li class="nav-item"><a class="nav-link" href="/blocks">Blocks(<%= blockCount %>)</a></li>
-					<li class="nav-item"><a class="nav-link" href="/matches">Matches(<%= matchCount %>)</a></li>
+					<li class="nav-item"><a class="nav-link" href="/blocks">Blocks(<%= blocks %>)</a></li>
+					<li class="nav-item"><a class="nav-link" href="/matches">Matches(<%= match %>)</a></li>
 					<script src="../js/notification.js"></script>
 					<li class="nav-item"><a class="nav-link" href="/notification"><i class="fas fa-bell" id="notification"></i></a></li>
 					<li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>

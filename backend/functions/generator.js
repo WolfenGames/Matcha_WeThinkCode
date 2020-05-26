@@ -6,13 +6,13 @@ const tags = require("./tags");
 async function UserGenerator(cb) {
 	let userArr = [];
 	fs.readFile("./backend/data/firstnames.txt", "utf8", (err, fNames) => {
-		fs.readFile("./backend/data/surname.txt", "utf8", (err2, sNames) => {
-			fs.readFile("./backend/data/likes.txt", "utf8", (err3, likes) => {
+		fs.readFile("./backend/data/surname.txt", "utf8", (_, sNames) => {
+			fs.readFile("./backend/data/likes.txt", "utf8", (_, likes) => {
 				fNames = fNames.split("\n");
 				sNames = sNames.split("\n");
 				likes = likes.split("\n");
 				var i;
-				for (i = 0; i < 5; i++) {
+				for (i = 0; i < 10; i++) {
 					var x = Math.floor(Math.random() * fNames.length);
 					var y = Math.floor(Math.random() * sNames.length);
 					var likeCountMax = Math.floor(Math.random() * likes.length);
@@ -60,18 +60,32 @@ async function UserGenerator(cb) {
 				if (cleanUserArr.length !== 0) {
 					cleanUserArr.forEach(user => {
 
-						db.pool.query("call add_user($1, $2, $3, $4, $5, $6)",
+						db.pool.query("call add_user($1, $2, $3, $4, $5, $6, $7);",
 							[
 								user.username,
 								user.email,
 								user.password,
 								user.firstname,
 								user.surname,
-								"N/A"
+								"N/A",
+								"Generated"
 							]
-						).then(res => {})
+						).then(_ => {
+							likesArray.forEach(async like => {
+								try {
+									await db.pool.query("call add_tag_for_user($1, $2, $3);",
+										[
+											-1,
+											user.username,
+											like
+										]
+									)
+								} catch (error) {
+									console.log(err);
+								}
+							})
+						})
 						.catch(err => { console.log(user); console.log(err); throw ("FUCK")})
-
 					})
 				}
 				// cb(null);

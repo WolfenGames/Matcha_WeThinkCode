@@ -9,6 +9,7 @@ const IS = require("../functions/image_save");
 const db = require("../database/db");
 const _mongo          = require('mongodb');
 const notification = require("../functions/notification");
+const aux = require('../functions/auxiliary')
 
 var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$#!%*?&_]{8,}$/;
 
@@ -321,231 +322,78 @@ router.get("/user/admin", (req, res) => {
 	} else res.redirect("/404");
 });
 
-router.post("/file/uploads/profile/Main", function(req, res) {
-	if (req.session.user) {
-		IS.upload.single("Image1")(req, res, _err => {
-			var picture = {
-				Picture1: "/images/" + req.session.user.f1,
-				Picture2:
-					req.session.user.picture.Picture1 === null
-						? "/images/" + req.session.user.picture.Picture1
-						: req.session.user.picture.Picture2,
-				Picture3:
-					req.session.user.picture.Picture1 === null
-						? "/images/" + req.session.user.picture.Picture1
-						: req.session.user.picture.Picture3,
-				Picture4:
-					req.session.user.picture.Picture1 === null
-						? "/images/" + req.session.user.picture.Picture1
-						: req.session.user.picture.Picture4,
-				Picture5:
-					req.session.user.picture.Picture1 === null
-						? "/images/" + req.session.user.picture.Picture1
-						: req.session.user.picture.Picture5
-			};
-			var email = req.session.user.email;
-			manageUser.updateUserOne(
-				{ email: email },
-				{
-					$set: {
-						picture: picture,
-						Prof: "/images/" + req.session.user.f1
-					}
-				},
-				function() {
-					res.redirect("/profile");
-					// response.end(JSON.stringify({ msg: "OK" }));
-				}
-			);
-		});
-	} else res.redirect("/404");
-});
-
-router.post("/file/uploads/profile/First", function(req, res) {
-	if (req.session.user) {
-		IS.upload.single("Image2")(req, res, _err => {
-			var picture = {
-				Picture1:
-					req.session.user.picture.Picture1 === null
-						? "/images/" + req.session.user.picture.Picture1
-						: req.session.user.picture.Picture1,
-				Picture2: "/images/" + req.session.user.f1,
-				Picture3:
-					req.session.user.picture.Picture3 === null
-						? "/images/" + req.session.user.picture.Picture3
-						: req.session.user.picture.Picture3,
-				Picture4:
-					req.session.user.picture.Picture4 === null
-						? "/images/" + req.session.user.picture.Picture4
-						: req.session.user.picture.Picture4,
-				Picture5:
-					req.session.user.picture.Picture5 === null
-						? "/images/" + req.session.user.picture.Picture5
-						: req.session.user.picture.Picture5
-			};
-			var email = req.session.user.email;
-			manageUser.updateUserOne(
-				{ email: email },
-				{ $set: { picture: picture } },
-				function() {
-					res.redirect("/profile");
-				}
-			);
-		});
-	} else res.end('{"msg":"404"}');
-});
-
-router.post("/file/uploads/profile/Second", function(req, res) {
-	if (req.session.user) {
-		IS.upload.single("Image3")(req, res, _err => {
-			var picture = {
-				Picture1:
-					req.session.user.picture.Picture1 === null
-						? "/images/" + req.session.user.picture.Picture1
-						: req.session.user.picture.Picture1,
-				Picture2:
-					req.session.user.picture.Picture2 === null
-						? "/images/" + req.session.user.picture.Picture2
-						: req.session.user.picture.Picture2,
-				Picture3: "/images/" + req.session.user.f1,
-				Picture4:
-					req.session.user.picture.Picture4 === null
-						? "/images/" + req.session.user.picture.Picture4
-						: req.session.user.picture.Picture4,
-				Picture5:
-					req.session.user.picture.Picture5 === null
-						? "/images/" + req.session.user.picture.Picture5
-						: req.session.user.picture.Picture5
-			};
-			var email = req.session.user.email;
-			manageUser.updateUserOne(
-				{ email: email },
-				{ $set: { picture: picture } },
-				function() {
-					res.redirect("/profile");
-				}
-			);
-		});
-	} else res.end('{"msg":"404"}');
-});
-
-router.get("/report/:id", function(req, res) {
-	if (req.session.user) {
-		if (typeof req.params.id === "string") {
-			manageUser.getUserInfoId(req.params.id, user => {
-				if (user) {
-					manageUser.updateUserOne(
-						{ email: user.email },
-						{ $set: { reports: user.reports + 1 } },
-						() => {
-							manageUser.updateUserOne(
-								{ email: user.email },
-								{
-									$set: { rating: user.rating - user.reports }
-								},
-								() => {
-									if (user.reports + 1 > 6)
-										manageUser.updateUserOne(
-											{ email: user.email },
-											{ $set: { banned: true } },
-											() => {
-												res.redirect(
-													"/block/" + req.params.id
-												);
-											}
-										);
-									else
-										res.redirect("/block/" + req.params.id);
-								}
-							);
-						}
-					);
-				} else res.redirect("/404");
-			});
-		} else res.redirect("/404");
-	} else res.redirect("/404");
-});
-router.post("/file/uploads/profile/Third", function(req, res) {
-	if (req.session.user) {
-		IS.upload.single("Image4")(req, res, _err => {
-			var picture = {
-				Picture1:
-					req.session.user.picture.Picture1 === null
-						? "/images/" + req.session.user.picture.Picture1
-						: req.session.user.picture.Picture1,
-				Picture2:
-					req.session.user.picture.Picture2 === null
-						? "/images/" + req.session.user.picture.Picture2
-						: req.session.user.picture.Picture2,
-				Picture3:
-					req.session.user.picture.Picture3 === null
-						? "/images/" + req.session.user.picture.Picture3
-						: req.session.user.picture.Picture3,
-				Picture4: "/images/" + req.session.user.f1,
-				Picture5:
-					req.session.user.picture.Picture5 === null
-						? "/images/" + req.session.user.picture.Picture5
-						: req.session.user.picture.Picture5
-			};
-			var email = req.session.user.email;
-			manageUser.updateUserOne(
-				{ email: email },
-				{ $set: { picture: picture } },
-				function() {
-					res.redirect("/profile");
-				}
-			);
-		});
-	} else res.end('{"msg":"404"}');
-});
-
-router.post("/file/uploads/profile/Fourth", function(req, res) {
-	if (req.session.user) {
-		IS.upload.single("Image5")(req, res, _err => {
-			var picture = {
-				Picture1:
-					req.session.user.picture.Picture1 === null
-						? "/images/" + req.session.user.picture.Picture1
-						: req.session.user.picture.Picture1,
-				Picture2:
-					req.session.user.picture.Picture2 === null
-						? "/images/" + req.session.user.picture.Picture2
-						: req.session.user.picture.Picture2,
-				Picture3:
-					req.session.user.picture.Picture3 === null
-						? "/images/" + req.session.user.picture.Picture3
-						: req.session.user.picture.Picture3,
-				Picture4:
-					req.session.user.picture.Picture4 === null
-						? "/images/" + req.session.user.picture.Picture4
-						: req.session.user.picture.Picture4,
-				Picture5: "/images/" + req.session.user.f1
-			};
-			var email = req.session.user.email;
-			manageUser.updateUserOne(
-				{ email: email },
-				{ $set: { picture: picture } },
-				function() {
-					res.redirect("/profile");
-				}
-			);
-		});
-	} else res.end('{"msg":"404"}');
-});
-
-router.get("/forgotpass", function(req, res) {
-	var adr = req.protocol + "://" + req.get("host") + req.url;
-	var q = url.parse(adr, true);
-	manageUser.getUserInfo(q.query.email, user => {
-		if (user) {
-			if (user["verification"] === q.query.verify)
-				res.render("pages/profile/forgot", {
-					email: user["email"],
-					verify: user["verification"]
-				});
-			else res.redirect("/login");
-		} else res.redirect("/404");
+router.post("/file/uploads/profile/Main", aux.authHandler, function(req, res) {
+	IS.upload.single("Image1")(req, res, _err => {
+		let loc = "/images/" + req.file.filename
+		console.log(loc)
+		manageUser.updateProfilePicture(req.session.user._id, loc);
+		res.redirect("/profile")
 	});
 });
 
+router.post("/file/uploads/profile/First", aux.authHandlerPost, function(req, res) {
+	IS.upload.single("Image2")(req, res, _err => {
+		let loc = "/images/" + req.file.filename
+		console.log(loc)
+		manageUser.updateProfilePictureOne(req.session.user._id, loc);
+		res.redirect("/profile")
+	});
+});
+
+router.post("/file/uploads/profile/Second", aux.authHandlerPost, function(req, res) {
+	IS.upload.single("Image3")(req, res, _err => {
+		let loc = "/images/" + req.file.filename
+		console.log(loc)
+		manageUser.updateProfilePictureTwo(req.session.user._id, loc);
+		res.redirect("/profile")
+	});
+});
+
+router.post("/file/uploads/profile/Third", aux.authHandlerPost, function(req, res) {
+	IS.upload.single("Image4")(req, res, _err => {
+		let loc = "/images/" + req.file.filename
+		console.log(loc)
+		manageUser.updateProfilePictureThree(req.session.user._id, loc);
+		res.redirect("/profile")
+	});
+});
+	
+router.post("/file/uploads/profile/Fourth", aux.authHandlerPost, function(req, res) {
+	IS.upload.single("Image5")(req, res, _err => {
+		let loc = "/images/" + req.file.filename
+		console.log(loc)
+		manageUser.updateProfilePictureFour(req.session.user._id, loc);
+		res.redirect("/profile")
+	});
+});
+	
+router.get("/forgotpass", async function(req, res) {
+	var adr = req.protocol + "://" + req.get("host") + req.url;
+	var q = url.parse(adr, true);
+	let user = await manageUser.getUserInfoByEmail(q.query.email)
+	if (user)
+	{
+		if (user["verify_key"] === q.query.verify)
+			res.render("pages/profile/forgot", {
+				email: user["email"],
+				verify: user[""]
+			})
+		else
+			res.redirect("/login")
+	}
+	else
+		res.redirect("/404")
+});
+
+router.get("/report/:id", aux.authHandler, async function(req, res) {
+	if (typeof req.params.id === "string") {
+		let reported_user = await manageUser.getUserInfo(parseInt(req.params.id))
+		if (reported_user)
+		{
+			// TODO: Maybe add back to the block thing
+			manageUser.reportUser(req.session.user._id, reported_user._id)
+		} else res.redirect("/404")
+	} else res.redirect("/404");
+});
+	
 module.exports = router;

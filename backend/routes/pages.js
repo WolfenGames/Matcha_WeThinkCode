@@ -41,17 +41,13 @@ router.get("/", function(req, res) {
 	}
 });
 
-router.get("/profile", function(req, res) {
-	if (!req.session.user) res.redirect("/404");
-	else {
-		manageUser.getUserInfo(req.session.user.email, result => {
-			req.session.user = result;
-			res.render("pages/profile/profile", {
-				user: req.session.user,
-				usertags: result.tags
-			});
-		});
-	}
+router.get("/profile", aux.authHandler, async function(req, res) {
+	console.log(req.session.user)
+	const tags = await manageUser.getTags(req.session.user._id)
+	res.render("pages/profile/profile", {
+		user: req.session.user,
+		usertags: tags ? tags : []
+	});
 });
 
 router.get("/login", function(req, res) {
@@ -75,41 +71,34 @@ router.post("/delete", function(req, res) {
 	} else res.end('{"msg":"404"}');
 });
 
-router.post("/User/Create", function(req, res) {
+router.post("/User/Create", async function(req, res) {
 	const oPass = req.body.oPassword;
 	const cPass = req.body.cPassword;
 	const email = req.body.Email;
 	const sub = req.body.emailpref;
 	const uname = req.body.Username;
-	FuncUser.emailExists(email, function(result) {
-		if (!result) {
-			FuncUser.unameExists(uname, function(result) {
-				if (!result) {
-					if (email_regex.test(email)) {
-						if (password_regex.test(oPass) && password_regex.test(cPass)) {
-							if (cPass == oPass) {
-								let hash = bcrypt.hashSync(oPass, 10);
-								var fullUrl =
-									req.protocol +
-									"://" +
-									req.get("host") +
-									"/verify?email=" +
-									email +
-									"&verify=";
-								FuncUser.userSave(uname, email, hash, "User", sub, fullUrl);
-								res.end('{"msg": "OK"}');
-							} else {
-								res.end('{"msg": "Passwords dont match"}');
-							}
-						} else
-							res.end(
-								'{"msg": "Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}'
-							);
-					} else res.end('{"msg": "Please enter a valid email"}');
-				} else res.end('{"msg":"Usename already in use"}');
-			});
-		} else res.end('{"msg":"Email already in use"}');
-	});
+
+	if (await FuncUser.emailExists(email))
+		res.end('{"msg": "Email already exists"}')
+	else if (await FuncUser.unameExists(uname))
+		res.end('{"msg": "Username already exists"}')
+	else if (email_regex.test(email)) {
+		if (password_regex.test(oPass) && password_regex.test(cPass)) {
+			if (cPass == oPass) {
+				let hash = await bcrypt.hashSync(oPass, 10);
+				var fullUrl =
+					req.protocol +
+					"://" +
+					req.get("host") +
+					"/verify?email=" +
+					email +
+					"&verify=";
+				FuncUser.userSave(uname, email, hash, "User", sub, fullUrl);
+				res.end('{"msg": "OK"}');
+			} else res.end('{"msg": "Passwords dont match"}');
+		} else res.end('{"msg": "Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}');
+	} else res.end('{"msg": "Please enter a valid email"}');
+
 });
 
 router.get("/signup", function(req, res) {
@@ -151,47 +140,45 @@ router.post("/login/resend", function(req, res) {
 	} else res.end('{"msg":"Please enter a valid email address"}');
 });
 
-router.post("/login/user", function(req, res) {
+router.post("/login/user", async function(req, res) {
 	if (email_regex.test(req.body.email)) {
 		if (password_regex.test(req.body.password)) {
-			login.login(req.body.email, req.body.password, function(loginres) {
-				if (loginres) {
-					req.session.user = loginres;
-					var user = loginres;
-					if (
-						!user["username"] ||
-						!user["firstname"] ||
-						!user["surname"] ||
-						!user["sex"] ||
-						!user["sexuality"] ||
-						!user["biography"]
-					)
-						req.session.setup = false;
-					else req.session.setup = true;
-					aux.getIp(result => {
-						if (result) {
-							var loc = geoip.lookup(result);
-							if (!loc) {
-								loc.ll[0] = 0;
-								loc.ll[1] = 0;
-							}
-							req.session.loc = [loc.ll[1], loc.ll[0]];
-							req.session.rooms = [];
-							manageUser.updateUserOne(
-								{ email: req.session.user.email },
-								{ $set: { locationIp: req.session.loc } },
-								cb => {
-									res.end('{"msg": "OK"}');
-								}
-							);
-						} else res.end('{"msg": "error???"}');
-					});
-				} else {
-					res.end(
-						'{"msg": "Needs to be verified or can\'t be found"}'
-					);
-				}
-			});
+			let loginres = await login.login(req.body.email, req.body.password)
+			if (loginres) {
+				req.session.user = loginres;
+				var user = loginres;
+				if (
+					!user["username"] ||
+					!user["firstname"] ||
+					!user["surname"] ||
+					!user["sex"] ||
+					!user["sexuality"] ||
+					!user["biography"]
+				)
+					req.session.setup = false;
+				else req.session.setup = true;
+				// aux.getIp(result => {
+				// 	if (result) {
+				// 		var loc = geoip.lookup(result);
+				// 		if (!loc) {
+				// 			loc.ll[0] = 0;
+				// 			loc.ll[1] = 0;
+				// 		}
+				// 		req.session.loc = [loc.ll[1], loc.ll[0]];
+				// 		req.session.rooms = [];
+				// 		manageUser.updateUserOne(
+				// 			{ email: req.session.user.email },
+				// 			{ $set: { locationIp: req.session.loc } },
+				// 			cb => {
+				// 				res.end('{"msg": "OK"}');
+				// 			}
+				// 		);
+				// 	} else res.end('{"msg": "error???"}');
+				// });
+				res.end('{"msg": "OK"}')
+			} else {
+				res.end('{"msg": "Needs to be verified or can\'t be found"}');
+			}
 		} else
 			res.end(
 				'{"msg":"Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}'

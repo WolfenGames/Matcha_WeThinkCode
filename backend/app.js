@@ -12,14 +12,9 @@ const notificationRoutes = require("./routes/notification")
 const session = require("express-session");
 const DB = require("./database/db");
 const fs = require("fs");
-const {
-	CreateChatCollection,
-	CreateRoomCollection
-} = require("./functions/chat");
 const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
 const redisClient = redis.createClient();
-const { addStartingTags } = require("./functions/tags");
 
 var dir = "./public/images";
 
@@ -28,11 +23,8 @@ if (!fs.existsSync(dir)) {
 }
 
 DB.createTables();
+DB.createIndex();
 DB.createProcs();
-
-CreateChatCollection();
-CreateRoomCollection();
-addStartingTags();
 
 redisClient.on("error", err => {
 	console.log(err);
@@ -86,9 +78,6 @@ app.post("*", function(req, res) {
 app.get("*", function(req, res) {
 	res.render("pages/404");
 });
-
-DB.createCollection("Users");
-DB.createTagsCollection();
 
 module.exports = {
 	app: app,
