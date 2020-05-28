@@ -1,46 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../database/db");
+
+const { authHandler, authHandlerPost } = require("../functions/auxiliary")
 
 router.get("/generate", function(req, res) {
 	require("../functions/generator").UserGenerator();
 	res.redirect("/");
 });
 
-router.post("/generate", function(req, res) {
-	require("../functions/generator").UserGenerator(done => {
-		res.redirect("/user/admin");
-	});
+router.post("/generate", authHandlerPost, async function(req, res) {
+	await require("../functions/generator").UserGenerator()
+	res.redirect("/user/admin");
 });
 
-router.get("/resetall", function(req, res) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(dbs => {
-			var dbo = dbs.db("Matcha");
-			dbo.collection("Users")
-				.deleteMany({ type: "Generated" })
-				.then(result => {
-					res.redirect("/");
-				});
-		});
+router.get("/resetall", authHandler, async function(req, res) {
+	await require("../functions/userManagement").deleteAll();
+	res.redirect("/user/admin")
 });
 
-router.post("/resetall", function(req, res) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(dbs => {
-			var dbo = dbs.db("Matcha");
-			dbo.collection("Users")
-				.deleteMany({ type: "Generated" })
-				.then(result => {
-					res.sendStatus(200);
-				})
-				.catch(err => {
-					console.log("Can't reset -> " + err);
-					res.sendStatus(403);
-				});
-		});
+router.post("/resetall", authHandlerPost, async function(req, res) {
+	await require("../functions/userManagement").deleteAll();
+	res.sendStatus(204);
 });
 
 module.exports = router;

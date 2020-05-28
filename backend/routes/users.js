@@ -2,249 +2,101 @@ const express = require("express");
 const router = express.Router();
 const manageUser = require("../functions/userManagement");
 const FuncUser = require("../functions/userSave");
-const UserList = require("../functions/userList")
 const bcrypt = require("bcrypt");
 const url = require("url");
 const IS = require("../functions/image_save");
-const db = require("../database/db");
-const _mongo          = require('mongodb');
 const notification = require("../functions/notification");
 const aux = require('../functions/auxiliary')
 
 var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$#!%*?&_]{8,}$/;
 
-router.get("/view/:id", function(req, res) {
-	if (req.session.user) {
-		if (typeof req.params.id === "string") {
-			manageUser.getUserInfoId(req.params.id, user => {
-				if (user) {
-					var sen = req.session.user._id;
-					var rec = req.params.id;
-					var oID =  new _mongo.ObjectID(sen);
-						db.mongo
-							.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-							.then(db => {
-								var dbo = db.db("Matcha");
-								return dbo.collection("Users")
-									.findOne({_id: oID}, {username: 1})
-							}).then(function(rem){
-								notification.addNotification(rec ,"<img src='"+rem.Prof+"'>"+rem.username+" viewed your profile.");
-							});
-					manageUser.updateUserOne(
-						{ email: user.email },
-						{
-							$set: { views: user.views + 1 },
-							$addToSet: { viewedBy: req.session.user._id },
-						},
-						() => {
-							manageUser.getHighestView(val => {
-								res.render("potentials/profile", {
-									user: req.session.user,
-									req_user: user,
-									highestView: val
-								});
-							});
-						}
-					);
-				} else res.redirect("/404");
+router.get("/view/:id", aux.authHandler, async function(req, res) {
+	const user = await manageUser.getUserInfo(req.params.id)
+	if (user)
+	{
+
+		const tags = await manageUser.getTags(user)
+	
+		//TODO: LOCATION
+		user.location = [0,0]
+	
+		me_likey_arr = await manageUser.getLikes(req.session.user._id)
+		me_likey_arr = me_likey_arr.map(e => e.likes)
+		me_likey = (me_likey_arr.indexOf(user._id) !== -1)
+		
+		me_blocky_arr = await manageUser.getBlocks(req.session.user._id)
+		me_blocky_arr = me_blocky_arr.map(e => e.blocks)
+		me_blocky = (me_blocky_arr.indexOf(user._id) !== -1)
+		
+		views = await manageUser.getMyViews(user._id)
+	
+		await manageUser.viewUser(req.session.user._id, user._id)
+	
+		if (req.session.user._id === user._id)
+			res.redirect("/profile")
+		else {
+			notification.addNotification(user, "<img src='"+req.session.user.profile_picture+"'>"+req.session.user.username+" VIEWED YOU O.O");
+			res.render("potentials/profile", {
+				user: req.session.user,
+				req_user: user,
+				tags: tags,
+				views: views,
+				highestView: -99,
+				me_likey: me_likey,
+				me_blocky: me_blocky
 			});
-		} else res.redirect("/404");
+		}
+	}
+	else
+		res.redirect("/")
+});
+
+router.get("/block/:id", aux.authHandler, async function(req, res) {
+	let user = await manageUser.getUserInfo(req.params.id)
+	if (user) {
+		notification.addNotification(user, "<img src='"+req.session.user.profile_picture+"'>"+req.session.user.username+" BLOCKED YOU </3");
+		await manageUser.blockUser(req.session.user._id, user._id)
+		res.redirect(`/view/${user._id}`)
 	} else res.redirect("/404");
 });
 
-router.get("/block/:id", function(req, res) {
-	if (req.session.user) {
-		if (typeof req.params.id === "string") {
-			manageUser.getUserInfoId(req.params.id, user => {
-				if (user) {
-					var sen = req.session.user._id;
-					var rec = req.params.id;
-					var oID =  new _mongo.ObjectID(sen);
-						db.mongo
-							.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-							.then(db => {
-								var dbo = db.db("Matcha");
-								return dbo.collection("Users")
-									.findOne({_id: oID}, {username: 1})
-							}).then(function(rem){
-								notification.addNotification(rec ,"<img src='"+rem.Prof+"'>"+rem.username+" BLOCKED YOU!!!");
-							});
-					manageUser.updateUserOne(
-						{ email: req.session.user.email },
-						{
-							$addToSet: {
-								blocks: user._id
-							}
-						},
-						_result => {
-							manageUser.getUserInfo(
-								req.session.user.email,
-								fn => {
-									req.session.user = fn;
-									res.redirect("/unlike/" + req.params.id);
-								}
-							);
-						}
-					);
-				} else res.redirect("/404");
-			});
-		} else res.redirect("/404");
+router.get("/unblock/:id", aux.authHandler, async function(req, res) {
+	let user = await manageUser.getUserInfo(req.params.id)
+	if (user) {
+		notification.addNotification(user, "<img src='"+req.session.user.profile_picture+"'>"+req.session.user.username+" UNBLOCKED YOU <3");
+		await manageUser.blockUser(req.session.user._id, user._id)
+		res.redirect(`/view/${user._id}`)
 	} else res.redirect("/404");
 });
 
-router.get("/unblock/:id", function(req, res) {
-	if (req.session.user) {
-		if (typeof req.params.id === "string") {
-			manageUser.getUserInfoId(req.params.id, user => {
-				if (user) {
-					manageUser.updateUserOne(
-						{ email: req.session.user.email },
-						{
-							$pull: {
-								blocks: user._id
-							}
-						},
-						_result => {
-							manageUser.getUserInfo(
-								req.session.user.email,
-								fn => {
-									req.session.user = fn;
-									notification.addNotification(user._id ,"<img src='"+req.session.user.Prof+"'>"+req.session.user.username+" UNBLOCKED YOU =(");
-									res.redirect("/");
-								}
-							);
-						}
-					);
-				} else res.redirect("/404");
-			});
-		} else res.redirect("/404");
+router.get("/like/:id", aux.authHandler, async function(req, res) {
+	let user = await manageUser.getUserInfo(req.params.id)
+	if (user) {
+		notification.addNotification(user, "<img src='"+req.session.user.profile_picture+"'>"+req.session.user.username+" LIKED YOU <3");
+		await manageUser.likeUser(req.session.user._id, user._id)
+		res.redirect(`/view/${user._id}`)
 	} else res.redirect("/404");
 });
 
-router.get("/like/:id", function(req, res) {
-	if (req.session.user) {
-		if (typeof req.params.id === "string") {
-			manageUser.getUserInfoId(req.params.id, user => {
-				if (user) {
-					var sen = req.session.user._id;
-					var rec = req.params.id;
-					var oID =  new _mongo.ObjectID(sen);
-						db.mongo
-							.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-							.then(db => {
-								var dbo = db.db("Matcha");
-								return dbo.collection("Users")
-									.findOne({_id: oID}, {username: 1})
-							}).then(function(rem){
-								notification.addNotification(rec ,"<img src='"+rem.Prof+"'>"+rem.username+" LIKED YOU <3");
-							});
-					var id = db._mongo.ObjectId(req.params.id);
-					manageUser.updateUserOne(
-						{ email: req.session.user.email },
-						{ $addToSet: { likes: req.params.id } },
-						() => {
-							manageUser.updateUserOne(
-								{ _id: id },
-								{
-									$addToSet: { likedBy: req.session.user._id }
-								},
-								() => {
-									
-									res.redirect("/");
-								}
-							);
-						}
-					);
-				} else res.redirect("/404");
-			});
-		} else res.redirect("/404");
+router.get("/unlike/:id", aux.authHandler, async function(req, res) {
+	let user = await manageUser.getUserInfo(req.params.id)
+	if (user) {
+		notification.addNotification(user, "<img src='"+req.session.user.profile_picture+"'>"+req.session.user.username+" UNLIKED YOU </3");
+		await manageUser.likeUser(req.session.user._id, user._id)
+		res.redirect(`/view/${user._id}`)
 	} else res.redirect("/404");
 });
 
-router.get("/unlike/:id", function(req, res) {
-	if (req.session.user) {
-		if (typeof req.params.id === "string") {
-			manageUser.getUserInfoId(req.params.id, user => {
-				if (user) {
-					var sen = req.session.user._id;
-					var rec = req.params.id;
-					var oID =  new _mongo.ObjectID(sen);
-						db.mongo
-							.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-							.then(db => {
-								var dbo = db.db("Matcha");
-								return dbo.collection("Users")
-									.findOne({_id: oID}, {username: 1})
-							}).then(function(rem){
-								notification.addNotification(rec ,"<img src='"+rem.Prof+"'>"+rem.username+" UNLIKED YOU =(");
-							});
-					var id = db._mongo.ObjectId(req.params.id);
-					manageUser.updateUserOne(
-						{ email: req.session.user.email },
-						{ $pull: { likes: req.params.id } },
-						() => {
-							manageUser.updateUserOne(
-								{ _id: id },
-								{ $pull: { likedBy: req.session.user._id } },
-								() => {
-									res.redirect("/");
-								}
-							);
-						}
-					);
-				} else res.redirect("/404");
-			});
-		} else res.redirect("/404");
+router.get("/unmatch/:id", aux.authHandler, async function(req, res) {
+	let user = await manageUser.getUserInfo(req.params.id)
+	if (user) {
+		notification.addNotification(user, "<img src='"+req.session.user.profile_picture+"'>"+req.session.user.username+" UNMATCHED YOU </3");
+		await manageUser.likeUser(req.session.user._id, user._id)
+		res.redirect(`/`)
 	} else res.redirect("/404");
 });
 
-router.get("/unblock/:id", function(req, res) {
-	if (req.session.user) {
-		if (typeof req.params.id === "string") {
-			manageUser.getUserInfoId(req.params.id, user => {
-				if (user) {
-					manageUser.updateUserOne(
-						{ email: req.session.user.email },
-						{ $pull: { blocks: req.params.id } },
-						() => {
-							console.log(user._id)
-							notification.addNotification(user._id ,"<img src='"+req.session.user.Prof+"'>"+req.session.user.username+" UNBLOCKED YOU =(");
-							res.redirect("/");
-						}
-					);
-				} else res.redirect("/404");
-			});
-		} else res.redirect("/404");
-	} else res.redirect("/404");
-});
-
-router.get("/unmatch/:id", function(req, res) {
-	if (req.session.user) {
-		if (typeof req.params.id === "string") {
-			manageUser.getUserInfoId(req.params.id, user => {
-				if (user) {
-					var id = db._mongo.ObjectId(req.params.id);
-					manageUser.updateUserOne(
-						{ email: req.session.user.email },
-						{ $pull: { likes: req.params.id } },
-						() => {
-							manageUser.updateUserOne(
-								{ _id: id },
-								{ $pull: { likedBy: req.session.user._id } },
-								() => {
-									notification.addNotification(user._id ,"<img src='"+req.session.user.Prof+"'>"+req.session.user.username+" UNMATCHED YOU =(");
-									res.redirect("/");
-								}
-							);
-						}
-					);
-				} else res.redirect("/404");
-			});
-		} else res.redirect("/404");
-	} else res.redirect("/404");
-});
-
-router.post("/resetpass", function(req, res) {
+router.post("/resetpass", async function(req, res) {
 	var email = req.body.Email;
 	var pass = req.body.oPassword;
 	var cpass = req.body.cPassword;
@@ -252,80 +104,64 @@ router.post("/resetpass", function(req, res) {
 	if (pass == cpass) {
 		if (password_regex.test(pass)) {
 			let hash = bcrypt.hashSync(pass, 10);
-			manageUser.updateUserOne(
-				{ email: email, verification: verify },
-				{ $set: { password: hash } },
-				result => {
-					if (result) res.end('{"msg":"OK"}');
-					else res.end('{"msg":"Could not update Password"}');
-				}
-			);
+			await manageUser.updatePassword(email, hash, verify);
+			res.end('{"msg":"OK"}');
 		} else
-			res.end(
-				'{"msg":"Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}'
-			);
-	} else res.end('{"msg":"Passwords dont match"}');
+			res.end('{"msg":"Passwords need 1 Caps, 1 lower, 1 number, 1 special character, min 8 characters"}');
+	} 
+	else 
+		res.end('{"msg":"Passwords dont match"}');
 });
 
-router.post("/user/updateLoc", (req, res) => {
+router.post("/user/updateLoc",aux.authHandlerPost, (req, res) => {
 	if (req.body.long && req.body.lat) {
-		if (req.session.user)
-			manageUser.setGeoLocBrowser(
-				req.body.long,
-				req.body.lat,
-				req.session.user
-			);
+		manageUser.setGeoLocBrowser(req.session.user, req.body.long, req.body.lat);
 		res.sendStatus(200);
 	}
 });
 
 router.post("/user/locType", (req, res) => {
-	// console.log(req.body);
 	if (req.body.locType && req.session.user) {
-		var val = 0;
+		var val = '';
 		switch (req.body.locType) {
-			case "Ip":
-				val = 0;
+			case "IP":
+				val = "IP";
 				break;
-			case "Browser":
-				val = 1;
+			case "BROWSER":
+				val = "BROWSER";
 				break;
-			case "Custom":
-				val = 2;
+			case "CUSTOM":
+				val = "CUSTOM";
 				break;
 			default:
-				val = 0;
+				val = 'IP';
 				break;
 		}
-		req.session.user.locationType = val;
-		manageUser.setTypeOfLoc(val, req.session.user);
-		manageUser.updateLoc(req.session.user);
+		manageUser.setTypeOfLoc(req.session.user, val);
 	}
 	res.sendStatus(200);
 });
 
-router.get("/delete/:name", (req, res) => {
-	if (req.session.user && req.session.user.type === "Admin") {
-		FuncUser.deleteUser(req.params.name);
+router.get("/delete/:id", aux.authHandler, async (req, res) => {
+	if (req.session.user.utype === "Admin") {
+		await manageUser.deleteByUsername(req.params.id)
 		res.redirect("/user/admin");
 	} else res.redirect("/404");
 });
 
-router.get("/user/admin", (req, res) => {
-	if (req.session.user && req.session.user.type === "Admin") {
-		FuncUser.getAll(result => {
-			res.render("pages/profile/admin", {
-				user: req.session.user,
-				results: result
-			});
-		});
+router.get("/user/admin", aux.authHandler, async (req, res) => {
+	if (req.session.user.utype === "Admin") {
+		let results = await manageUser.getAllUsers()
+		res.render("pages/profile/admin", {
+			user: req.session.user,
+			results: results
+		})
 	} else res.redirect("/404");
 });
 
 router.post("/file/uploads/profile/Main", aux.authHandler, function(req, res) {
 	IS.upload.single("Image1")(req, res, _err => {
 		let loc = "/images/" + req.file.filename
-		console.log(loc)
 		manageUser.updateProfilePicture(req.session.user._id, loc);
 		res.redirect("/profile")
 	});
@@ -334,7 +170,6 @@ router.post("/file/uploads/profile/Main", aux.authHandler, function(req, res) {
 router.post("/file/uploads/profile/First", aux.authHandlerPost, function(req, res) {
 	IS.upload.single("Image2")(req, res, _err => {
 		let loc = "/images/" + req.file.filename
-		console.log(loc)
 		manageUser.updateProfilePictureOne(req.session.user._id, loc);
 		res.redirect("/profile")
 	});
@@ -343,7 +178,6 @@ router.post("/file/uploads/profile/First", aux.authHandlerPost, function(req, re
 router.post("/file/uploads/profile/Second", aux.authHandlerPost, function(req, res) {
 	IS.upload.single("Image3")(req, res, _err => {
 		let loc = "/images/" + req.file.filename
-		console.log(loc)
 		manageUser.updateProfilePictureTwo(req.session.user._id, loc);
 		res.redirect("/profile")
 	});
@@ -352,7 +186,6 @@ router.post("/file/uploads/profile/Second", aux.authHandlerPost, function(req, r
 router.post("/file/uploads/profile/Third", aux.authHandlerPost, function(req, res) {
 	IS.upload.single("Image4")(req, res, _err => {
 		let loc = "/images/" + req.file.filename
-		console.log(loc)
 		manageUser.updateProfilePictureThree(req.session.user._id, loc);
 		res.redirect("/profile")
 	});
@@ -361,7 +194,6 @@ router.post("/file/uploads/profile/Third", aux.authHandlerPost, function(req, re
 router.post("/file/uploads/profile/Fourth", aux.authHandlerPost, function(req, res) {
 	IS.upload.single("Image5")(req, res, _err => {
 		let loc = "/images/" + req.file.filename
-		console.log(loc)
 		manageUser.updateProfilePictureFour(req.session.user._id, loc);
 		res.redirect("/profile")
 	});

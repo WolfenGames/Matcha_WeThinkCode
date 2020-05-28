@@ -294,9 +294,8 @@ $(document).ready(function() {
 			if (tag) {
 				if (myCurrTags.indexOf(tag) === -1) {
 					$("#likes-list").append(
-						' <button class="tag-button" onclick="removeTag(\'' +
-							tag +
-							"', this)\">" +
+						' <button class="tag-button" onclick="removeTag(0' +
+							",'"+tag+"', this)\">" +
 							tag +
 							"</button>"
 					);
@@ -307,8 +306,8 @@ $(document).ready(function() {
 				}).done(result => {
 					$.get("/tags/get").done(result => {
 						result.forEach(element => {
-							if (availableTags.indexOf(element["Tag"]) === -1)
-								availableTags.push(element["Tag"]);
+							if (availableTags.indexOf(element.tag) === -1)
+								availableTags.push(element.tag);
 							$("#tags").autocomplete({
 								source: availableTags
 							});
@@ -322,13 +321,13 @@ $(document).ready(function() {
 	//Update my list
 	$.get("/tags/get/mine").done(result => {
 		result.forEach(element => {
-			myCurrTags.push(element);
+			myCurrTags.push(element.tag);
 		});
 	});
 	$.get("/tags/get").done(result => {
 		result.forEach(element => {
-			if (availableTags.indexOf(element["Tag"]) === -1)
-				availableTags.push(element["Tag"]);
+			if (availableTags.indexOf(element.tag) === -1)
+				availableTags.push(element.tag);
 			$("#tags").autocomplete({
 				source: availableTags
 			});
@@ -338,8 +337,8 @@ $(document).ready(function() {
 	setInterval(function() {
 		$.get("/tags/get").done(result => {
 			result.forEach(element => {
-				if (availableTags.indexOf(element["Tag"]) === -1)
-					availableTags.push(element["Tag"]);
+				if (availableTags.indexOf(element.tag) === -1)
+					availableTags.push(element.tag);
 				$("#tags").autocomplete({
 					source: availableTags
 				});
@@ -425,8 +424,8 @@ function initMap() {
 	}
 }
 
-function removeTag(tagname, el) {
-	$.post("/tag/delete", { Tag: tagname }).done(data => {
+function removeTag(tagid, tagname, el) {
+	$.post("/tag/delete", { tag_id: tagid, tag_name: tagname }).done(data => {
 		$(el).remove();
 		availableTags.splice(availableTags.indexOf(tagname), 1);
 		myCurrTags.splice(myCurrTags.indexOf(tagname), 1);

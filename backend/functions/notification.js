@@ -1,85 +1,23 @@
 const db = require("../database/db");
-const _mongo          = require('mongodb');
 ("use strict");
 
-function addNotification(user, message) {
-    var oID =  new _mongo.ObjectID(user);
-    db.mongo
-    .connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(db => {
-        var dbo = db.db("Matcha");
-        dbo.collection("Users")
-            .updateOne(
-                { _id: oID },
-                {
-                    $push: {
-                        notifications: {
-                            $each: [message],
-                            $position: 0
-                        }
-                    },
-                    $set: {
-                        nNotification: true
-                    }
-                }
-            )
-            .catch(err => {});
-    })
-    .catch(err => {
-        console.log("Cant connect to database " + err);
-    });
+async function addNotification(user, message) {
+    await db.pool.query('CALL add_notification($1::int, $2)',[user._id, message])
 }
 
-function clearNotification(user) {
-    var oID =  new _mongo.ObjectID(user);
-    db.mongo
-    .connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(db => {
-        var dbo = db.db("Matcha");
-        dbo.collection("Users")
-            .updateOne(
-                { _id: oID },
-                {
-                    $set: {
-                        nNotification: false
-                    }
-                }
-            )
-            .catch(err => {});
-    })
-    .catch(err => {
-        console.log("Cant connect to database " + err);
-    });
+async function clearNotification(user) {
+    await db.pool.query('CALL viewed_notification($1)', [user._id]);
 }
 
-function isNewNotifications(user, cb) {
-    // var oID =  new _mongo.ObjectID(user);
-    // db.mongo
-    // .connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-    // .then(function(db) {
-    //     var dbo = db.db("Matcha");
-    //     var t = dbo.collection("Users")
-    //         .findOne({ _id: oID },)
-    //         .then( function(rep) {
-    //             cb(rep.nNotification)
-    //         })
-    // })
-    cb(null)
+async function isNewNotifications(user) {
+    let notifications = await db.pool.query(`SELECT * FROM get_new_notifications($1::int)`, [user._id])
+    return notifications.rowCount > 0;
 }
 
-function getNotifications(user, cb) {
-        var oID =  new _mongo.ObjectID(user);
-        db.mongo
-        .connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-        .then(db => { 
-            var dbo = db.db("Matcha");
-            dbo.collection("Users")
-                .findOne({_id: oID}, {})
-                .then(function(res) {
-                    cb(res.notifications)
-                })
-        })
-    }
+async function getNotifications(user) {
+    let notifications = await db.pool.query(`SELECT * FROM get_notifications($1::int)`, [user._id])
+    return notifications.rows;
+}
     
 
 module.exports = {

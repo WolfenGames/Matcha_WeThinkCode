@@ -13,7 +13,7 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 		sex: sex.toString(),
 		sexuality: sexuality.toString(),
 		locationType: 0,
-		location: [16.5 + Math.random() * 17, -22 + Math.random() * 12],
+		location: [27.811115 + Math.random() * 1, -25.284806 + Math.random() * 1],
 		locationIp: [0, 0],
 		locationCustom: [0, 0],
 		locationBrowser: [0, 0],
@@ -58,7 +58,6 @@ function generatedUser(first, second, email, age, bio, likes, sex, sexuality) {
 
 async function userSave(uname, email, password, uType, sub, url) {
 	let verifyKey = await crypt.hashSync(uname + email, 10)
-	console.log("password: " + password)
 	await db.pool.query('CALL add_user($1, $2, $3, $4, $5, $6, $7, $8)',
 		[
 			uname,
@@ -84,52 +83,9 @@ async function unameExists(uname) {
 	return (res.rowCount > 0)
 }
 
-function getAll(cb) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.find({})
-				.toArray()
-				.then(res => {
-					cb(res);
-				})
-				.catch(err => {
-					console.log("Cant use email Exists => " + err);
-				});
-		})
-		.catch(err => {
-			console.log(
-				"Can't connect to database called by getAll() -> " + err
-			);
-		});
-}
-
-function deleteUser(name) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.deleteOne({ username: name })
-				.then(res => {})
-				.catch(err => {
-					console.log("Cant use email Exists => " + err);
-				});
-		})
-		.catch(err => {
-			console.log(
-				"Can't connect to database called by getAll() -> " + err
-			);
-		});
-}
-
 module.exports = {
 	userSave: userSave,
 	emailExists: emailExists,
 	unameExists: unameExists,
 	generatedUser: generatedUser,
-	getAll: getAll,
-	deleteUser: deleteUser
-};
+}

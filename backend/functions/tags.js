@@ -1,73 +1,35 @@
 const db = require("../database/db");
-const conn = db.mongo;
 
 async function getTags() {
-	let res = await db.pool.query('SELECT tags from Tags')
+	let res = await db.pool.query('SELECT * from Tags')
 	return (res.rows)
 }
 
 
-function setTags(query, user, cb) {
-	// if (query && user) {
-	// 	conn.connect(db.url, {
-	// 		useNewUrlParser: true,
-	// 		useUnifiedTopology: true
-	// 	})
-	// 		.then(db => {
-	// 			var dbo = db.db("Matcha");
-	// 			dbo.collection("Tags")
-	// 				.insertOne({ Tag: query })
-	// 				.then(_res => {
-	// 					dbo.collection("Users")
-	// 						.findOneAndUpdate(
-	// 							{ email: user },
-	// 							{ $addToSet: { Tag: query } }
-	// 						)
-	// 						.then(res => {
-	// 							cb(res.tags);
-	// 						});
-	// 				})
-	// 				.catch(_err => {});
-	// 		})
-	// 		.catch(() => {});
-	// }
+async function setTags(user, tag) {
+	await db.pool.query('CALL add_tag_for_user($1::int, $2::varchar, $3::varchar)',
+		[
+			user._id,
+			user.username,
+			tag
+		]
+	)
 }
 
-function getUpdatedTags(email, cb) {
-	// conn.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-	// 	.then(db => {
-	// 		var dbo = db.db("Matcha");
-	// 		dbo.collection("Users")
-	// 			.findOne({ email: email })
-	// 			.then(result => {
-	// 				db.close();
-	// 				cb(result.tags);
-	// 			})
-	// 			.catch(err => {
-	// 				console.log("3: Cant connect to collection -> " + err);
-	// 			});
-	// 	})
-	// 	.catch(err => {
-	// 		console.log("Cant connect to database due to => " + err);
-	// 	});
+async function getUpdatedTags(user) {
+	let result = await db.pool.query('SELECT * FROM get_tags_for_user($1::int)', [user._id])
+	return (result.rows)
 }
 
-function removeTag(email, tag) {
-	// conn.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-	// 	.then(db => {
-	// 		var dbo = db.db("Matcha");
-	// 		dbo.collection("Users")
-	// 			.updateOne({ email: email }, { $pull: { Tag: tag } })
-	// 			.then(() => {
-	// 				db.close();
-	// 			})
-	// 			.catch(err => {
-	// 				console.log("Cannot remove due to reason " + err);
-	// 			});
-	// 	})
-	// 	.catch(err => {
-	// 		console.log("Cannot connect to database due to reason => " + err);
-	// 	});
+async function removeTag(user, tag_id, tag_name) {
+	
+	await db.pool.query('CALL delete_tag_for_user($1::int, $2::varchar, $3::int);', 
+		[
+			user._id,
+			tag_name,
+			tag_id
+		]
+	)
 }
 
 module.exports = {

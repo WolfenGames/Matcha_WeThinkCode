@@ -7,8 +7,7 @@ const {
 	RoomUser
 } = require("./backend/functions/chat");
 const { Message } = require("./backend/classes/Message");
-const _mongo          = require('mongodb');
-const db = require("./backend/database/db");
+const manageUser = require("./backend/functions/userManagement")
 const notification = require("./backend/functions/notification")
 
 const normalizePort = val => {
@@ -68,65 +67,53 @@ io.use((socket, next) => {
 });
 
 io.on("connection", function(socket) {
-	socket.on("init", id => {
+	socket.on("init", async id => {
 		if (
 			socket.request.session &&
-			socket.request.session.user._id === id.id1
+			socket.request.session.user._id == id.id1
 		) {
-			RoomLogin(id.id1, id.id2, res => {
-				getRoomChats(res, chats => {
-					socket.join(res);
-					io.sockets
-						.in(res)
-						.emit("joined", {
-							roomName: res,
-							history: chats,
-							person: socket.request.session.user.username
-						});
-					res = null;
-				});
-			});
+			let room = await RoomLogin(id.id1, id.id2)
+			let chats = await getRoomChats(room.room_login)
+			socket.join(room.room_login)
+			io.sockets.in(room.room_login)
+				.emit("joined", {
+					roomName: room.room_login,
+					history: chats,
+					person: socket.request.session.user.username
+				})
 		}
 	});
 
-	socket.on("chat message", function(roomname, sender, msg) {
-		RoomUser(roomname, res => {
-			if (res) {
-				if (
-					socket.request.session.user._id === res.id1 ||
-					socket.request.session.user._id === res.id2
-				) {
-					if (msg) {
-						var newMessage = new Message(
-							roomname,
-							sender,
-							msg,
-							Date.now()
-						);
-						addChat(newMessage);
-						io.sockets
-							.in(roomname)
-							.emit("chat message", newMessage);
-						if (socket.request.session.user._id === res.id1) {
-							var rec = res.id2;
-							var sen = res.id1;
-						} else {
-							var rec = res.id1;
-							var sen = res.id2;
-						};
-						var oID =  new _mongo.ObjectID(sen);
-						db.mongo
-							.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-							.then(db => {
-								var dbo = db.db("Matcha");
-								return dbo.collection("Users")
-									.findOne({_id: oID}, {username: 1})
-							}).then(function(res){
-								notification.addNotification(rec ,"<img src='"+res.picture.Picture1+"'>"+res.username+" sent you a message");
-							});
-					}
+	socket.on("chat message", async function(roomname, sender, msg) {
+		let res = await RoomUser(roomname)
+		if (res) {
+			if (
+				socket.request.session.user._id == res.id1 ||
+				socket.request.session.user._id == res.id2
+			) {
+				if (msg) {
+					var newMessage = new Message(
+						roomname,
+						sender,
+						msg,
+						Date.now()
+					);
+					addChat(newMessage);
+					io.sockets
+						.in(roomname)
+						.emit("chat message", newMessage);
+					if (socket.request.session.user._id === res.id1) {
+						var rec = res.id2;
+						var sen = res.id1;
+					} else {
+						var rec = res.id1;
+						var sen = res.id2;
+					};
+					let user = await manageUser.getUserInfo(sen)
+					let reciever = await manageUser.getUserInfo(rec)
+					notification.addNotification(reciever ,"<img src='"+user.profile_picture+"'>"+user.username+" sent you a message");
 				}
 			}
-		});
+		}
 	});
 });

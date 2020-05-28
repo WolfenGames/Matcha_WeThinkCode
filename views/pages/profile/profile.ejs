@@ -28,19 +28,23 @@
 			var subscription = user['email_subscription'];
 			var biography = user['biography'];
 			var fame = user['fame'];
-			var age = user['dob'];
-			console.log(age)
+			var age = user['age'];
+			var dob = user['dob']
 			var email = user['email'];
 			var userType = user['utype'];
 			var Sexuality = user['sexuality'];
 			var Gender = user['sex'];
 			var firstname = user['firstname'] === null ? 'You\'re in dire need of a firstname' : user['firstname'];
 			var lastname = user['surname'] === null ? 'You\'re in dire need of a lastname' : user['surname'];
-			if (usertags)
-				var tags = usertags;
+			var tags = usertags ? usertags : [];
 			var views = user['views'];
-			var lastTime = ''// user['lastTime'];
-			var locTpye = ''// user['locationType']
+			var lastTime = user['last_login'];
+			var locTpye = user['loctype']
+			const d = new Date(dob)
+			const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+			const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
+			const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+			var parsedDate = `${ye}-${mo}-${da}`
 		}
 	%>
 	<main>
@@ -80,9 +84,9 @@
 					<textarea class="form-control" id="biography" rows="5" style="resize: none" maxlength="150"><%= biography %></textarea>
 					<label for="biography" id="biographylength"></label>
 					<p>Which method of location would you like to use:</p>
-					<input type="radio" name="locType" value="Ip" <% if (locTpye == 0) {%> checked="true" <%}%> > Ip<br>
-					<input type="radio" name="locType" value="Browser" <% if (locTpye == 1) {%> checked="true" <%}%> > Browser<br>
-					<input type="radio" name="locType" value="Custom" <% if (locTpye == 2) {%> checked="true" <%}%> > Custom<br>
+					<input type="radio" name="locType" value="IP" <% if (locTpye == "IP") {%> checked="true" <%}%> > Ip<br>
+					<input type="radio" name="locType" value="BROWSER" <% if (locTpye == "BROWSER") {%> checked="true" <%}%> > Browser<br>
+					<input type="radio" name="locType" value="CUSTOM" <% if (locTpye == "CUSTOM") {%> checked="true" <%}%> > Custom<br>
 					<div id='map'></div>
 						
 				</div>
@@ -109,7 +113,7 @@
 									<label class="control-label" for="DateOfBirth">Date of birth</label>
 									<input class="form-control" id="DateOfBirth" name="date" type="date"/>
 									<script>
-										$('#DateOfBirth').val("<%= age %>");
+										$('#DateOfBirth').val("<%= parsedDate %>");
 									</script>
 								</div>
 							</form>
@@ -209,8 +213,10 @@
 			<hr>
 			<div class="grid">
 				<div id='likes-list' class="mx-auto">
-				<% for (var i = 0; i < tags.length; i++) { %>
-					<button class="tag-button" onclick="removeTag('<%=tags[i] %>', this)"><%=tags[i] %></button>
+				<% for (var i = 0; i < tags.length; i++) { 
+					let tag_to_add = tags[i]._id
+				%>
+					<button class="tag-button" onclick="removeTag('<%= tag_to_add %>','<%= tags[i].tag %>', this)"><%=tags[i].tag %></button>
 				<% } %>
 				</div>
 			</div>

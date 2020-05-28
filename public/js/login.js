@@ -17,7 +17,7 @@ $(document).ready(function() {
 				$("#error-modal").modal();
 				$("#errorModalTitle").html("Error has occured");
 				$("#errorModalText").html(msg["msg"]);
-			} else location.replace("/");
+			} else location.replace("/profile");
 		});
 	});
 	$("#Resend-Button").click(function(e) {

@@ -23,9 +23,9 @@
 								<% matches.forEach(person => {
 									%><div name='clickme' class="chat_list" onclick="initChat('<%= user._id %>', '<%= person._id %>', this)">
 										<div id ="" class="chat_people">
-											<div class="chat_img"> <img src="<%= person.Prof%>" alt="profile pic"></div>
+											<div class="chat_img"> <img src="<%= person.profile_picture %>" alt="profile pic"></div>
 											<div class="chat_ib">
-												<h5><%= person.username%> <span class="chat_date"></span></h5> <!-- TODO: stuff-->
+												<h5><%= person.username%> <span class="chat_date"></span></h5>
 											</div>
 										</div>
 									</div><%
@@ -92,11 +92,12 @@
 	{
         var blockthing = document.createElement('div');
         var container = document.getElementById('msg_history');
-        var loggedUser =  '<%= user._id %>';
+		var loggedUser =  '<%= user._id %>';
+		var message_to_display = msg.mtext ? msg.mtext : msg.text
         if(msg.sender == loggedUser){
             blockthing.innerHTML = '<div class="outgoing_msg">'+
                                             '<div class="sent_msg">'+
-                                                '<p>'+ msg.text +'</p>'+
+                                                '<p>'+ message_to_display +'</p>'+
                                                 '<span class="time_date">'+ datestuffrename(msg.date) +'</span>' +
                                             '</div>'+
                                     '</div>';
@@ -105,7 +106,7 @@
             blockthing.innerHTML = '<div class="incoming_msg">'+
                                         '<div class="received_msg">'+
                                             '<div class="received_withd_msg">'+
-                                            '<p>'+ msg.text +'</p>'+
+                                            '<p>'+ message_to_display +'</p>'+
                                             '<span class="time_date">'+ datestuffrename(msg.date) +'</span></div>'+
                                         '</div>'+
                                     '</div>';

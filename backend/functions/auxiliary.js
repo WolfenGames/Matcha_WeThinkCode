@@ -38,16 +38,23 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2, cb) {
 	cb(d);
 }
 
+function _calculateAge(birthday) {
+    var ageDifMs = Date.now() - birthday;
+    var ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
+
 async function authHandler(req, res, next) {
 	if (req.session.user)
 	{
 		const result = await manageUser.getUserInfo(req.session.user._id)
-		console.log(result)
-		result.blocks = await manageUser.getBlocks(req.session.user._id)
-		result.viewed_by = await manageUser.getViewedBy(req.session.user._id)
-		result.likes = await manageUser.getLikes(req.session.user._id)
-		result.matches = await manageUser.getMatches(req.session.user._id)
-		
+		// console.log(result)
+		result.blocks = await manageUser.getBlocksCount(req.session.user._id)
+		result.viewed_by = await manageUser.getViewedByCount(req.session.user._id)
+		result.likes = await manageUser.getLikesCount(req.session.user._id)
+		result.matches = await manageUser.getMatchesCount(req.session.user._id)
+		result.age = _calculateAge(Date.parse(result.dob))
+		result.views = await manageUser.getMyViews(req.session.user._id)
 		//TODO: Implement
 		result.location = [0,0]
 
@@ -55,7 +62,7 @@ async function authHandler(req, res, next) {
 		next();
 	}
 	else
-    	res.redirect('/404');
+    	res.redirect('/login');
 }
 
 async function authHandlerPost(req, res, next) {

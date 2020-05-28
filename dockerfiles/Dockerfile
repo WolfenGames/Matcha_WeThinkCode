@@ -1,7 +1,7 @@
-FROM node:latest
+FROM node:14.2
 
-COPY app/* .
+COPY . .
 
 RUN npm i
 
-ENTRYPOINT [ "npm run server" ]
+CMD [ "node", "server.js" ]

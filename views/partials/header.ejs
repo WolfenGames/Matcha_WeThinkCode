@@ -10,7 +10,7 @@
 				<li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
 				<li class="nav-item"><a class="nav-link" href="/signup">Signup</a></li>
 				<% } else {
-					if (user['type'] === 'Admin') {
+					if (user['utype'] === 'Admin') {
 						%>
 							<li class="nav-item"><a class="nav-link" href="/user/admin">Admin Panel</a></li>
 						<%

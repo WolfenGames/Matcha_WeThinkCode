@@ -45,7 +45,7 @@
 				var uid = results[i]['_id']; 
 				var uname = results[i]['username'];
 				var pass = results[i]['password'];
-				var type = results[i]['type'];
+				var type = results[i]['utype'];
 				var bio = results[i]['biography'];
 				%>
 					<div class="w-100">
@@ -61,7 +61,7 @@
 									id: <%= uid %>
 								</p>
 								<% if (user['_id'] != results[i]['_id']) { %> 
-								<input class="btn btn-warning" type="submit" value="Delete User: <%= uname %>" onclick='location.href="/delete/<%= uname %>"'>
+								<input class="btn btn-warning" type="submit" value="Delete User: <%= uname %>" onclick='location.href="/delete/<%= uid %>"'>
 								<%}%>
 								<hr>
 							</div>

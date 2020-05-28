@@ -1,92 +1,22 @@
 const db = require("../database/db");
 
-function deleteByUsername(email, cb) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			var query = { email: email };
-			dbo.collection("Users")
-				.deleteOne(query)
-				.then(res => {
-					cb("Suceesss");
-				})
-				.catch(err => {
-					cb("Error");
-					console.log(
-						"Can't deleteby one (email:: " + email + ") -> " + err
-					);
-				});
-			db.close();
-		})
-		.catch(err => {
-			cb("Cant connect to database");
-			console.log(
-				"Cant connect to database called by deleteByUsername(" +
-					user +
-					")"
-			);
-		});
+async function deleteByUsername(uid) {
+	await db.pool.query('CALL delete_user($1::int);', [uid])
 }
 
-function deleteAll() {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			var query = { type: "User" };
-			dbo.collection("Users")
-				.deleteMany(query)
-				.then(res => {})
-				.catch(err => {
-					console.log("Cant delete many called by deleteAll()");
-				});
-			db.close();
-		})
-		.catch(err => {
-			console.log("Cant connect to database called by deleteAll");
-		});
+async function deleteAll() {
+	await db.pool.query('CALL delete_generated_users()')
 }
 
-function updateUserOne(query, set, cb) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.updateOne(query, set)
-				.then(() => {
-					cb(true);
-				})
-				.catch(err => {
-					console.log(
-						"Cant update called by updateUserOne(" +
-							query +
-							"," +
-							set +
-							") due to => " +
-							err
-					);
-					cb(false);
-				});
-			db.close();
-		})
-		.catch(err => {
-			console.log(
-				"Can't connect to database called by updateUserOne(" +
-					query +
-					", " +
-					set +
-					") due to => " +
-					err
-			);
-			cb(false);
-		});
+async function getAllUsers()
+{
+	let result = await db.pool.query('SELECT * FROM get_users()')
+	return result.rows
 }
 
-async function getTags(uid){
-	let res = await db.pool.query("SELECT * FROM get_tags_for_user($1::int);", [uid])
-	return (res.rows[0])
+async function getTags(user){
+	let result = await db.pool.query('SELECT * FROM get_tags_for_user($1::int)', [user._id])
+	return (result.rows)
 }
 
 async function getUserInfo(uid) {
@@ -96,28 +26,57 @@ async function getUserInfo(uid) {
 
 
 async function getUserInfoByEmail(email) {
-	let res = await db.pool.query('SELECT * FROM get_user($1::varchar);', [email])
+	let res = await db.pool.query('SELECT * FROM get_user_by_email($1::varchar);', [email])
 	return (res.rows[0])
 }
 
+async function getMatchesCount(uid) {
+	let res = await db.pool.query('SELECT * FROM matches($1::int);', [uid])
+	return res.rowCount
+}
+
+
 async function getMatches(uid) {
 	let res = await db.pool.query('SELECT * FROM matches($1::int);', [uid])
+	return res.rows
+}
+
+async function getLikesCount(uid) {
+	let res = await db.pool.query('SELECT * FROM get_likes($1::int);', [uid])
 	return res.rowCount
 }
 
 async function getLikes(uid) {
 	let res = await db.pool.query('SELECT * FROM get_likes($1::int);', [uid])
+	return res.rows
+}
+
+async function getMyViews(uid)
+{
+	let res = await db.pool.query('SELECT * FROM get_viewed_by($1::int);', [uid])
 	return res.rowCount
 }
 
-async function getViewedBy(uid) {
+async function getViewedByCount(uid) {
 	let res = await db.pool.query('SELECT * FROM get_views($1::int);', [uid])
 	return res.rowCount
 }
 
-async function getBlocks(uid) {
+
+async function getViewedBy(uid) {
+	let res = await db.pool.query('SELECT * FROM get_viewed_by($1::int);', [uid])
+	return res.rows
+}
+
+async function getBlocksCount(uid) {
 	let res = await db.pool.query('SELECT * FROM get_blocks($1::int);', [uid])
 	return res.rowCount
+}
+
+
+async function getBlocks(uid) {
+	let res = await db.pool.query('SELECT * FROM get_blocks($1::int);', [uid])
+	return res.rows
 }
 
 async function reportUser(reporter, bad) {
@@ -141,10 +100,8 @@ async function updateBio(uid, bio) {
 
 		UPDATE UserInfo
 			SET biography = $2::varchar
-		FROM UserInfo as ui
-		INNER JOIN Users as u on u._id = ui.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, bio])
 }
@@ -154,10 +111,8 @@ async function updateGender(uid, sex) {
 
 		UPDATE UserInfo
 			SET sex = $2::int
-		FROM UserInfo as ui
-		INNER JOIN Users as u on u._id = ui.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, sex])
 }
@@ -167,10 +122,8 @@ async function updateSex(uid, sex) {
 
 		UPDATE UserInfo
 			SET sexuality = $2::int
-		FROM UserInfo as ui
-		INNER JOIN Users as u on u._id = ui.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, sex])
 }
@@ -180,10 +133,8 @@ async function updateFirstname(uid, firstname) {
 
 		UPDATE UserInfo
 			SET firstname = $2::varchar
-		FROM UserInfo as ui
-		INNER JOIN Users as u on u._id = ui.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, firstname])
 }
@@ -193,10 +144,8 @@ async function updateLastname(uid, lastname) {
 
 		UPDATE UserInfo
 			SET surname = $2::varchar
-		FROM UserInfo as ui
-		INNER JOIN Users as u on u._id = ui.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, lastname])
 }
@@ -206,10 +155,8 @@ async function updateDOB(uid, dob) {
 
 		UPDATE UserInfo
 			SET date_of_birth = $2::TIMESTAMP
-		FROM UserInfo as ui
-		INNER JOIN Users as u on u._id = ui.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, dob])
 }
@@ -219,10 +166,8 @@ async function updateProfilePicture(uid, imgloc) {
 
 		UPDATE Pictures
 			SET profile_picture = $2::varchar
-		FROM Pictures as p
-		INNER JOIN Users as u on u._id = p.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, imgloc])
 }
@@ -232,10 +177,8 @@ async function updateProfilePictureOne(uid, imgloc) {
 
 		UPDATE Pictures
 			SET picture_one = $2::varchar
-		FROM Pictures as p
-		INNER JOIN Users as u on u._id = p.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, imgloc])
 }
@@ -245,10 +188,8 @@ async function updateProfilePictureTwo(uid, imgloc) {
 
 		UPDATE Pictures
 			SET picture_two = $2::varchar
-		FROM Pictures as p
-		INNER JOIN Users as u on u._id = p.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, imgloc])
 }
@@ -258,10 +199,8 @@ async function updateProfilePictureThree(uid, imgloc) {
 
 		UPDATE Pictures
 			SET picture_three = $2::varchar
-		FROM Pictures as p
-		INNER JOIN Users as u on u._id = p.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, imgloc])
 }
@@ -271,167 +210,121 @@ async function updateProfilePictureFour(uid, imgloc) {
 
 		UPDATE Pictures
 			SET picture_four = $2::varchar
-		FROM Pictures as p
-		INNER JOIN Users as u on u._id = p.uid
 		WHERE
-			u._id = $1::int;
+			uid = $1::int;
 	
 	`,[uid, imgloc])
 }
 
-function getHighestView(cb) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.find()
-				.sort({ views: -1 })
-				.limit(1)
-				.toArray()
-				.then(res => {
-					if (res[0] && res[0].views) cb(res[0].views);
-					else cb(0);
-				})
-				.catch(err => {
-					console.log("Fuck " + err);
-				});
-		})
-		.catch(err => {
-			console.log("Cant connect to database " + err);
-		});
+async function likeUser(liker, likee)
+{
+	await db.pool.query(`CALL like_user($1::int, $2::int)`, [liker, likee])
 }
 
-function setGeoLocBrowser(long, lat, user) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.updateOne(
-					{ email: user.email },
-					{
-						$set: {
-							locationBrowser: [parseFloat(long), parseFloat(lat)]
-						}
-					}
-				)
-				.catch(err => {});
-		})
-		.catch(err => {
-			console.log("Cant connect to database " + err);
-		});
+async function blockUser(blocker, blockee)
+{
+	await db.pool.query(`CALL block_user($1::int, $2::int)`, [blocker, blockee])
 }
 
-function setTypeOfLoc(locType, user) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.updateOne(
-					{ email: user.email },
-					{
-						$set: {
-							locationType: parseInt(locType)
-						}
-					}
-				)
-				.catch(err => {});
-		})
-		.catch(err => {
-			console.log("Cant connect to database " + err);
-		});
+async function updatePassword(email, password, verify)
+{
+	await db.pool.query(`CALL update_password($1::varchar, $2::varchar, $3::varchar)`, [email, password, verify])
 }
 
-function setCustomLoc(user, long, lat) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.updateOne(
-					{ email: user.email },
-					{
-						$set: {
-							locationCustom: [long, lat]
-						}
-					}
-				)
-				.catch(err => {});
-		})
-		.catch(err => {
-			console.log("Cant connect to database " + err);
-		});
+async function unbanUser(uid) {
+	await db.pool.query(`
+		delete from reports where reported = $1;
+		UPDATE UserInfo SET banned = false WHERE uid = $1;`,
+		[uid]
+	)
 }
 
-async function updateLoc(user) {
-	switch (user.locationType) {
-		case 0:
-			user.location = user.locationIp;
-			break;
-		case 1:
-			user.location = user.locationBrowser;
-			break;
-		case 2:
-			user.location = user.locationCustom;
-			break;
-	}
-	await db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.updateOne(
-					{ email: user.email },
-					{
-						$set: {
-							location: user.location
-						}
-					}
-				)
-				.catch(err => {});
-		})
-		.catch(err => {
-			console.log("Cant connect to database " + err);
-		});
+async function getLikedUsers(user) {
+	let likes = await db.pool.query(`
+		SELECT * FROM get_my_likes($1::int)`,
+		[user._id])
+	return likes.rows
 }
 
-function filter(thing, cb) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			dbo.collection("Users")
-				.find(thing)
-				.toArray()
-				.then(res => {
-					cb(res);
-				})
-				.catch(err => {});
-		})
-		.catch(err => {
-			console.log("Cant connect to database " + err);
-		});
+async function getBlockedUsers(user) {
+	let blocks = await db.pool.query(
+		`SELECT * from get_my_blocks($1::int)`,
+		[user._id]
+	)
+	return blocks.rows
+}
+
+async function viewUser(user, view)
+{
+	await db.pool.query(`CALL view_user($1::int, $2::int);`, [user, view])
+}
+
+async function getUsers(user) {
+	let users = await db.pool.query(`SELECT * FROM get_users_for_user($1::int)`,[user._id])
+	return users.rows
+}
+
+async function updateLocation(uid, type, long, lat)
+{
+	await db.pool.query(`CALL update_location($1, $2, $3, $4)`, [uid, type, long, lat])
+}
+
+// TODO: DO I NEED YOU?
+async function getHighestView() {
+
+}
+
+async function updateVerification(email, hash) {
+	await db.pool.query('CALL update_verification($1, $2)', [email, hash])
+}
+
+async function setIPBrowser(user, long, lat) {
+	await updateLocation(user._id, 'IP', long, lat)
+}
+
+async function setGeoLocBrowser(user, long, lat) {
+	await updateLocation(user._id, 'BROWSER', long, lat)
+}
+
+async function setCustomLoc(user, long, lat) {
+	await updateLocation(user._id, 'CUSTOM', long, lat)
+}
+
+async function setTypeOfLoc(user, type) {
+	await db.pool.query('CALL update_location_type($1, $2);', [user._id, type])
+}
+
+async function updateLoc(user, long, lat) {
+	await db.pool.query('CALL update_my_location($1, $2, $3);', [user._id, long, lat])
+}
+
+function filter() {
+	
 }
 
 module.exports = {
 	deleteByUsername: deleteByUsername,
 	deleteAll: deleteAll,
-	updateUserOne: updateUserOne,
 	getHighestView: getHighestView,
 	setGeoLocBrowser: setGeoLocBrowser,
 	setTypeOfLoc: setTypeOfLoc,
 	updateLoc: updateLoc,
+	setIPBrowser,
 	setCustomLoc: setCustomLoc,
 	filter: filter,
 	getUserInfo: getUserInfo,
 	getUserInfoByEmail,
 	getTags,
 	getMatches,
+	getMatchesCount,
 	getLikes,
+	getLikesCount,
 	getViewedBy,
+	getViewedByCount,
+	getMyViews,
 	getBlocks,
+	getBlocksCount,
+	getUsers,
 	reportUser,
 	updateEmail,
 	updateBio,
@@ -444,5 +337,16 @@ module.exports = {
 	updateProfilePictureOne,
 	updateProfilePictureTwo,
 	updateProfilePictureThree,
-	updateProfilePictureFour
+	updateProfilePictureFour,
+	updatePassword,
+	likeUser,
+	blockUser,
+	unbanUser,
+	getLikedUsers,
+	getBlockedUsers,
+	viewUser,
+	updateLocation,
+	getAllUsers,
+	updateVerification
 };
+																																																			

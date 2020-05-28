@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const ListUsers = require("../functions/userList");
 const manageUser = require("../functions/userManagement");
 const FuncUser = require("../functions/userSave");
 const bcrypt = require("bcrypt");
@@ -14,39 +13,20 @@ const geoip = require("geoip-lite");
 var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$#!%*?&_]{8,}$/;
 var email_regex = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,10})$/;
 
-router.get("/", function(req, res) {
-	if (!req.session.user) res.redirect("/login");
-	else {
-		manageUser.getUserInfo(req.session.user.email, result => {
-			var user = req.session.user;
-			req.session.setup =
-				!user["username"] ||
-				!user["firstname"] ||
-				!user["surname"] ||
-				!user["sex"] ||
-				!user["sexuality"] ||
-				!user["biography"] ||
-				!user["Prof"]
-					? false
-					: true;
-			req.session.user = result;
-			ListUsers.ListUser(user, result => {
-				res.render("pages/index", {
-					user: req.session.user,
-					users: result,
-					setup: req.session.setup
-				});
-			});
-		});
-	}
+router.get("/", aux.authHandler, async function(req, res) {
+	let users = await manageUser.getUsers(req.session.user)
+	res.render("pages/index",{
+		user: req.session.user,
+		users: users,
+		setup: true
+	})
 });
 
 router.get("/profile", aux.authHandler, async function(req, res) {
-	console.log(req.session.user)
-	const tags = await manageUser.getTags(req.session.user._id)
+	const tags = await manageUser.getTags(req.session.user)
 	res.render("pages/profile/profile", {
 		user: req.session.user,
-		usertags: tags ? tags : []
+		usertags: tags
 	});
 });
 
@@ -55,20 +35,9 @@ router.get("/login", function(req, res) {
 	else res.render("pages/profile/login", { user: req.session.user });
 });
 
-router.post("/delete", function(req, res) {
-	if (req.session.user) {
-		manageUser.deleteByUsername(req.body.email, function(reason) {
-			if (reason) {
-				res.end(
-					'{"msg": "OK", "extra": "You have deleted your account"}'
-				);
-			} else {
-				res.end(
-					'{"msg": "Failed", "extra": "Failed to delete your account"}'
-				);
-			}
-		});
-	} else res.end('{"msg":"404"}');
+router.post("/delete", aux.authHandlerPost, async function(req, res) {
+	await manageUser.deleteByUsername(req.session.user._id)
+	res.end('{"msg": "OK", "extra": "You have deleted your account"}');
 });
 
 router.post("/User/Create", async function(req, res) {
@@ -121,7 +90,7 @@ router.get("/logout/user", function(req, res) {
 	res.redirect("/");
 });
 
-router.post("/login/resend", function(req, res) {
+router.post("/login/resend", async function(req, res) {
 	var email = req.body.email;
 	if (email_regex.test(email)) {
 		if (email) {
@@ -132,10 +101,9 @@ router.post("/login/resend", function(req, res) {
 				"/verify?email=" +
 				email +
 				"&verify=";
-			mailer.resendVerify(email, fullUrl, function(ret) {
+			let ret = await mailer.resendVerify(email, fullUrl)
 				if (ret) res.send('{"msg":"OK"}');
 				else res.send('{"msg":"No email associated with account"}');
-			});
 		} else res.send('{"msg":"No email Provided"}');
 	} else res.end('{"msg":"Please enter a valid email address"}');
 });
@@ -156,26 +124,20 @@ router.post("/login/user", async function(req, res) {
 					!user["biography"]
 				)
 					req.session.setup = false;
+
 				else req.session.setup = true;
-				// aux.getIp(result => {
-				// 	if (result) {
-				// 		var loc = geoip.lookup(result);
-				// 		if (!loc) {
-				// 			loc.ll[0] = 0;
-				// 			loc.ll[1] = 0;
-				// 		}
-				// 		req.session.loc = [loc.ll[1], loc.ll[0]];
-				// 		req.session.rooms = [];
-				// 		manageUser.updateUserOne(
-				// 			{ email: req.session.user.email },
-				// 			{ $set: { locationIp: req.session.loc } },
-				// 			cb => {
-				// 				res.end('{"msg": "OK"}');
-				// 			}
-				// 		);
-				// 	} else res.end('{"msg": "error???"}');
-				// });
-				res.end('{"msg": "OK"}')
+				aux.getIp(async result => {
+					if (result) {
+						var loc = geoip.lookup(result);
+						if (!loc) {
+							loc.ll[0] = 0;
+							loc.ll[1] = 0;
+						}
+						await manageUser.setIPBrowser(req.session.user, loc.ll[1], loc.ll[0])
+						await login.updateLoginTime(req.session.user._id)
+						res.end('{"msg": "OK"}')
+					} else res.end('{"msg": "error???"}');
+				});
 			} else {
 				res.end('{"msg": "Needs to be verified or can\'t be found"}');
 			}
@@ -186,7 +148,7 @@ router.post("/login/user", async function(req, res) {
 	} else res.end('{"msg":"Please enter a valid email address"}');
 });
 
-router.post("/login/forgot", function(req, res) {
+router.post("/login/forgot", async function(req, res) {
 	var email = req.body.email;
 	if (email_regex.test(email)) {
 		if (email) {
@@ -197,10 +159,9 @@ router.post("/login/forgot", function(req, res) {
 				"/forgotpass/?email=" +
 				email +
 				"&verify=";
-			mailer.sendPassForget(email, fullUrl, function(ret) {
-				if (ret) res.send('{"msg":"OK"}');
-				else res.send('{"msg":"No email associated with account"}');
-			});
+			let ret = await mailer.sendPassForget(email, fullUrl)
+			if (ret) res.send('{"msg":"OK"}');
+			else res.send('{"msg":"No email associated with account"}');
 		} else res.send('{"msg":"No email Provided"}');
 	} else res.end('{"msg":"Please enter a valid email address"}');
 });

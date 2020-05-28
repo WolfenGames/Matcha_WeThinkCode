@@ -26,8 +26,6 @@
 		"iplocation": "^6.0.4",
 		"ipware": "^2.0.0",
 		"mkdir": "0.0.2",
-		"mongo": "^0.1.0",
-		"mongodb": "^3.5.7",
 		"multer": "^1.4.1",
 		"node": "^13.3.0",
 		"node-pre-gyp": "^0.14.0",

@@ -1,5 +1,6 @@
 const mailer = require("nodemailer");
-const db = require("../database/db");
+const manageUser = require("./userManagement");
+const bcrypt = require("bcrypt");
 ("use strict");
 
 let transporter = mailer.createTransport({
@@ -7,8 +8,8 @@ let transporter = mailer.createTransport({
 	host: "smtp.gmail.com",
 	port: 465,
 	auth: {
-		user: "jwolfmatcha@gmail.com",
-		pass: "foyjiatrodzqtogl"
+		user: process.env.EMAIL,
+		pass: process.env.EMAIL_PASSWORD
 	}
 });
 
@@ -52,102 +53,34 @@ function sendVerifyEmail(email, verifykey) {
 		});
 }
 
-function sendNotificationEmail(email, user) {
-	let mailOptions = {
-		from: "'Matcha' <jwolfmatcha@gmail.com>",
-		to: email + ", <" + email + ">",
-		subject: "Matcha Notification",
-		text: "Matcha Notification",
-		html:
-			"<h1> Good day " +
-			user +
-			" </h1> <br><hr> <p>This is a notification for your account</p>"
-	};
-	transporter
-		.sendMail(mailOptions)
-		.then(info => {})
-		.catch(error => {
-			console.log("Error sending mail: " + error);
-		});
+async function resendVerify(email, url) {
+	let user = await manageUser.getUserInfoByEmail(email)
+	if (user)
+	{
+		let newhash = await bcrypt.hashSync(Date.now() + '', 10)
+		await manageUser.updateVerification(email, newhash);
+		sendVerifyEmail(email, url = user.verification_key)
+		return true;
+	}
+	else
+		return false;
 }
 
-function resendVerify(email, url, cb) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			var query = { email: email };
-			dbo.collection("Users")
-				.findOne(query)
-				.then(res => {
-					if (res) {
-						if (res["verification"]) {
-							sendVerifyEmail(email, url + res["verification"]);
-							cb(true);
-						} else cb(false);
-					} else cb(false);
-					db.close();
-				})
-				.catch(err => {
-					console.log(
-						"Cant connect to collection 'Users' due to => " + err
-					);
-					cb(false);
-				});
-			db.close();
-		})
-		.catch(err => {
-			console.log(
-				"Cant connect to database called by resendVerify(" +
-					email +
-					", ...)"
-			);
-			cb(false);
-		});
-}
-
-function sendPassForget(email, url, cb) {
-	db.mongo
-		.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(db => {
-			var dbo = db.db("Matcha");
-			var query = { email: email };
-			dbo.collection("Users")
-				.findOne(query)
-				.then(res => {
-					if (res) {
-						if (res["verification"]) {
-							sendPassForgetEmail(
-								email,
-								url + res["verification"]
-							);
-							cb(true);
-						} else cb(false);
-					} else {
-						cb(false);
-					}
-				})
-				.catch(err => {
-					console.log(
-						"Cant connect to collection 'Users' due to => " + err
-					);
-					cb(false);
-				});
-			db.close();
-		})
-		.catch(err => {
-			console.log(
-				"Cant connect to database called by resendVerify(" +
-					email +
-					", ...)"
-			);
-			cb(false);
-		});
+async function sendPassForget(email, url) {
+	let user = await manageUser.getUserInfoByEmail(email)
+	if (user)
+	{
+		let newhash = await bcrypt.hashSync(Date.now() + '', 10)
+		await manageUser.updateVerification(email, newhash)
+		sendPassForgetEmail(email, url + newhash)
+		return true;
+	}
+	else
+		return false;
 }
 
 module.exports = {
 	sendPassForget: sendPassForget,
 	resendVerify: resendVerify,
 	sendVerifyEmail: sendVerifyEmail,
-	sendNotificationEmail: sendNotificationEmail
 };

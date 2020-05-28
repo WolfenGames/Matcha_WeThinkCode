@@ -1,5 +1,17 @@
 version: "2.4"
 services: 
+    matcha_service:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/Dockerfile
+        environment: 
+            EMAIL: ''
+            EMAIL_PASSWRD: ''
+            PORT: 8000
+        image: tmp_matcha:latest
+        ports: 
+            - 8000:8000
+
     posgress_db:
         build:
             context: .
@@ -19,10 +31,3 @@ services:
         image: tmp_matcha_redis_db:latest
         ports:
             - 6379:6379
-    old_db:
-        build:
-            context: .
-            dockerfile: ./dockerfiles/MongoDockerfile
-        image: tmp_matcha_mongo_db:latest
-        ports: 
-            - 27017:27017

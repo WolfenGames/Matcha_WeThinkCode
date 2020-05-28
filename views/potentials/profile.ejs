@@ -12,13 +12,12 @@
 	if (req_user) {
 		var username = req_user['username'] === null ? 'You\'re in dire need of an username' : req_user['username'];
 		var email = req_user['email'];
-		var up = JSON.parse(JSON.stringify(req_user['picture']));
-		var img1 = up['Picture1'];
-		var img2 = up['Picture2'];
-		var img3 = up['Picture3'];
-		var img4 = up['Picture4'];
-		var img5 = up['Picture5'];
-		var prof = req_user['Prof'];
+		var prof = req_user['profile_picture'];
+		var img1 = prof
+		var img2 = req_user['picture_one'];
+		var img3 = req_user['picture_two'];
+		var img4 = req_user['picture_three'];
+		var img5 = req_user['picture_four'];
 		var subscription = req_user['email_subscription'];
 		var biography = req_user['biography'];
 		var fame = req_user['fame'];
@@ -29,19 +28,18 @@
 		var Gender = req_user['sex'];
 		var firstname = req_user['firstname'] === null ? 'You\'re in dire need of a firstname' : req_user['firstname'];
 		var lastname = req_user['surname'] === null ? 'You\'re in dire need of a lastname' : req_user['surname'];
-		var tags = req_user['Tag'];
-		var id = req_user['_id'];		
-		var views = req_user['views'];
-		var lastTime = req_user['lastTime'];
+		var id = req_user['_id'];
+		var lastTime = req_user['last_login'];
 		var date = new Date();
 		var acAge = req_user['actualage']
 		var mydate = new Date(age);
 		var myAge = date.getFullYear() - mydate.getFullYear();
 		var tot = (views / highestView) * 5;
+		var banned = req_user["banned"]
 	}
 	%>
 	<main>
-		<% if (myAge > 17) { %>
+		<% if (myAge > 17 && !banned) { %>
 		<div class="container bg-light rounded-bottom mh-100 page">
 			<hr>
 			<div class="row">
@@ -58,17 +56,10 @@
 		</p>
 			<div class="row w-100">
 				<%
-					let found = false;
-					for (let like of user.likes) {
-						if (like == id) {
-							found = true;
-							break;
-						}
-					}
-					if (found)
+					if (me_likey)
 					{
 						%>
-						<a href="/unlike/<%= id %>" class="btn btn-primary">unLike</a>
+						<a href="/unlike/<%= id %>" class="btn btn-primary">un like</a>
 						<%
 					}
 					else
@@ -76,10 +67,22 @@
 						%>
 						<a href="/like/<%= id %>" class="btn btn-primary">Like</a>
 						<%
-					} %>
-				<!-- <a href="/unlike/<%= id %>" class="btn btn-primary">unLike</a>
-				<a href="/like/<%= id %>" class="btn btn-primary">Like</a> -->
-				<a href="/block/<%= id %>" class="btn btn-warning">block</a>
+					} 
+				
+					if (me_blocky)
+					{
+						%>
+							<a href="/unblock/<%= id %>" class="btn btn-warning">un block</a>
+						<%
+					}
+					else
+					{
+						%>
+							<a href="/block/<%= id %>" class="btn btn-warning">block</a>
+						<%
+					}
+				
+				%>
 				<a href="/report/<%= id %>" class="btn btn-danger">Report</a>
 			</div>
 			<hr>
@@ -203,7 +206,7 @@
 			<div class="grid">
 				<div id='likes-list' class="mx-auto">
 				<% for (var i = 0; i < tags.length; i++) { %>
-					<label class="edit-label"><%=tags[i] %></label>
+					<label class="edit-label"><%=tags[i].tag %></label>
 				<% } %>
 				</div>
 			</div>
@@ -211,6 +214,12 @@
 		</div>
 		</div>
 		</div>
+		<% }
+			if (banned) {
+		%>
+			<div class="container bg-light rounded-bottom mh-100 page">
+				<h1 style="color: #ffaaaa; text-align: center;">THIS USER IS BANNED</h1>
+			</div>
 		<% } %>
 		<!--End Template-->
 	</main>

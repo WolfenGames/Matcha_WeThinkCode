@@ -4,7 +4,7 @@ const mailer = require("./sendmail");
 ("use strict");
 
 async function login(email, password) {
-	const res = await db.pool.query('SELECT * FROM get_user($1);', [email])
+	const res = await db.pool.query('SELECT * FROM get_user_by_email($1::varchar);', [email])
 	let user;
 	if (user = res.rows[0])
 	{
@@ -18,6 +18,11 @@ async function login(email, password) {
 	return null;
 }
 
+async function updateLoginTime(uid) {
+	await db.pool.query('CALL update_last_login($1::int);',[uid])
+}
+
 module.exports = {
-	login: login
+	login: login,
+	updateLoginTime
 };
