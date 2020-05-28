@@ -28,8 +28,8 @@ router.post("/update/loc", (req, res) => {
 router.post("/update/loc/custom", (req, res) => {
 	if (req.body && req.body.long && req.body.lat && req.session.user) {
 		let [long, lat] = [parseFloat(req.body.long), parseFloat(req.body.lat)];
-		manageUser.setCustomLoc(req.session.user, long, lat);
-		manageUser.updateLoc(req.session.user);
+		manageUser.setTypeOfLoc(req.session.user, "CUSTOM")
+		manageUser.updateLocation(req.session.user, long, lat);
 	}
 	res.sendStatus(200);
 });

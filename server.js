@@ -9,6 +9,13 @@ const {
 const { Message } = require("./backend/classes/Message");
 const manageUser = require("./backend/functions/userManagement")
 const notification = require("./backend/functions/notification")
+const dotenv = require('dotenv')
+
+const result = dotenv.config()
+ 
+if (result.error) {
+  throw result.error
+}
 
 const normalizePort = val => {
 	var port = parseInt(val, 10);

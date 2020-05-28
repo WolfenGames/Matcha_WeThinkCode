@@ -37,7 +37,7 @@ app.use(express.static(__dirname + "/../public"));
 app.set("view engine", "ejs");
 
 let sessionMiddleware = session({
-	store: new RedisStore({ client: redisClient }),
+	store: new RedisStore({ client: redisClient, host: process.env.REDIS_SERVER, port: process.env.REDIS_PORT }),
 	secret: "American Pie: Beta House",
 	saveUninitialized: false,
 	cookie: {

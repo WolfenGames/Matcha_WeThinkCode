@@ -147,7 +147,7 @@ async function createProcs() {
 		verify_key varchar,
 		sex varchar,
 		sexuality varchar,
-		age int,
+		age float,
 		fame int,
 		utype varchar,
 		biography varchar,
@@ -173,7 +173,7 @@ async function createProcs() {
 			v.verification_key as verify_key,
 			ui.sex as sex,
 			ui.sexuality as sexuality,
-			ui.age as age,
+			EXTRACT(YEAR FROM age(ui.date_of_birth)) as age,
 			ui.fame as fame,
 			ui.utype as utype,
 			ui.biography as biography,
@@ -1177,6 +1177,65 @@ async function createProcs() {
 		locType = (SELECT ui.locType FROM UserInfo as ui where ui.uid = $1);
 		call update_location($1, loctype, $2, $3);
 		
+	END;
+	$$ LANGUAGE 'plpgsql';
+
+	CREATE OR REPLACE FUNCTION get_users_filter(_uid int, minAge int, maxAge int, minDistance int, maxDistance int, minCompat int, maxCompat int, _sexuality varchar, _sex varchar)
+	RETURNS TABLE (
+		_id integer,
+		username character varying,
+		email character varying,
+		last_login timestamp without time zone,
+		sex character varying,
+		sexuality character varying,
+		_age float,
+		fame integer,
+		utype character varying,
+		biography character varying,
+		profile_picture character varying,
+		picture_one character varying,
+		picture_two character varying,
+		picture_three character varying,
+		picture_four character varying,
+		compatibility float,
+		distance float
+	) 
+	AS $$
+	BEGIN
+		RETURN QUERY
+		SELECT 
+			u._id as _id,
+			u.username as username,
+			u.email as email,
+			u.last_login as last_login,
+			ui.sex as sex,
+			ui.sexuality as sexuality,
+			EXTRACT(YEAR FROM age(ui.date_of_birth)) as _age,
+			ui.fame as fame,
+			ui.utype as utype,
+			ui.biography as biography,
+			pics.profile_picture as profile_picure,
+			pics.picture_one as picture_one,
+			pics.picture_two as picture_two,
+			pics.picture_three as picture_three,
+			pics.picture_four as picture_four,
+			compatibility(u._id, $1) as compatibility,
+			distance_between(u._id, $1) as distance
+		FROM Users as u
+		LEFT JOIN Verification as v on u._id = v.uid
+		LEFT JOIN UserInfo as ui on u._id = ui.uid
+		LEFT JOIN Pictures as pics on u._id = pics.uid
+		WHERE
+			u._id != $1 AND
+			EXTRACT(YEAR FROM age(ui.date_of_birth)) < $3 AND
+			EXTRACT(YEAR FROM age(ui.date_of_birth)) > $2 AND
+			distance_between(u._id, $1) < $5 AND
+			distance_between(u._id, $1) > $4 AND
+			compatibility(u._id, $1) < $7 AND
+			compatibility(u._id, $1) > $6 AND
+			ui.sex = $9 AND
+			ui.sexuality = $8
+		;
 	END;
 	$$ LANGUAGE 'plpgsql';
 

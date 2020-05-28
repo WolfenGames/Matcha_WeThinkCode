@@ -298,8 +298,21 @@ async function updateLoc(user, long, lat) {
 	await db.pool.query('CALL update_my_location($1, $2, $3);', [user._id, long, lat])
 }
 
-function filter() {
-	
+async function filter(user, query) {
+	let result = await db.pool.query('SELECT * FROM get_users_filter($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+		[
+			user._id,
+			query.age.gt,
+			query.age.lt,
+			query.location.gt,
+			query.location.lt,
+			query.compaitibility.gt,
+			query.compaitibility.lt,
+			query.sexuality,
+			query.sex
+		]
+	)
+	return result.rows
 }
 
 module.exports = {

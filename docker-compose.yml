@@ -1,17 +1,5 @@
 version: "2.4"
 services: 
-    matcha_service:
-        build:
-            context: .
-            dockerfile: ./dockerfiles/Dockerfile
-        environment: 
-            EMAIL: ''
-            EMAIL_PASSWRD: ''
-            PORT: 8000
-        image: tmp_matcha:latest
-        ports: 
-            - 8000:8000
-
     posgress_db:
         build:
             context: .

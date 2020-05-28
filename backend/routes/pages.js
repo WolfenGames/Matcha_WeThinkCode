@@ -26,7 +26,8 @@ router.get("/profile", aux.authHandler, async function(req, res) {
 	const tags = await manageUser.getTags(req.session.user)
 	res.render("pages/profile/profile", {
 		user: req.session.user,
-		usertags: tags
+		usertags: tags,
+		map_api_key: process.env.MAP_SECRET
 	});
 });
 
@@ -133,6 +134,7 @@ router.post("/login/user", async function(req, res) {
 							loc.ll[0] = 0;
 							loc.ll[1] = 0;
 						}
+						await manageUser.setTypeOfLoc(req.session.user, "IP")
 						await manageUser.setIPBrowser(req.session.user, loc.ll[1], loc.ll[0])
 						await login.updateLoginTime(req.session.user._id)
 						res.end('{"msg": "OK"}')
@@ -166,117 +168,86 @@ router.post("/login/forgot", async function(req, res) {
 	} else res.end('{"msg":"Please enter a valid email address"}');
 });
 
-router.get("/filter", (req, res) => {
+router.get("/filter", aux.authHandler, async (req, res) => {
 	/*
 		/:minAge/:maxAge/:distance:/
 	*/
-	if (req.session.user) {
-		manageUser.getUserInfo(req.session.user.email, result => {
-			var user = req.session.user;
-			req.session.setup =
-				!user["username"] ||
-				!user["firstname"] ||
-				!user["surname"] ||
-				!user["sex"] ||
-				!user["sexuality"] ||
-				!user["biography"] ||
-				!user["Prof"]
-					? false
-					: true;
-			req.session.user = result;
-			if (!req.query.minAge) req.query.minAge = 17;
-			if (!req.query.maxAge) req.query.maxAge = 99;
-			if (!req.query.dist) req.query.dist = 1000;
-			if (!(req.query.minAge instanceof Number)) {
-				try {
-					req.query.minAge = parseInt(req.query.minAge);
-				} catch (ex) {
-					req.query.minAge = 17;
-				}
-			}
-			if (!(req.query.maxAge instanceof Number)) {
-				try {
-					req.query.maxAge = parseInt(req.query.maxAge);
-				} catch (ex) {
-					req.query.maxAge = 99;
-				}
-			}
-			if (!(req.query.dist instanceof Number)) {
-				try {
-					req.query.dist = parseInt(req.query.dist);
-				} catch (ex) {
-					req.query.dist = 99;
-				}
-			}
-			var date = new Date();
-			var date2 = new Date();
-			date.setFullYear(date.getFullYear() - parseInt(req.query.minAge));
-			date2.setFullYear(date2.getFullYear() - parseInt(req.query.maxAge));
-			var x = require("dateformat");
-			var y = x(date, "yyyy-mm-dd");
-			var z = x(date2, "yyyy-mm-dd");
-			var dist = parseInt(req.query.dist) * parseInt(req.query.dist);
-			var check = [];
-			if (user["sex"] === "3") {
-				check.push({ sex: "3" });
-			} else {
-				if (user["sexuality"] === "3") {
-					check.push({ sexuality: "1", sex: user["sex"] });
-					check.push({ sexuality: "3", sex: user["sex"] });
-				}
-				if (user["sexuality"] === "2") {
-					check.push({
-						sexuality: "1",
-						sex: user["sex"] === "1" ? "2" : "1"
-					});
-					check.push({
-						sexuality: "2",
-						sex: user["sex"] === "1" ? "2" : "1"
-					});
-				}
-				if (user["sexuality"] === "1") {
-					check.push({ sexuality: "1", sex: "1" });
-					check.push({ sexuality: "1", sex: "2" });
-					check.push({
-						sex: user["sex"] === "1" ? "2" : "1",
-						sexuality: "2"
-					});
-					check.push({ sex: user["sex"], sexuality: "3" });
-				}
-			}
 
-			var query = {
-				age: {
-					$lte: y,
-					$gte: z
-				},
-				$or: check.length === 0 ? [{}] : check,
-				banned: false,
-				isVerified: true,
-				location: {
-					$nearSphere: {
-						$geometry: {
-							type: "2dSphere",
-							coordinates: user.location
-						},
-						$maxDistance: dist
-					}
-				}
-			};
-			if (req.query.tags && req.query.tags.length != 0) {
-				if (req.query.tags instanceof Array)
-					query.tags = { $in: req.query.tags };
-				else query.tags = { $in: [req.query.tags] };
-			}
-			manageUser.filter(query, result => {
-				res.render("pages/filter", {
-					user: req.session.user,
-					users: result,
-					setup: req.session.setup
-				});
-			});
-		});
-	} else res.redirect("/404");
+	let user = req.session.user;
+	if (!req.query.minAge) req.query.minAge = 17;
+	if (!req.query.maxAge) req.query.maxAge = 99;
+	if (!req.query.minDistance) req.query.minDistance = -1;
+	if (!req.query.maxDistance) req.query.maxDistance = 500;
+	if (!req.query.minCompat) req.query.minCompat = -1;
+	if (!req.query.maxCompat) req.query.maxCompat = 101;
+	if (!req.query.sex) req.query.sex = '';
+	if (!req.query.sexuailty) req.query.sexuailty = '';
+
+	if (!(req.query.minAge instanceof Number)) {
+		try {
+			req.query.minAge = parseInt(req.query.minAge);
+		} catch (ex) {
+			req.query.minAge = 17;
+		}
+	}
+	if (!(req.query.maxAge instanceof Number)) {
+		try {
+			req.query.maxAge = parseInt(req.query.maxAge);
+		} catch (ex) {
+			req.query.maxAge = 99;
+		}
+	}
+	if (!(req.query.minDistance instanceof Number)) {
+		try {
+			req.query.minDistance = parseInt(req.query.minDistance);
+		} catch (ex) {
+			req.query.minDistance = -1;
+		}
+	}
+	if (!(req.query.maxDistance instanceof Number)) {
+		try {
+			req.query.maxDistance = parseInt(req.query.maxDistance);
+		} catch (ex) {
+			req.query.maxDistance = 500;
+		}
+	}
+	if (!(req.query.minCompat instanceof Number)) {
+		try {
+			req.query.minCompat = parseInt(req.query.minCompat);
+		} catch (ex) {
+			req.query.minCompat = -1;
+		}
+	}
+	if (!(req.query.maxCompat instanceof Number)) {
+		try {
+			req.query.maxCompat = parseInt(req.query.maxCompat);
+		} catch (ex) {
+			req.query.maxCompat = 101;
+		}
+	}
+
+	var query = {
+		age: {
+			lt: req.query.maxAge,
+			gt: req.query.minAge
+		},
+		location: {
+			lt: req.query.maxDistance,
+			gt: req.query.minDistance
+		},
+		compaitibility: {
+			lt: req.query.maxCompat,
+			gt: req.query.minCompat
+		},
+		sex: req.query.sex,
+		sexuality: req.query.sexuailty 
+	};
+	let result = await manageUser.filter(user, query)
+	res.render("pages/filter", {
+		user: user,
+		users: result,
+		setup: req.session.setup
+	});
 });
 
 module.exports = router;

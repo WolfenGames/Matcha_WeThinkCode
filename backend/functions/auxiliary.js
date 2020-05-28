@@ -48,7 +48,6 @@ async function authHandler(req, res, next) {
 	if (req.session.user)
 	{
 		const result = await manageUser.getUserInfo(req.session.user._id)
-		// console.log(result)
 		result.blocks = await manageUser.getBlocksCount(req.session.user._id)
 		result.viewed_by = await manageUser.getViewedByCount(req.session.user._id)
 		result.likes = await manageUser.getLikesCount(req.session.user._id)

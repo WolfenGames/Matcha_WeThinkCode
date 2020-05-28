@@ -420,6 +420,7 @@ function initMap() {
 			disableDefaultUI: true
 		});
 	} catch (ex) {
+		console.log("BORK")
 		console.log(ex);
 	}
 }

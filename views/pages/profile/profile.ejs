@@ -8,8 +8,8 @@
 	var long = <%=  user['location'][0] %>
 	var lat = <%= user['location'][1] %>
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= map_api_key %>" async defer></script>
 <script src="/js/profile.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKiKTx8kHi3BnhOZ4gJnXIhQcr_iZMn9A&callback=initMap" async defer></script>
 </head>
 <body class="container">
 	<header>
@@ -119,7 +119,7 @@
 							</form>
 							<p class="age">Views:: <%= views %></p>
 							<p class="age">Last Online:: <%= lastTime %></p>
-					<!--Sexuality-->
+						<!--Sexuality-->
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<label class="input-group-text" for="SexualityGroup">Sexuality</label>

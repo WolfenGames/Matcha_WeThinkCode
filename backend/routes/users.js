@@ -120,21 +120,45 @@ router.post("/user/updateLoc",aux.authHandlerPost, (req, res) => {
 	}
 });
 
-router.post("/user/locType", (req, res) => {
+router.post("/user/locType", async (req, res) => {
 	if (req.body.locType && req.session.user) {
 		var val = '';
 		switch (req.body.locType) {
 			case "IP":
 				val = "IP";
+				aux.getIp(async result => {
+					if (result) {
+						var loc = geoip.lookup(result);
+						if (!loc) {
+							loc.ll[0] = 0;
+							loc.ll[1] = 0;
+						}
+						await manageUser.setTypeOfLoc(req.session.user, val)
+						await manageUser.setIPBrowser(req.session.user, loc.ll[1], loc.ll[0])
+					}
+				});
 				break;
 			case "BROWSER":
 				val = "BROWSER";
+				await manageUser.setTypeOfLoc(req.session.user, val)
 				break;
 			case "CUSTOM":
 				val = "CUSTOM";
+				await manageUser.setTypeOfLoc(req.session.user, val)
 				break;
 			default:
 				val = 'IP';
+				aux.getIp(async result => {
+					if (result) {
+						var loc = geoip.lookup(result);
+						if (!loc) {
+							loc.ll[0] = 0;
+							loc.ll[1] = 0;
+						}
+						await manageUser.setTypeOfLoc(req.session.user, val)
+						await manageUser.setIPBrowser(req.session.user, loc.ll[1], loc.ll[0])
+					}
+				});
 				break;
 		}
 		manageUser.setTypeOfLoc(req.session.user, val);
@@ -227,5 +251,6 @@ router.get("/report/:id", aux.authHandler, async function(req, res) {
 		} else res.redirect("/404")
 	} else res.redirect("/404");
 });
-	
+
+
 module.exports = router;

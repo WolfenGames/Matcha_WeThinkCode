@@ -4,3 +4,4 @@ node_modules/
 out
 public/images/
 package-lock.json
+.env

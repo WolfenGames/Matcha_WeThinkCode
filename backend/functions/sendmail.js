@@ -1,7 +1,12 @@
 const mailer = require("nodemailer");
 const manageUser = require("./userManagement");
 const bcrypt = require("bcrypt");
+const dotenv = require("dotenv");
 ("use strict");
+
+// console.log(process.env)
+
+dotenv.config()
 
 let transporter = mailer.createTransport({
 	service: "gmail",
@@ -59,7 +64,7 @@ async function resendVerify(email, url) {
 	{
 		let newhash = await bcrypt.hashSync(Date.now() + '', 10)
 		await manageUser.updateVerification(email, newhash);
-		sendVerifyEmail(email, url = user.verification_key)
+		sendVerifyEmail(email, url + newhash)
 		return true;
 	}
 	else

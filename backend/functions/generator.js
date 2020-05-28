@@ -89,6 +89,21 @@ async function UserGenerator() {
 				}
 			})
 			let _user = await manageUser.getUserInfoByEmail(user.email)
+
+			let ndate = Date.now();
+			let randomValueBetween = (min, max) => Math.random() * (max - min) + min;
+			var date1 = date1 || '01-01-1970'
+			var date2 = date2 || new Date().toLocaleDateString()
+			date1 = new Date(date1).getTime()
+			date2 = new Date(date2).getTime()
+			if( date1>date2){
+				ndate = new Date(randomValueBetween(date2,date1)).toLocaleDateString()   
+			} else{
+				ndate = new Date(randomValueBetween(date1, date2)).toLocaleDateString()  
+			}
+
+			await manageUser.updateDOB(_user._id, ndate);
+
 			await manageUser.updateGender(_user._id, user.sex)
 			await manageUser.updateSex(_user._id, user.sexuality)
 			await manageUser.updateBio(_user._id, user.biography)
