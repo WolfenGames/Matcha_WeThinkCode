@@ -11,7 +11,7 @@
 	},
 	"dependencies": {
 		"@types/socket.io": "^2.1.4",
-		"bcrypt": "^3.0.7",
+		"bcrypt": "^5.0.0",
 		"body-parser": "^1.18.3",
 		"connect-redis": "^4.0.3",
 		"dateformat": "^3.0.3",
