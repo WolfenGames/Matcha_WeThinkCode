@@ -402,17 +402,11 @@ $(document).ready(function() {
 			locType: $("input[name=locType]:checked").val()
 		}).done(() => location.reload());
 	});
-	google.maps.event.addListener(map, "click", function(event) {
-		var latitude = event.latLng.lat();
-		var longitude = event.latLng.lng();
-		$.post("/update/loc/custom", {
-			long: longitude,
-			lat: latitude
-		}).done();
-	});
+	initMap()
 });
 
 function initMap() {
+
 	try {
 		map = new google.maps.Map(document.getElementById("map"), {
 			center: { lat: lat, lng: long },
@@ -423,6 +417,15 @@ function initMap() {
 		console.log("BORK")
 		console.log(ex);
 	}
+	
+	google.maps.event.addListener(map, "click", function(event) {
+		var latitude = event.latLng.lat();
+		var longitude = event.latLng.lng();
+		$.post("/update/loc/custom", {
+			long: longitude,
+			lat: latitude
+		}).done();
+	});
 }
 
 function removeTag(tagid, tagname, el) {
