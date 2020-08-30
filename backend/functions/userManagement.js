@@ -80,7 +80,6 @@ async function getBlocks(uid) {
 }
 
 async function reportUser(reporter, bad) {
-	// TODO: HIGHLY UNTESTED
 	await db.pool.query('CALL report_user($1::int, $2::int);', [reporter, bad])
 }
 
@@ -266,7 +265,8 @@ async function getUsers(user) {
 
 async function updateLocation(uid, type, long, lat)
 {
-	await db.pool.query(`CALL update_location($1, $2, $3, $4)`, [uid, type, long, lat])
+	let [longitude, latitude] = [parseFloat(long), parseFloat(lat)];
+	await db.pool.query(`CALL update_location($1, $2, $3, $4)`, [uid, type, longitude, latitude])
 }
 
 // TODO: DO I NEED YOU?
@@ -315,6 +315,12 @@ async function filter(user, query) {
 	return result.rows
 }
 
+async function get_my_location(uid)
+{
+	let location = await db.pool.query('SELECT * FROM get_my_location($1)', [uid])
+	return location.rows
+}
+
 module.exports = {
 	deleteByUsername: deleteByUsername,
 	deleteAll: deleteAll,
@@ -360,6 +366,7 @@ module.exports = {
 	viewUser,
 	updateLocation,
 	getAllUsers,
-	updateVerification
+	updateVerification,
+	get_my_location
 };
 																																																			

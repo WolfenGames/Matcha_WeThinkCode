@@ -7,6 +7,7 @@ const url = require("url");
 const IS = require("../functions/image_save");
 const notification = require("../functions/notification");
 const aux = require('../functions/auxiliary')
+const geoip = require('geoip-lite')
 
 var password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$#!%*?&_]{8,}$/;
 
@@ -16,9 +17,6 @@ router.get("/view/:id", aux.authHandler, async function(req, res) {
 	{
 
 		const tags = await manageUser.getTags(user)
-	
-		//TODO: LOCATION
-		user.location = [0,0]
 	
 		me_likey_arr = await manageUser.getLikes(req.session.user._id)
 		me_likey_arr = me_likey_arr.map(e => e.likes)

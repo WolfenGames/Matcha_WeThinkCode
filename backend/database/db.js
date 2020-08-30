@@ -1239,6 +1239,25 @@ async function createProcs() {
 	END;
 	$$ LANGUAGE 'plpgsql';
 
+	CREATE OR REPLACE FUNCTION get_my_location(_uid int)
+	RETURNS TABLE
+	(
+		longitude float,
+		latitude float
+	)
+	AS $$
+	BEGIN
+		RETURN QUERY
+		SELECT l.longitude, l.latitude 
+		FROM location l
+		JOIN users u on u._id = l.uid
+		JOIN userinfo ui on ui.uid = u._id
+		WHERE 
+			type = ui.locType 
+			AND 
+			u._id = '1';
+	END;
+	$$ LANGUAGE 'plpgsql';
 	`)
 }
 

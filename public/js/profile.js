@@ -397,12 +397,13 @@ $(document).ready(function() {
 	});
 
 	$("input[type=radio][name=locType]").change(e => {
-		console.log($("input[name=locType]:checked").val());
 		$.post("/user/locType", {
 			locType: $("input[name=locType]:checked").val()
 		}).done(() => location.reload());
 	});
+
 	initMap()
+
 });
 
 function initMap() {
@@ -411,13 +412,12 @@ function initMap() {
 		map = new google.maps.Map(document.getElementById("map"), {
 			center: { lat: lat, lng: long },
 			zoom: 10,
-			disableDefaultUI: true
 		});
 	} catch (ex) {
 		console.log("BORK")
 		console.log(ex);
 	}
-	
+		
 	google.maps.event.addListener(map, "click", function(event) {
 		var latitude = event.latLng.lat();
 		var longitude = event.latLng.lng();

@@ -55,7 +55,7 @@ async function authHandler(req, res, next) {
 		result.age = _calculateAge(Date.parse(result.dob))
 		result.views = await manageUser.getMyViews(req.session.user._id)
 		//TODO: Implement
-		result.location = [0,0]
+		result.location = await manageUser.get_my_location(req.session.user._id)
 
 		req.session.user = result;
 		next();
