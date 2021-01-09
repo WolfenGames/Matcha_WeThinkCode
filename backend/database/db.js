@@ -1255,7 +1255,7 @@ async function createProcs() {
 		WHERE 
 			type = ui.locType 
 			AND 
-			u._id = '1';
+			u._id = $1;
 	END;
 	$$ LANGUAGE 'plpgsql';
 	`)
